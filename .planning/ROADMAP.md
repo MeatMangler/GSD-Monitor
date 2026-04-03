@@ -31,8 +31,8 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. The deduplication logic reads the `.git` file pointer — not heuristics — to resolve canonical repo root
 **Plans**: 2 plans
 Plans:
-- [ ] 01-01-PLAN.md — Backend worktree detection, deduplication in discover_groups, API serialization
-- [ ] 01-02-PLAN.md — Frontend WorktreeInfo interface, badge + CSS-only hover tooltip
+- [x] 01-01-PLAN.md — Backend worktree detection, deduplication in discover_groups, API serialization
+- [x] 01-02-PLAN.md — Frontend WorktreeInfo interface, badge + CSS-only hover tooltip
 
 ### Phase 2: Visual Redesign
 **Goal**: The dashboard immediately communicates project status without any navigation or clicks, using a VS Code dark aesthetic
@@ -43,7 +43,10 @@ Plans:
   2. All phases are visible in a list with color-coded status indicators (green=done, blue=active, gray=todo) on the main view
   3. A breadcrumb reading "repo → project → active phase" is always visible at the top
   4. The entire UI renders with a dark background (#1e1e1e range), matching sidebar, and VS Code-style typography
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 02-01-PLAN.md — DashboardPage stats bar, breadcrumb, phase row borders, VS Code tokens + index.css font
+- [ ] 02-02-PLAN.md — ShellLayout sidebar VS Code token swaps
 **UI hint**: yes
 
 ### Phase 3: Doc Browser
@@ -76,7 +79,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Worktree Deduplication | 0/2 | Not started | - |
-| 2. Visual Redesign | 0/? | Not started | - |
+| 1. Worktree Deduplication | 1/2 | In progress | - |
+| 2. Visual Redesign | 0/2 | Not started | - |
 | 3. Doc Browser | 0/? | Not started | - |
 | 4. Performance & Correctness | 0/? | Not started | - |
