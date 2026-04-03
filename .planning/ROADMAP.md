@@ -29,7 +29,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Hovering or clicking the badge reveals the branch/directory names of each worktree
   4. One worktree in the list is marked as currently active (the currently-checked-out one)
   5. The deduplication logic reads the `.git` file pointer — not heuristics — to resolve canonical repo root
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 01-01-PLAN.md — Backend worktree detection, deduplication in discover_groups, API serialization
+- [ ] 01-02-PLAN.md — Frontend WorktreeInfo interface, badge + CSS-only hover tooltip
 
 ### Phase 2: Visual Redesign
 **Goal**: The dashboard immediately communicates project status without any navigation or clicks, using a VS Code dark aesthetic
@@ -73,7 +76,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Worktree Deduplication | 0/? | Not started | - |
+| 1. Worktree Deduplication | 0/2 | Not started | - |
 | 2. Visual Redesign | 0/? | Not started | - |
 | 3. Doc Browser | 0/? | Not started | - |
 | 4. Performance & Correctness | 0/? | Not started | - |
