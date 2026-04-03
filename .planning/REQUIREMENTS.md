@@ -1,0 +1,84 @@
+# Requirements: GSD Monitor
+
+**Defined:** 2026-04-03
+**Core Value:** Developer opens GSD Monitor and immediately understands every project's status with zero duplicate entries and zero confusion
+
+## v1 Requirements
+
+### Worktree Deduplication
+
+- [ ] **WRKTR-01**: Project dropdown shows exactly one entry per canonical repo root (`.git` directory), regardless of how many worktrees exist
+- [ ] **WRKTR-02**: App detects git worktrees by checking if `.git` is a file (not a directory) and reads the `gitdir:` pointer to resolve the canonical repo root
+- [ ] **WRKTR-03**: Project entry in dropdown shows a badge with the count of active worktrees when more than one exists
+- [ ] **WRKTR-04**: Hovering or clicking the badge shows the list of worktree branch/directory names
+- [ ] **WRKTR-05**: An indicator marks which worktree is currently active (checked out)
+
+### Dashboard & Visual
+
+- [ ] **DASH-01**: Stats bar is visible immediately above the fold: % complete, phases done/total, active phase name
+- [ ] **DASH-02**: Phase list shows all phases with status colors (done=green, active=blue, todo=gray) without any click required
+- [ ] **DASH-03**: Breadcrumb is always visible: repo name → project name → active phase
+- [ ] **DASH-04**: UI uses VS Code dark theme: dark background (#1e1e1e range), sidebar, matching typography and contrast
+- [ ] **DASH-05**: Doc browser panel shows `.planning/` file tree and renders selected markdown inline
+- [ ] **DASH-06**: ROADMAP.md, STATE.md, active PLAN.md, and REQUIREMENTS.md are surfaced as default quick-access files
+- [ ] **DASH-07**: Any file in `.planning/` is navigable and renderable in the doc browser
+
+### Performance & Correctness
+
+- [ ] **PERF-01**: FS watcher uses non-blocking trylock — incoming events are dropped (coalesced) if a refresh is already in progress, not queued
+- [ ] **PERF-02**: Discovery excludes `node_modules/`, `.venv/`, `build/`, `dist/`, `.git/` directories from recursive scan
+- [ ] **PERF-03**: `StateParser` is wired into the discovery pipeline — active phase, active milestone, and workflow position are populated on each segment
+- [ ] **PERF-04**: `SettingsPage.save()` does not call `reload()` after saving — relies solely on the WebSocket `projects_updated` event to refresh data
+
+## v2 Requirements
+
+### Drift Detection
+- **DRIFT-01**: Actual drift computation using git commit dates vs phase write times
+- **DRIFT-02**: Drift indicators show `none`/`minor`/`major` rather than always `deferred`
+
+### Notifications
+- **NOTIF-01**: Notify on phase completion (when enabled in settings)
+- **NOTIF-02**: Notify on verification failure
+
+### Verification Detail
+- **VERIF-01**: Verification page lists per-phase detail — which phases need attention and why
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Editing markdown files | Read-only app by design; writing would require conflict resolution with Claude Code |
+| macOS/Linux support | pywebview targets Edge WebView2; Windows-only per PRD |
+| Multi-user or cloud sync | Single-user local tool |
+| Replacing GSD CLI | Monitoring and visualization only |
+| OAuth / auth system | No network exposure; loopback only |
+
+## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| WRKTR-01 | Phase 1 | Pending |
+| WRKTR-02 | Phase 1 | Pending |
+| WRKTR-03 | Phase 1 | Pending |
+| WRKTR-04 | Phase 1 | Pending |
+| WRKTR-05 | Phase 1 | Pending |
+| DASH-01 | Phase 2 | Pending |
+| DASH-02 | Phase 2 | Pending |
+| DASH-03 | Phase 2 | Pending |
+| DASH-04 | Phase 2 | Pending |
+| DASH-05 | Phase 3 | Pending |
+| DASH-06 | Phase 3 | Pending |
+| DASH-07 | Phase 3 | Pending |
+| PERF-01 | Phase 4 | Pending |
+| PERF-02 | Phase 4 | Pending |
+| PERF-03 | Phase 4 | Pending |
+| PERF-04 | Phase 4 | Pending |
+
+**Coverage:**
+- v1 requirements: 16 total
+- Mapped to phases: 16
+- Unmapped: 0 ✓
+
+---
+*Requirements defined: 2026-04-03*
+*Last updated: 2026-04-03 after initial definition*
