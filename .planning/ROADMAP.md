@@ -1,0 +1,79 @@
+# Roadmap: GSD Monitor
+
+## Overview
+
+GSD Monitor already has a working Python/FastAPI/React skeleton — these phases fix what is broken and add what is missing. Phase 1 eliminates the duplicate-project problem (the #1 user complaint), Phase 2 replaces the visual structure with one that makes status legible at a glance, Phase 3 adds the doc browser so every planning file is readable from within the app, and Phase 4 closes the backend correctness and performance gaps that remain.
+
+## Phases
+
+**Phase Numbering:**
+- Integer phases (1, 2, 3): Planned milestone work
+- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
+
+Decimal phases appear between their surrounding integers in numeric order.
+
+- [ ] **Phase 1: Worktree Deduplication** - Fix the backend so each canonical repo appears exactly once, with a worktree badge
+- [ ] **Phase 2: Visual Redesign** - VS Code dark theme, stats bar, phase list, breadcrumb
+- [ ] **Phase 3: Doc Browser** - Full `.planning/` file tree navigation with inline markdown rendering
+- [ ] **Phase 4: Performance & Correctness** - Non-blocking lock, scan exclusions, StateParser wiring, settings race fix
+
+## Phase Details
+
+### Phase 1: Worktree Deduplication
+**Goal**: Each git repo appears exactly once in the project dropdown, regardless of how many worktrees are checked out
+**Depends on**: Nothing (first phase)
+**Requirements**: WRKTR-01, WRKTR-02, WRKTR-03, WRKTR-04, WRKTR-05
+**Success Criteria** (what must be TRUE):
+  1. Opening a repo that has three worktrees checked out shows one dropdown entry, not three
+  2. That single entry has a badge showing the worktree count (e.g., "3 worktrees")
+  3. Hovering or clicking the badge reveals the branch/directory names of each worktree
+  4. One worktree in the list is marked as currently active (the currently-checked-out one)
+  5. The deduplication logic reads the `.git` file pointer — not heuristics — to resolve canonical repo root
+**Plans**: TBD
+
+### Phase 2: Visual Redesign
+**Goal**: The dashboard immediately communicates project status without any navigation or clicks, using a VS Code dark aesthetic
+**Depends on**: Phase 1
+**Requirements**: DASH-01, DASH-02, DASH-03, DASH-04
+**Success Criteria** (what must be TRUE):
+  1. Opening the app to any project shows % complete, phases done/total, and active phase name without scrolling
+  2. All phases are visible in a list with color-coded status indicators (green=done, blue=active, gray=todo) on the main view
+  3. A breadcrumb reading "repo → project → active phase" is always visible at the top
+  4. The entire UI renders with a dark background (#1e1e1e range), matching sidebar, and VS Code-style typography
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 3: Doc Browser
+**Goal**: Any file in the project's `.planning/` directory is navigable and readable inline without leaving the app
+**Depends on**: Phase 2
+**Requirements**: DASH-05, DASH-06, DASH-07
+**Success Criteria** (what must be TRUE):
+  1. A file tree panel shows all files and folders inside `.planning/` for the selected project
+  2. Clicking any markdown file renders it inline as formatted HTML (not raw text)
+  3. ROADMAP.md, STATE.md, the active PLAN.md, and REQUIREMENTS.md appear as prominent quick-access shortcuts
+  4. Navigating the file tree does not require any page reload or full re-fetch
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 4: Performance & Correctness
+**Goal**: The backend is fast, correct, and non-blocking — scans stay tight, state is fully populated, and the UI never flashes stale data
+**Depends on**: Phase 3
+**Requirements**: PERF-01, PERF-02, PERF-03, PERF-04
+**Success Criteria** (what must be TRUE):
+  1. Saving settings shows updated project data driven only by the WebSocket event — no stale-data flash before it arrives
+  2. A file-system change during an active scan is dropped (coalesced), not queued — no cascade of redundant re-scans
+  3. Scanning a directory tree that contains `node_modules/`, `.venv/`, `build/`, or `dist/` completes noticeably faster than before
+  4. The active phase name on the dashboard matches what STATE.md reports as the current position
+**Plans**: TBD
+
+## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 1 → 2 → 3 → 4
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 1. Worktree Deduplication | 0/? | Not started | - |
+| 2. Visual Redesign | 0/? | Not started | - |
+| 3. Doc Browser | 0/? | Not started | - |
+| 4. Performance & Correctness | 0/? | Not started | - |
