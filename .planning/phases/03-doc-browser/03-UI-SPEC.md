@@ -5,6 +5,7 @@ status: draft
 shadcn_initialized: false
 preset: none
 created: 2026-04-04
+revised: 2026-04-03
 ---
 
 # Phase 3 — UI Design Contract
@@ -51,14 +52,18 @@ Exceptions:
 
 ## Typography
 
+Declared weights: **2** — 400 (regular) and 500 (medium). This satisfies the 2-weight maximum.
+
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 14px (`text-sm`) | 400 regular | 1.5 |
-| Label / tree node | 13px (`text-xs`) | 500 medium | 1.4 |
-| Section header (Quick access, full tree) | 11px (`text-xs` + `uppercase tracking-wider`) | 600 semibold | 1.4 |
-| Content heading (via `prose prose-invert prose-sm`) | Scales per heading level (prose-sm: h1=20px, h2=18px, h3=16px) | 600/700 (prose defaults) | 1.25–1.3 |
+| Label / tree node | 12px (`text-xs`) | 500 medium | 1.4 |
+| Section header (Quick access, Files) | 11px (`text-xs` + `uppercase tracking-wider`) | 500 medium | 1.4 |
 
 Notes:
+- Section headers (11px, uppercase, `tracking-wider`) are visually distinguished from tree nodes (12px, no transform) by size, case, and letter-spacing — not by weight. Both use 500.
+- Prose heading weights (600/700) are `prose-sm` plugin defaults, not tracked as design tokens. The `prose prose-invert prose-sm max-w-none` class manages its own internal heading hierarchy automatically.
+- Tailwind v4 `text-xs` renders at **12px** (0.75rem). Use `text-xs` in code; do not use `text-[13px]`.
 - Monospace font applied to file/folder names via `font-mono` — inherits browser monospace stack. Source: established in DashboardPage.tsx phase number rendering (`font-mono font-medium`).
 - `prose prose-invert prose-sm max-w-none` for rendered markdown — identical to existing Drawer.tsx and DashboardPage.tsx patterns. This is non-negotiable; `prose-invert` is required for dark-background legibility.
 - Raw `<pre>` blocks for non-markdown files: `text-sm text-[#cccccc] whitespace-pre-wrap` — inherits body font.
@@ -224,7 +229,7 @@ All files not ending in `.md` render as `<pre>` with raw content. Source: CONTEX
 | Loading state — tree fetch | "Loading…" (muted, `text-[#858585]`) |
 | Loading state — content fetch | "Loading…" (muted, `text-[#858585]`, displayed in content pane) |
 | Error state — content fetch failed | "Could not load file. Check that the file still exists and try selecting it again." (`text-red-400`) |
-| Error state — tree fetch failed | "Could not load file tree." (`text-red-400`, displayed in tree panel) |
+| Error state — tree fetch failed | "Could not load file tree. Try switching projects or restarting the app." (`text-red-400`, displayed in tree panel) |
 | Destructive confirmation | None — this phase has no destructive actions. App is read-only. |
 
 No confirmation dialogs. No destructive actions. No form submissions in this phase.
