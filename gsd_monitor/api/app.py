@@ -6,6 +6,8 @@ import asyncio
 import json
 import sys
 import threading
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
@@ -170,8 +172,17 @@ def _group_to_json(g: ProjectGroup) -> dict[str, Any]:
     }
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    """Startup: capture event loop and trigger initial scan. Shutdown: stop file watcher."""
+    state._loop = asyncio.get_running_loop()
+    asyncio.create_task(_run_refresh_background(settings_saved=False))
+    yield
+    state.watcher.stop()
+
+
 def create_app() -> FastAPI:
-    application = FastAPI(title="GSD Monitor API")
+    application = FastAPI(title="GSD Monitor API", lifespan=lifespan)
 
     application.add_middleware(
         CORSMiddleware,
@@ -188,15 +199,6 @@ def create_app() -> FastAPI:
             response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
             response.headers["Pragma"] = "no-cache"
         return response
-
-    @application.on_event("startup")
-    async def startup() -> None:
-        state._loop = asyncio.get_running_loop()
-        asyncio.create_task(_run_refresh_background(settings_saved=False))
-
-    @application.on_event("shutdown")
-    async def shutdown() -> None:
-        state.watcher.stop()
 
     @application.get("/api/health")
     async def health() -> dict[str, str]:
