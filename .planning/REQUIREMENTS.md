@@ -7,11 +7,11 @@
 
 ### Worktree Deduplication
 
-- [ ] **WRKTR-01**: Project dropdown shows exactly one entry per canonical repo root (`.git` directory), regardless of how many worktrees exist
-- [ ] **WRKTR-02**: App detects git worktrees by checking if `.git` is a file (not a directory) and reads the `gitdir:` pointer to resolve the canonical repo root
+- [x] **WRKTR-01**: Project dropdown shows exactly one entry per canonical repo root (`.git` directory), regardless of how many worktrees exist
+- [x] **WRKTR-02**: App detects git worktrees by checking if `.git` is a file (not a directory) and reads the `gitdir:` pointer to resolve the canonical repo root
 - [x] **WRKTR-03**: Project entry in dropdown shows a badge with the count of active worktrees when more than one exists
 - [x] **WRKTR-04**: Hovering or clicking the badge shows the list of worktree branch/directory names
-- [ ] **WRKTR-05**: An indicator marks which worktree is currently active (checked out)
+- [x] **WRKTR-05**: An indicator marks which worktree is currently active (checked out)
 
 ### Dashboard & Visual
 

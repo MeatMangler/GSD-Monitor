@@ -140,7 +140,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [ ] 08-01-PLAN.md — Write Phase 01 VERIFICATION.md and update REQUIREMENTS.md
-- [ ] 08-02-PLAN.md — Fix stale metadata and Python datetime deprecation
+- [x] 08-02-PLAN.md — Fix stale metadata and Python datetime deprecation
 
 ## Progress
 
@@ -156,4 +156,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 5. GSD-2 StateParser Wiring | 1/1 | Complete | 2026-04-04 |
 | 6. Tech Debt Remediation | 2/2 | Complete | 2026-04-04 |
 | 7. Frontend Source Completion & Bundle Rebuild | 2/2 | Complete   | 2026-04-04 |
-| 8. Phase 01 Verification & Metadata Cleanup | 0/2 | Active | |
+| 8. Phase 01 Verification & Metadata Cleanup | 1/2 | In Progress|  |
