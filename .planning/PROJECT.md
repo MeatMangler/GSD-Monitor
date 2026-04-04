@@ -63,6 +63,7 @@ The codebase already exists with a working Python/FastAPI backend and React fron
 | Settings save no longer triggers reload | WS handler filters on `projects_updated` type — prevents stale-data flash after settings save | ✓ Phase 04 |
 | `StateParser` wired into GSD-2 discovery | GSD-2 segments now surface `active_slice` as `stateCurrentPosition` — closes PERF-03 GSD-2 gap | ✓ Phase 05 |
 | FastAPI lifespan context manager | Replace deprecated `@on_event` decorators — eliminates deprecation warnings and future breakage risk | ✓ Phase 06 |
+| `datetime.fromtimestamp(ts, tz=timezone.utc)` replaces `utcfromtimestamp()` | Python 3.12 deprecated `utcfromtimestamp` — timezone-aware replacement eliminates warnings across 9 call sites | ✓ Phase 08 |
 
 ## Evolution
 
@@ -82,4 +83,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-04 — Phase 07 complete (frontend-source-completion) — fresh bundle built with all Phase 02-05 features*
+*Last updated: 2026-04-04 — Phase 08 complete (phase01-verification-cleanup) — all 16 v1 requirements verified, zero deprecated datetime calls, milestone v1.0 done*
