@@ -12,18 +12,17 @@ A developer opens GSD Monitor and within seconds understands exactly where every
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Project dropdown shows exactly ONE entry per canonical repo, regardless of how many git worktrees exist — *Validated in Phase 01: worktree-deduplication*
+- [x] Worktree count shown as a badge on the project entry when multiple worktrees exist — *Validated in Phase 01: worktree-deduplication*
 
 ### Active
 
-- [ ] Project dropdown shows exactly ONE entry per canonical repo, regardless of how many git worktrees exist
-- [ ] Worktree count shown as a badge on the project entry when multiple worktrees exist
-- [ ] Stats bar visible immediately above fold: % complete, phases done/total, active phase name
-- [ ] Phase list with clear status colors (done/active/todo) visible without clicking
-- [ ] Breadcrumb always shows: repo → project → active phase
+- [x] Stats bar visible immediately above fold: % complete, phases done/total, active phase name — *Validated in Phase 02: visual-redesign*
+- [x] Phase list with clear status colors (done/active/todo) visible without clicking — *Validated in Phase 02: visual-redesign*
+- [x] Breadcrumb always shows: repo → project → active phase — *Validated in Phase 02: visual-redesign*
+- [x] VS Code dark visual theme throughout (sidebar, content area, typography) — *Validated in Phase 02: visual-redesign*
 - [ ] Doc browser navigates the full `.planning/` file tree
 - [ ] ROADMAP.md, STATE.md, active PLAN.md, and REQUIREMENTS.md all renderable
-- [ ] VS Code dark visual theme throughout (sidebar, content area, typography)
 - [ ] App feels fast — no sluggish scanning or UI blocking
 
 ### Out of Scope
@@ -55,7 +54,7 @@ The codebase already exists with a working Python/FastAPI backend and React fron
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Deduplicate by canonical repo root (resolve `.git` file → main worktree) | Worktrees share the same `.planning/` — showing duplicates is the primary complaint | — Pending |
+| Deduplicate by canonical repo root (resolve `.git` file → main worktree) | Worktrees share the same `.planning/` — showing duplicates is the primary complaint | ✓ Phase 01 |
 | VS Code dark theme | User explicitly requested; familiar to target audience | — Pending |
 | All `.planning/` files browsable (not just a curated subset) | User wants full access; curated defaults (ROADMAP/STATE/PLAN) shown first | — Pending |
 | Non-blocking trylock for FS watcher refreshes | Drop duplicate events instead of queuing them — eliminates redundant rescans | — Pending |
@@ -78,4 +77,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-03 after initialization*
+*Last updated: 2026-04-03 — Phase 01 complete (worktree deduplication)*
