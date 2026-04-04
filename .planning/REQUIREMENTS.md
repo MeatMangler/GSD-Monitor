@@ -7,11 +7,11 @@
 
 ### Worktree Deduplication
 
-- [x] **WRKTR-01**: Project dropdown shows exactly one entry per canonical repo root (`.git` directory), regardless of how many worktrees exist
-- [x] **WRKTR-02**: App detects git worktrees by checking if `.git` is a file (not a directory) and reads the `gitdir:` pointer to resolve the canonical repo root
+- [ ] **WRKTR-01**: Project dropdown shows exactly one entry per canonical repo root (`.git` directory), regardless of how many worktrees exist
+- [ ] **WRKTR-02**: App detects git worktrees by checking if `.git` is a file (not a directory) and reads the `gitdir:` pointer to resolve the canonical repo root
 - [x] **WRKTR-03**: Project entry in dropdown shows a badge with the count of active worktrees when more than one exists
 - [x] **WRKTR-04**: Hovering or clicking the badge shows the list of worktree branch/directory names
-- [x] **WRKTR-05**: An indicator marks which worktree is currently active (checked out)
+- [ ] **WRKTR-05**: An indicator marks which worktree is currently active (checked out)
 
 ### Dashboard & Visual
 
@@ -57,11 +57,11 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WRKTR-01 | Phase 1 | Complete (01-01) |
-| WRKTR-02 | Phase 1 | Complete (01-01) |
+| WRKTR-01 | Phase 8 | Pending (orphaned — verification missing) |
+| WRKTR-02 | Phase 8 | Pending (orphaned — verification missing) |
 | WRKTR-03 | Phase 1 | Complete (01-02) |
 | WRKTR-04 | Phase 1 | Complete (01-02) |
-| WRKTR-05 | Phase 1 | Complete (01-01) |
+| WRKTR-05 | Phase 8 | Pending (orphaned — verification missing) |
 | DASH-01 | Phase 2 | Complete |
 | DASH-02 | Phase 2 | Complete |
 | DASH-03 | Phase 2 | Complete |
@@ -78,8 +78,8 @@
 - v1 requirements: 16 total
 - Mapped to phases: 16
 - Unmapped: 0 ✓
-- Satisfied: 16 (`[x]`), 0 pending
+- Satisfied: 13 (`[x]`), 3 pending (WRKTR-01, WRKTR-02, WRKTR-05 — closing in Phase 8)
 
 ---
 *Requirements defined: 2026-04-03*
-*Last updated: 2026-04-04 — Phase 6 tech debt: all traceability items marked Complete*
+*Last updated: 2026-04-04 — Gap closure: WRKTR-01/02/05 reset to Pending (orphaned, closing in Phase 8)*

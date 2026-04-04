@@ -17,7 +17,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Doc Browser** - Full `.planning/` file tree navigation with inline markdown rendering
 - [x] **Phase 4: Performance & Correctness** - Non-blocking lock, scan exclusions, StateParser wiring, settings race fix
 - [x] **Phase 5: GSD-2 StateParser Wiring** - Wire StateParser into GSD-2 discovery path so stateCurrentPosition is populated for GSD-2 projects (completed 2026-04-04)
-- [ ] **Phase 6: Tech Debt Remediation** - Fix stale REQUIREMENTS.md checkboxes, tick 03-VERIFICATION.md UAT items, upgrade FastAPI lifespan pattern
+- [x] **Phase 6: Tech Debt Remediation** - Fix stale REQUIREMENTS.md checkboxes, tick 03-VERIFICATION.md UAT items, upgrade FastAPI lifespan pattern
+- [ ] **Phase 7: Frontend Source Completion & Bundle Rebuild** - Merge missing source files to master, create stubs for v2 placeholders, rebuild frontend/dist
+- [ ] **Phase 8: Phase 01 Verification & Metadata Cleanup** - Write Phase 01 VERIFICATION.md to close orphaned WRKTR requirements, fix stale planning metadata, fix Python deprecation
 
 ## Phase Details
 
@@ -109,10 +111,37 @@ Plans:
 - [x] 06-01-PLAN.md — Fix stale checkboxes in 03-VERIFICATION.md and REQUIREMENTS.md traceability
 - [x] 06-02-PLAN.md — Migrate app.py from deprecated @on_event to lifespan context manager
 
+### Phase 7: Frontend Source Completion & Bundle Rebuild
+**Goal**: Master branch has a complete, compilable frontend source tree and a fresh dist bundle that reflects all Phase 02–05 work
+**Depends on**: Phase 6
+**Requirements**: DASH-01, DASH-02, DASH-03, DASH-04, DASH-05, DASH-06, DASH-07, PERF-03, PERF-04 (currently broken in source/bundle)
+**Gap Closure**: Closes INT-01 (missing source files) and INT-02 (stale bundle) from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. `context.tsx` and `SettingsPage.tsx` exist in `frontend/src/` on master (merged from worktree-agent-a9b06372)
+  2. Placeholder stub components exist for `DriftPage.tsx`, `QuickTasksPage.tsx`, `VerificationPage.tsx`
+  3. `tsc -b` completes with zero errors
+  4. `npm run build` produces a fresh `frontend/dist` bundle
+  5. Bundle contains DocsPage, AppProvider, stateCurrentPosition, and ReactMarkdown rendering
+**Plans**: 0 plans
+Plans:
+
+### Phase 8: Phase 01 Verification & Metadata Cleanup
+**Goal**: Close all remaining documentation gaps — Phase 01 VERIFICATION.md written, planning metadata current, Python deprecation fixed
+**Depends on**: Phase 7
+**Requirements**: WRKTR-01, WRKTR-02, WRKTR-05 (orphaned — need verification artifact)
+**Gap Closure**: Closes WRKTR-01/02/05 orphaned status, Phase 06 stale metadata, Python deprecation warning
+**Success Criteria** (what must be TRUE):
+  1. `phases/01-worktree-deduplication/01-VERIFICATION.md` exists and documents WRKTR-01, WRKTR-02, WRKTR-05 with code evidence
+  2. ROADMAP.md Phase 6 checkbox is `[x]` and progress table shows Complete
+  3. STATE.md reflects Phase 6 completion (stopped_at updated, completed_plans accurate)
+  4. `datetime.utcfromtimestamp()` replaced with timezone-aware equivalent in `project_discovery.py`
+**Plans**: 0 plans
+Plans:
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -120,5 +149,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Visual Redesign | 2/2 | Complete | 2026-04-03 |
 | 3. Doc Browser | 2/2 | Complete | 2026-04-04 |
 | 4. Performance & Correctness | 2/2 | Complete | 2026-04-04 |
-| 5. GSD-2 StateParser Wiring | 1/1 | Complete   | 2026-04-04 |
-| 6. Tech Debt Remediation | 1/2 | In Progress|  |
+| 5. GSD-2 StateParser Wiring | 1/1 | Complete | 2026-04-04 |
+| 6. Tech Debt Remediation | 2/2 | Complete | 2026-04-04 |
+| 7. Frontend Source Completion & Bundle Rebuild | 0/0 | Pending | |
+| 8. Phase 01 Verification & Metadata Cleanup | 0/0 | Pending | |
