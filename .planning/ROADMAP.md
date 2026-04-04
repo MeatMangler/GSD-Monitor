@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: GSD-2 StateParser Wiring** - Wire StateParser into GSD-2 discovery path so stateCurrentPosition is populated for GSD-2 projects (completed 2026-04-04)
 - [x] **Phase 6: Tech Debt Remediation** - Fix stale REQUIREMENTS.md checkboxes, tick 03-VERIFICATION.md UAT items, upgrade FastAPI lifespan pattern
 - [x] **Phase 7: Frontend Source Completion & Bundle Rebuild** - Merge missing source files to master, create stubs for v2 placeholders, rebuild frontend/dist (completed 2026-04-04)
-- [ ] **Phase 8: Phase 01 Verification & Metadata Cleanup** - Write Phase 01 VERIFICATION.md to close orphaned WRKTR requirements, fix stale planning metadata, fix Python deprecation
+- [x] **Phase 8: Phase 01 Verification & Metadata Cleanup** - Write Phase 01 VERIFICATION.md to close orphaned WRKTR requirements, fix stale planning metadata, fix Python deprecation
 
 ## Phase Details
 
@@ -156,4 +156,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 5. GSD-2 StateParser Wiring | 1/1 | Complete | 2026-04-04 |
 | 6. Tech Debt Remediation | 2/2 | Complete | 2026-04-04 |
 | 7. Frontend Source Completion & Bundle Rebuild | 2/2 | Complete   | 2026-04-04 |
-| 8. Phase 01 Verification & Metadata Cleanup | 1/2 | In Progress|  |
+| 8. Phase 01 Verification & Metadata Cleanup | 2/2 | Complete | 2026-04-04 |
