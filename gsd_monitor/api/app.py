@@ -58,7 +58,15 @@ class RuntimeState:
         self._refresh_lock = threading.Lock()
 
     def _on_fs_change(self, _root: str) -> None:
-        self.refresh()
+        acquired = self._refresh_lock.acquire(blocking=False)
+        if not acquired:
+            return  # Drop event — scan already in progress (PERF-01)
+        try:
+            s = self.settings_service.load()
+            self.groups = self.discovery.discover_groups(s.scan_roots)
+            self.watcher.set_roots(list(s.scan_roots))
+        finally:
+            self._refresh_lock.release()
         if self._loop:
             asyncio.run_coroutine_threadsafe(self._broadcast({"type": "projects_updated"}), self._loop)
 

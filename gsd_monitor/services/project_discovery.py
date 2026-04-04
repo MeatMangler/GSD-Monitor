@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -27,6 +28,7 @@ from gsd_monitor.services.planning_layout import PlanningContext, iter_planning_
 _FRONTMATTER = re.compile(r"^---\s*\n.*?^---\s*\n", re.DOTALL | re.MULTILINE)
 _NYQUIST = re.compile(r"nyquist_compliant:\s*(true|false)", re.IGNORECASE)
 _VERIFICATION = re.compile(r"verification_result:\s*(pass|fail)", re.IGNORECASE)
+_EXCLUDED_DIRS: set[str] = {"node_modules", ".venv", ".git", "build", "dist"}
 
 
 def _try_read(path: Path) -> str | None:
@@ -204,9 +206,10 @@ class ProjectDiscoveryService:
     def _find_dirs(self, root: Path, name: str) -> list[Path]:
         out: list[Path] = []
         try:
-            for p in root.rglob(name):
-                if p.is_dir() and p.name == name:
-                    out.append(p)
+            for dirpath, dirnames, _filenames in os.walk(root, topdown=True):
+                dirnames[:] = [d for d in dirnames if d not in _EXCLUDED_DIRS]
+                if Path(dirpath).name == name:
+                    out.append(Path(dirpath))
         except (PermissionError, OSError):
             pass
         return out
