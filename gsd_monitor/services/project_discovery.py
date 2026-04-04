@@ -7,7 +7,7 @@ import re
 import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from gsd_monitor.models.core import GsdProject, Milestone, PhaseEntry, TodoItem
@@ -311,7 +311,7 @@ class ProjectDiscoveryService:
             sp = base / state_name
             if sp.is_file():
                 try:
-                    lu = datetime.utcfromtimestamp(sp.stat().st_mtime)
+                    lu = datetime.fromtimestamp(sp.stat().st_mtime, tz=timezone.utc)
                     if best is None or lu > best:
                         best = lu
                 except Exception:
@@ -373,15 +373,15 @@ class ProjectDiscoveryService:
             last_updated = None
             if summary_files:
                 last_updated = max(
-                    datetime.utcfromtimestamp(f.stat().st_mtime) for f in summary_files
+                    datetime.fromtimestamp(f.stat().st_mtime, tz=timezone.utc) for f in summary_files
                 )
             elif latest_plan:
-                last_updated = datetime.utcfromtimestamp(latest_plan.stat().st_mtime)
+                last_updated = datetime.fromtimestamp(latest_plan.stat().st_mtime, tz=timezone.utc)
 
             latest_plan_write = None
             if plan_files:
                 latest_plan_write = max(
-                    datetime.utcfromtimestamp(f.stat().st_mtime) for f in plan_files
+                    datetime.fromtimestamp(f.stat().st_mtime, tz=timezone.utc) for f in plan_files
                 )
 
             validation_file = phase_dir / f"{padded}-VALIDATION.md"
@@ -526,7 +526,7 @@ class ProjectDiscoveryService:
             state_path = gsd_dir / "state.md"
             if state_path.is_file():
                 try:
-                    lu = datetime.utcfromtimestamp(state_path.stat().st_mtime)
+                    lu = datetime.fromtimestamp(state_path.stat().st_mtime, tz=timezone.utc)
                     proj = proj.model_copy(update={"last_updated": lu})
                 except Exception:
                     pass
@@ -590,7 +590,7 @@ class ProjectDiscoveryService:
             last_updated = None
             if summary_file.is_file():
                 try:
-                    last_updated = datetime.utcfromtimestamp(summary_file.stat().st_mtime)
+                    last_updated = datetime.fromtimestamp(summary_file.stat().st_mtime, tz=timezone.utc)
                 except Exception:
                     pass
             plan_content = None
@@ -606,7 +606,7 @@ class ProjectDiscoveryService:
             plan_write_time = None
             if has_plan:
                 try:
-                    plan_write_time = datetime.utcfromtimestamp(plan_file.stat().st_mtime)
+                    plan_write_time = datetime.fromtimestamp(plan_file.stat().st_mtime, tz=timezone.utc)
                 except Exception:
                     pass
             tasks_dir = slice_dir / "tasks"
