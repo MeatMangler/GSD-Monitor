@@ -124,7 +124,7 @@ Plans:
   5. Bundle contains DocsPage, AppProvider, stateCurrentPosition, and ReactMarkdown rendering
 **Plans**: 2 plans
 Plans:
-- [ ] 07-01-PLAN.md — Reconstruct config files, cherry-pick context.tsx + SettingsPage.tsx, create Drawer + stub pages
+- [x] 07-01-PLAN.md — Reconstruct config files, cherry-pick context.tsx + SettingsPage.tsx, create Drawer + stub pages
 - [ ] 07-02-PLAN.md — Build frontend bundle and verify Phase 02-05 features in output
 
 ### Phase 8: Phase 01 Verification & Metadata Cleanup
@@ -153,5 +153,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 4. Performance & Correctness | 2/2 | Complete | 2026-04-04 |
 | 5. GSD-2 StateParser Wiring | 1/1 | Complete | 2026-04-04 |
 | 6. Tech Debt Remediation | 2/2 | Complete | 2026-04-04 |
-| 7. Frontend Source Completion & Bundle Rebuild | 0/2 | Pending | |
+| 7. Frontend Source Completion & Bundle Rebuild | 1/2 | In Progress|  |
 | 8. Phase 01 Verification & Metadata Cleanup | 0/0 | Pending | |
