@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Visual Redesign** - VS Code dark theme, stats bar, phase list, breadcrumb
 - [x] **Phase 3: Doc Browser** - Full `.planning/` file tree navigation with inline markdown rendering
 - [x] **Phase 4: Performance & Correctness** - Non-blocking lock, scan exclusions, StateParser wiring, settings race fix
-- [x] **Phase 5: GSD-2 StateParser Wiring** - Wire StateParser into GSD-2 discovery path so stateCurrentPosition is populated for GSD-2 projects (completed 2026-04-04)
+- [x] **Phase 5: GSD-2 StateParser Wiring** - Wire StateParser into GSD-2 discovery path so stateCurrentPosition is populated for GSD-2 projects (completed 2026-04-04)
 - [ ] **Phase 6: Tech Debt Remediation** - Fix stale REQUIREMENTS.md checkboxes, tick 03-VERIFICATION.md UAT items, upgrade FastAPI lifespan pattern
 
 ## Phase Details
@@ -104,6 +104,10 @@ Plans:
   2. Traceability table shows Complete for those 5 requirements
   3. `03-VERIFICATION.md` UAT items are checked off
   4. `app.py` uses lifespan context manager instead of deprecated `@on_event`
+**Plans**: 2 plans
+Plans:
+- [ ] 06-01-PLAN.md — Fix stale checkboxes in 03-VERIFICATION.md and REQUIREMENTS.md traceability
+- [ ] 06-02-PLAN.md — Migrate app.py from deprecated @on_event to lifespan context manager
 
 ## Progress
 
@@ -117,4 +121,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Doc Browser | 2/2 | Complete | 2026-04-04 |
 | 4. Performance & Correctness | 2/2 | Complete | 2026-04-04 |
 | 5. GSD-2 StateParser Wiring | 1/1 | Complete   | 2026-04-04 |
-| 6. Tech Debt Remediation | 0/0 | Pending | — |
+| 6. Tech Debt Remediation | 0/2 | Pending | — |
