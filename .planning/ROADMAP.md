@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Performance & Correctness** - Non-blocking lock, scan exclusions, StateParser wiring, settings race fix
 - [x] **Phase 5: GSD-2 StateParser Wiring** - Wire StateParser into GSD-2 discovery path so stateCurrentPosition is populated for GSD-2 projects (completed 2026-04-04)
 - [x] **Phase 6: Tech Debt Remediation** - Fix stale REQUIREMENTS.md checkboxes, tick 03-VERIFICATION.md UAT items, upgrade FastAPI lifespan pattern
-- [ ] **Phase 7: Frontend Source Completion & Bundle Rebuild** - Merge missing source files to master, create stubs for v2 placeholders, rebuild frontend/dist
+- [x] **Phase 7: Frontend Source Completion & Bundle Rebuild** - Merge missing source files to master, create stubs for v2 placeholders, rebuild frontend/dist (completed 2026-04-04)
 - [ ] **Phase 8: Phase 01 Verification & Metadata Cleanup** - Write Phase 01 VERIFICATION.md to close orphaned WRKTR requirements, fix stale planning metadata, fix Python deprecation
 
 ## Phase Details
@@ -125,7 +125,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 07-01-PLAN.md — Reconstruct config files, cherry-pick context.tsx + SettingsPage.tsx, create Drawer + stub pages
-- [ ] 07-02-PLAN.md — Build frontend bundle and verify Phase 02-05 features in output
+- [x] 07-02-PLAN.md — Build frontend bundle and verify Phase 02-05 features in output
 
 ### Phase 8: Phase 01 Verification & Metadata Cleanup
 **Goal**: Close all remaining documentation gaps — Phase 01 VERIFICATION.md written, planning metadata current, Python deprecation fixed
@@ -153,5 +153,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 4. Performance & Correctness | 2/2 | Complete | 2026-04-04 |
 | 5. GSD-2 StateParser Wiring | 1/1 | Complete | 2026-04-04 |
 | 6. Tech Debt Remediation | 2/2 | Complete | 2026-04-04 |
-| 7. Frontend Source Completion & Bundle Rebuild | 1/2 | In Progress|  |
+| 7. Frontend Source Completion & Bundle Rebuild | 2/2 | Complete   | 2026-04-04 |
 | 8. Phase 01 Verification & Metadata Cleanup | 0/0 | Pending | |
