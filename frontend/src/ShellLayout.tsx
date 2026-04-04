@@ -5,6 +5,7 @@ import type { GroupPayload, SegmentPayload, WorktreeInfo } from "./api";
 
 const nav = [
   { to: "/dashboard", label: "Dashboard" },
+  { to: "/docs", label: "Docs" },
   { to: "/drift", label: "Drift" },
   { to: "/quick-tasks", label: "Quick Tasks" },
   { to: "/verification", label: "Verification" },
