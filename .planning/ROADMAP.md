@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Visual Redesign** - VS Code dark theme, stats bar, phase list, breadcrumb
 - [x] **Phase 3: Doc Browser** - Full `.planning/` file tree navigation with inline markdown rendering
 - [x] **Phase 4: Performance & Correctness** - Non-blocking lock, scan exclusions, StateParser wiring, settings race fix
-- [ ] **Phase 5: GSD-2 StateParser Wiring** - Wire StateParser into GSD-2 discovery path so stateCurrentPosition is populated for GSD-2 projects
+- [x] **Phase 5: GSD-2 StateParser Wiring** - Wire StateParser into GSD-2 discovery path so stateCurrentPosition is populated for GSD-2 projects (completed 2026-04-04)
 - [ ] **Phase 6: Tech Debt Remediation** - Fix stale REQUIREMENTS.md checkboxes, tick 03-VERIFICATION.md UAT items, upgrade FastAPI lifespan pattern
 
 ## Phase Details
@@ -92,7 +92,7 @@ Plans:
   3. DashboardPage displays STATE.md active phase for GSD-2 projects (same as GSD-1 behavior)
 **Plans**: 1 plan
 Plans:
-- [ ] 05-01-PLAN.md — Wire StateParser.parse() into _discover_gsd2() with GSD-2 field priority + unit tests
+- [x] 05-01-PLAN.md — Wire StateParser.parse() into _discover_gsd2() with GSD-2 field priority + unit tests
 
 ### Phase 6: Tech Debt Remediation
 **Goal**: Documentation and code hygiene — stale checkboxes corrected, UAT items ticked, FastAPI deprecation removed
@@ -116,5 +116,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Visual Redesign | 2/2 | Complete | 2026-04-03 |
 | 3. Doc Browser | 2/2 | Complete | 2026-04-04 |
 | 4. Performance & Correctness | 2/2 | Complete | 2026-04-04 |
-| 5. GSD-2 StateParser Wiring | 0/1 | Pending | — |
+| 5. GSD-2 StateParser Wiring | 1/1 | Complete   | 2026-04-04 |
 | 6. Tech Debt Remediation | 0/0 | Pending | — |

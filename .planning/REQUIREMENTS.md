@@ -27,7 +27,7 @@
 
 - [x] **PERF-01**: FS watcher uses non-blocking trylock — incoming events are dropped (coalesced) if a refresh is already in progress, not queued
 - [x] **PERF-02**: Discovery excludes `node_modules/`, `.venv/`, `build/`, `dist/`, `.git/` directories from recursive scan
-- [ ] **PERF-03**: `StateParser` is wired into the discovery pipeline — active phase, active milestone, and workflow position are populated on each segment (GSD-1: complete; GSD-2: Phase 5 gap closure)
+- [x] **PERF-03**: `StateParser` is wired into the discovery pipeline — active phase, active milestone, and workflow position are populated on each segment (GSD-1: complete; GSD-2: Phase 5 gap closure)
 - [x] **PERF-04**: `SettingsPage.save()` does not call `reload()` after saving — relies solely on the WebSocket `projects_updated` event to refresh data
 
 ## v2 Requirements

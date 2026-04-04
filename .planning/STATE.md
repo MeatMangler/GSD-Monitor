@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-04-04T11:38:52.152Z"
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-04-04T12:15:58.537Z"
 last_activity: 2026-04-04
 progress:
-  total_phases: 4
+  total_phases: 6
   completed_phases: 4
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 9
+  completed_plans: 7
   percent: 15
 ---
 
@@ -58,6 +58,7 @@ Progress: [██░░░░░░░░] 15%
 | Phase 02-visual-redesign P02 | 2 | 1 tasks | 1 files |
 | Phase 03-doc-browser P03-01 | 10 | 2 tasks | 5 files |
 | Phase 04-performance-correctness P04-02 | 2 | 2 tasks | 4 files |
+| Phase 05-gsd2-stateparser-wiring P01 | 8 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,8 @@ Recent decisions affecting current work:
 - [Phase 03-02]: Depth-based indentation uses inline `style={{ paddingLeft }}` — dynamic Tailwind class strings are not JIT-safe in v4
 - [Phase 04-02]: StateParser called in _build_gsd1_segment; STATE.md position text is authoritative source for active phase display on dashboard
 - [Phase 04-02]: stateCurrentPosition is optional (? nullable) in TypeScript SegmentPayload — null-safe at both ends; falls back to ROADMAP in_progress phase title
+- [Phase 05-gsd2-stateparser-wiring]: GSD-2 state_current_position uses active_slice -> status priority (inverse of GSD-1)
+- [Phase 05-gsd2-stateparser-wiring]: No uppercase STATE.md fallback for GSD-2 — lowercase state.md only by convention
 
 ### Pending Todos
 
@@ -103,6 +106,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T11:30:29.851Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-04-04T12:15:58.533Z
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None
