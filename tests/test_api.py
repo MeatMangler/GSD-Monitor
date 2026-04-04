@@ -41,3 +41,10 @@ def test_groups() -> None:
     r = c.get("/api/groups")
     assert r.status_code == 200
     assert "groups" in r.json()
+
+
+def test_no_deprecated_on_event() -> None:
+    """Verify app.py uses lifespan, not deprecated @on_event."""
+    import inspect
+    source = inspect.getsource(create_app)
+    assert "on_event" not in source, "create_app still uses deprecated @on_event"
