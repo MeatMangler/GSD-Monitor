@@ -60,7 +60,7 @@ Plans:
   4. Navigating the file tree does not require any page reload or full re-fetch
 **Plans**: 2 plans
 Plans:
-- [ ] 03-01-PLAN.md — Backend doc tree/file endpoints, frontend API client, route + nav wiring
+- [x] 03-01-PLAN.md — Backend doc tree/file endpoints, frontend API client, route + nav wiring
 - [ ] 03-02-PLAN.md — DocsPage two-column layout with tree panel, quick-access, markdown rendering
 **UI hint**: yes
 
@@ -84,5 +84,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Worktree Deduplication | 1/2 | In progress | - |
 | 2. Visual Redesign | 1/2 | In Progress|  |
-| 3. Doc Browser | 0/2 | Not started | - |
+| 3. Doc Browser | 1/2 | In Progress|  |
 | 4. Performance & Correctness | 0/? | Not started | - |

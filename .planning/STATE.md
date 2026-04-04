@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Phase 3 context gathered
-last_updated: "2026-04-04T00:22:06.752Z"
+stopped_at: Completed 03-doc-browser 03-01-PLAN.md
+last_updated: "2026-04-04T10:29:42.464Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 6
+  completed_plans: 5
   percent: 15
 ---
 
@@ -54,6 +54,7 @@ Progress: [██░░░░░░░░] 15%
 *Updated after each plan completion*
 | Phase 02-visual-redesign P01 | 2 | 1 tasks | 2 files |
 | Phase 02-visual-redesign P02 | 2 | 1 tasks | 1 files |
+| Phase 03-doc-browser P03-01 | 10 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,8 @@ Recent decisions affecting current work:
 - [Phase 02-01]: Breadcrumb falls back: in_progress title -> last complete title -> em dash
 - [Phase 02-02]: VS Code hex tokens applied as Tailwind arbitrary values in ShellLayout.tsx — no tailwind.config.js needed in v4
 - [Phase 02-02]: text-red-400 preserved for error display per UI-SPEC semantic color contract
+- [Phase 03-doc-browser]: HTTPException added to fastapi import — was not previously present
+- [Phase 03-doc-browser]: Doc endpoints placed before WebSocket handler to prevent SPA catch-all from swallowing them
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T00:22:06.747Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-doc-browser/03-CONTEXT.md
+Last session: 2026-04-04T10:29:42.459Z
+Stopped at: Completed 03-doc-browser 03-01-PLAN.md
+Resume file: None

@@ -19,9 +19,9 @@
 - [x] **DASH-02**: Phase list shows all phases with status colors (done=green, active=blue, todo=gray) without any click required
 - [x] **DASH-03**: Breadcrumb is always visible: repo name → project name → active phase
 - [x] **DASH-04**: UI uses VS Code dark theme: dark background (#1e1e1e range), sidebar, matching typography and contrast
-- [ ] **DASH-05**: Doc browser panel shows `.planning/` file tree and renders selected markdown inline
+- [x] **DASH-05**: Doc browser panel shows `.planning/` file tree and renders selected markdown inline
 - [ ] **DASH-06**: ROADMAP.md, STATE.md, active PLAN.md, and REQUIREMENTS.md are surfaced as default quick-access files
-- [ ] **DASH-07**: Any file in `.planning/` is navigable and renderable in the doc browser
+- [x] **DASH-07**: Any file in `.planning/` is navigable and renderable in the doc browser
 
 ### Performance & Correctness
 
@@ -66,9 +66,9 @@
 | DASH-02 | Phase 2 | Complete |
 | DASH-03 | Phase 2 | Complete |
 | DASH-04 | Phase 2 | Complete |
-| DASH-05 | Phase 3 | Pending |
+| DASH-05 | Phase 3 | Complete |
 | DASH-06 | Phase 3 | Pending |
-| DASH-07 | Phase 3 | Pending |
+| DASH-07 | Phase 3 | Complete |
 | PERF-01 | Phase 4 | Pending |
 | PERF-02 | Phase 4 | Pending |
 | PERF-03 | Phase 4 | Pending |
