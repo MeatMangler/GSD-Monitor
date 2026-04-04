@@ -73,7 +73,10 @@ Plans:
   2. A file-system change during an active scan is dropped (coalesced), not queued — no cascade of redundant re-scans
   3. Scanning a directory tree that contains `node_modules/`, `.venv/`, `build/`, or `dist/` completes noticeably faster than before
   4. The active phase name on the dashboard matches what STATE.md reports as the current position
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 04-01-PLAN.md — Non-blocking trylock, scan exclusions, settings save race fix
+- [ ] 04-02-PLAN.md — StateParser wiring into discovery pipeline and dashboard display
 
 ## Progress
 
@@ -85,4 +88,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Worktree Deduplication | 1/2 | In progress | - |
 | 2. Visual Redesign | 1/2 | In Progress|  |
 | 3. Doc Browser | 1/2 | In Progress|  |
-| 4. Performance & Correctness | 0/? | Not started | - |
+| 4. Performance & Correctness | 0/2 | Not started | - |
