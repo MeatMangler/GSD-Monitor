@@ -46,7 +46,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 02-01-PLAN.md — DashboardPage stats bar, breadcrumb, phase row borders, VS Code tokens + index.css font
-- [ ] 02-02-PLAN.md — ShellLayout sidebar VS Code token swaps
+- [x] 02-02-PLAN.md — ShellLayout sidebar VS Code token swaps
 **UI hint**: yes
 
 ### Phase 3: Doc Browser
