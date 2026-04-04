@@ -62,6 +62,7 @@ The codebase already exists with a working Python/FastAPI backend and React fron
 | `StateParser` wired into discovery pipeline | `STATE.md` current position is now authoritative active phase name on dashboard | ✓ Phase 04 |
 | Settings save no longer triggers reload | WS handler filters on `projects_updated` type — prevents stale-data flash after settings save | ✓ Phase 04 |
 | `StateParser` wired into GSD-2 discovery | GSD-2 segments now surface `active_slice` as `stateCurrentPosition` — closes PERF-03 GSD-2 gap | ✓ Phase 05 |
+| FastAPI lifespan context manager | Replace deprecated `@on_event` decorators — eliminates deprecation warnings and future breakage risk | ✓ Phase 06 |
 
 ## Evolution
 
@@ -81,4 +82,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-04 — Phase 05 complete (gsd2-stateparser-wiring)*
+*Last updated: 2026-04-04 — Phase 06 complete (tech-debt-remediation) — all 6 phases done*
