@@ -106,7 +106,7 @@ Plans:
   4. `app.py` uses lifespan context manager instead of deprecated `@on_event`
 **Plans**: 2 plans
 Plans:
-- [ ] 06-01-PLAN.md — Fix stale checkboxes in 03-VERIFICATION.md and REQUIREMENTS.md traceability
+- [x] 06-01-PLAN.md — Fix stale checkboxes in 03-VERIFICATION.md and REQUIREMENTS.md traceability
 - [ ] 06-02-PLAN.md — Migrate app.py from deprecated @on_event to lifespan context manager
 
 ## Progress
@@ -121,4 +121,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Doc Browser | 2/2 | Complete | 2026-04-04 |
 | 4. Performance & Correctness | 2/2 | Complete | 2026-04-04 |
 | 5. GSD-2 StateParser Wiring | 1/1 | Complete   | 2026-04-04 |
-| 6. Tech Debt Remediation | 0/2 | Pending | — |
+| 6. Tech Debt Remediation | 1/2 | In Progress|  |
