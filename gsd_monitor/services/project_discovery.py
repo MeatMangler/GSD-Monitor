@@ -531,6 +531,17 @@ class ProjectDiscoveryService:
                 except Exception:
                     pass
             proj = self._enrich_gsd2_project(gsd_dir, proj)
+            # PERF-03 (GSD-2): Wire StateParser for active phase position
+            state_position: str | None = None
+            state_path_sp = gsd_dir / "state.md"
+            if state_path_sp.is_file():
+                state_result = StateParser.parse(str(state_path_sp))
+                if state_result.is_success and state_result.value:
+                    si = state_result.value
+                    # GSD-2: prefer active_slice; fall back to status text
+                    pos = si.active_slice or si.status or ""
+                    if pos.strip():
+                        state_position = pos.strip()
             return SegmentModel(
                 segment_key="gsd2",
                 gsd_project=None,
@@ -539,6 +550,7 @@ class ProjectDiscoveryService:
                 planning_path=str(gsd_dir),
                 repo_root=str(repo_dir),
                 project=proj,
+                state_current_position=state_position,
             )
         except Exception:
             return SegmentModel(
