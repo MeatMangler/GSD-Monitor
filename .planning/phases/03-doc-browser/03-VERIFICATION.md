@@ -1,6 +1,6 @@
 ---
 phase: 03-doc-browser
-status: pending
+status: complete
 date: 2026-04-04
 ---
 
@@ -11,15 +11,15 @@ Users can browse and read any planning document from their GSD project directly 
 
 ## UAT Checklist
 
-- [ ] "Docs" link appears in sidebar between Dashboard and Drift
-- [ ] Navigating to /docs shows two-column layout (file tree left, content right)
-- [ ] Quick access section shows ROADMAP.md, STATE.md, REQUIREMENTS.md
-- [ ] ROADMAP.md auto-selected and rendered as formatted markdown on load
-- [ ] Clicking a folder expands/collapses it
-- [ ] Clicking a .md file renders formatted markdown in content pane
-- [ ] Clicking a non-.md file renders raw preformatted text
-- [ ] Switching projects resets to ROADMAP.md
-- [ ] Path traversal protection: /api/docs/../etc/passwd returns 403
+- [x] "Docs" link appears in sidebar between Dashboard and Drift
+- [x] Navigating to /docs shows two-column layout (file tree left, content right)
+- [x] Quick access section shows ROADMAP.md, STATE.md, REQUIREMENTS.md
+- [x] ROADMAP.md auto-selected and rendered as formatted markdown on load
+- [x] Clicking a folder expands/collapses it
+- [x] Clicking a .md file renders formatted markdown in content pane
+- [x] Clicking a non-.md file renders raw preformatted text
+- [x] Switching projects resets to ROADMAP.md
+- [x] Path traversal protection: /api/docs/../etc/passwd returns 403
 
 ## Status
-Human visual verification passed (2026-04-04). Pending automated test run.
+Human visual verification passed (2026-04-04). All UAT items verified.
