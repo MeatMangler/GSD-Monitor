@@ -59,14 +59,16 @@ export function DashboardPage() {
     const phasesDone = complete;
     const phasesTotal = total;
     const activePhaseName =
-      phases.find((p) => p.status === "in_progress")?.title ?? "—";
+      activeSegment?.stateCurrentPosition ??
+      phases.find((p) => p.status === "in_progress")?.title ??
+      "—";
     let driftLabel = "No drift";
     const hasM = phases.some((p) => p.drift === "major");
     const hasN = phases.some((p) => p.drift === "minor");
     if (hasM) driftLabel = "Major drift";
     else if (hasN) driftLabel = "Minor drift";
     return { completion, phasesDone, phasesTotal, activePhaseName, driftLabel, gsdVersion: activeProject.version };
-  }, [activeProject]);
+  }, [activeProject, activeSegment]);
 
   const breadcrumb = useMemo(() => {
     const activeGroup = groups.find((g) => g.id === activeSegment?.groupId) ?? null;
@@ -74,6 +76,7 @@ export function DashboardPage() {
     const projectName = activeProject?.name ?? "—";
     const phases = activeProject?.milestones.flatMap((m) => m.phases) ?? [];
     const activePhaseTitle =
+      activeSegment?.stateCurrentPosition ??
       phases.find((p) => p.status === "in_progress")?.title ??
       [...phases].filter((p) => p.status === "complete").sort(byLastUpdated)[0]?.title ??
       "—";

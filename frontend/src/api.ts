@@ -89,6 +89,7 @@ export interface SegmentPayload {
   quickPlanningRoot: string;
   groupId: string;
   project: GsdProjectPayload;
+  stateCurrentPosition?: string | null;
 }
 
 export interface GsdProjectPayload {
