@@ -107,7 +107,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 06-01-PLAN.md — Fix stale checkboxes in 03-VERIFICATION.md and REQUIREMENTS.md traceability
-- [ ] 06-02-PLAN.md — Migrate app.py from deprecated @on_event to lifespan context manager
+- [x] 06-02-PLAN.md — Migrate app.py from deprecated @on_event to lifespan context manager
 
 ## Progress
 
