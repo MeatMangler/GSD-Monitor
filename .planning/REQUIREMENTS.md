@@ -57,11 +57,11 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WRKTR-01 | Phase 8 | Pending (orphaned — verification missing) |
-| WRKTR-02 | Phase 8 | Pending (orphaned — verification missing) |
+| WRKTR-01 | Phase 1 | Complete (01-01, verified in 01-VERIFICATION.md) |
+| WRKTR-02 | Phase 1 | Complete (01-01, verified in 01-VERIFICATION.md) |
 | WRKTR-03 | Phase 1 | Complete (01-02) |
 | WRKTR-04 | Phase 1 | Complete (01-02) |
-| WRKTR-05 | Phase 8 | Pending (orphaned — verification missing) |
+| WRKTR-05 | Phase 1 | Complete (01-01, verified in 01-VERIFICATION.md) |
 | DASH-01 | Phase 2 | Complete |
 | DASH-02 | Phase 2 | Complete |
 | DASH-03 | Phase 2 | Complete |
@@ -78,8 +78,8 @@
 - v1 requirements: 16 total
 - Mapped to phases: 16
 - Unmapped: 0 ✓
-- Satisfied: 13 (`[x]`), 3 pending (WRKTR-01, WRKTR-02, WRKTR-05 — closing in Phase 8)
+- Satisfied: 16 (`[x]`), 0 pending
 
 ---
 *Requirements defined: 2026-04-03*
-*Last updated: 2026-04-04 — Gap closure: WRKTR-01/02/05 reset to Pending (orphaned, closing in Phase 8)*
+*Last updated: 2026-04-04 — WRKTR-01, WRKTR-02, WRKTR-05 verified and closed (Phase 8 gap closure)*
