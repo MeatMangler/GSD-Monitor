@@ -76,7 +76,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [ ] 04-01-PLAN.md — Non-blocking trylock, scan exclusions, settings save race fix
-- [ ] 04-02-PLAN.md — StateParser wiring into discovery pipeline and dashboard display
+- [x] 04-02-PLAN.md — StateParser wiring into discovery pipeline and dashboard display
 
 ## Progress
 
@@ -88,4 +88,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Worktree Deduplication | 1/2 | In progress | - |
 | 2. Visual Redesign | 1/2 | In Progress|  |
 | 3. Doc Browser | 1/2 | In Progress|  |
-| 4. Performance & Correctness | 0/2 | Not started | - |
+| 4. Performance & Correctness | 1/2 | In Progress|  |

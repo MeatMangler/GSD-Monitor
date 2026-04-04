@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3 complete — pending verification
-last_updated: "2026-04-04T12:00:00.000Z"
+status: executing
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-04-04T11:30:29.855Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 4
-  completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 3
+  total_plans: 8
+  completed_plans: 7
   percent: 15
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-03)
 
 **Core value:** Developer opens GSD Monitor and immediately understands every project's status with zero duplicate entries and zero confusion
-**Current focus:** Phase 02 — visual-redesign
+**Current focus:** Phase 04 — performance-correctness
 
 ## Current Position
 
-Phase: 3
-Plan: complete
-Status: Phase complete — pending verification
+Phase: 04 (performance-correctness) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-04-04
 
 Note: Phase 3 doc browser is complete. Both plans (03-01 research/spec and 03-02 implementation) are done and human-verified.
@@ -57,6 +57,7 @@ Progress: [██░░░░░░░░] 15%
 | Phase 02-visual-redesign P01 | 2 | 1 tasks | 2 files |
 | Phase 02-visual-redesign P02 | 2 | 1 tasks | 1 files |
 | Phase 03-doc-browser P03-01 | 10 | 2 tasks | 5 files |
+| Phase 04-performance-correctness P04-02 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,8 @@ Recent decisions affecting current work:
 - [Phase 03-doc-browser]: HTTPException added to fastapi import — was not previously present
 - [Phase 03-doc-browser]: Doc endpoints placed before WebSocket handler to prevent SPA catch-all from swallowing them
 - [Phase 03-02]: Depth-based indentation uses inline `style={{ paddingLeft }}` — dynamic Tailwind class strings are not JIT-safe in v4
+- [Phase 04-02]: StateParser called in _build_gsd1_segment; STATE.md position text is authoritative source for active phase display on dashboard
+- [Phase 04-02]: stateCurrentPosition is optional (? nullable) in TypeScript SegmentPayload — null-safe at both ends; falls back to ROADMAP in_progress phase title
 
 ### Pending Todos
 
@@ -100,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T12:00:00.000Z
-Stopped at: Phase 3 complete — pending verification
+Last session: 2026-04-04T11:30:29.851Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
