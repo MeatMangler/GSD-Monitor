@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 03-doc-browser 03-01-PLAN.md
-last_updated: "2026-04-04T10:29:42.464Z"
+stopped_at: Completed 03-doc-browser 03-02-PLAN.md
+last_updated: "2026-04-04T11:00:00.000Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
   percent: 15
 ---
 
@@ -80,6 +80,7 @@ Recent decisions affecting current work:
 - [Phase 02-02]: text-red-400 preserved for error display per UI-SPEC semantic color contract
 - [Phase 03-doc-browser]: HTTPException added to fastapi import — was not previously present
 - [Phase 03-doc-browser]: Doc endpoints placed before WebSocket handler to prevent SPA catch-all from swallowing them
+- [Phase 03-02]: Depth-based indentation uses inline `style={{ paddingLeft }}` — dynamic Tailwind class strings are not JIT-safe in v4
 
 ### Pending Todos
 
@@ -97,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T10:29:42.459Z
-Stopped at: Completed 03-doc-browser 03-01-PLAN.md
+Last session: 2026-04-04T11:00:00.000Z
+Stopped at: Completed 03-doc-browser 03-02-PLAN.md
 Resume file: None
