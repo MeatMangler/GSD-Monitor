@@ -21,9 +21,9 @@ A developer opens GSD Monitor and within seconds understands exactly where every
 - [x] Phase list with clear status colors (done/active/todo) visible without clicking — *Validated in Phase 02: visual-redesign*
 - [x] Breadcrumb always shows: repo → project → active phase — *Validated in Phase 02: visual-redesign*
 - [x] VS Code dark visual theme throughout (sidebar, content area, typography) — *Validated in Phase 02: visual-redesign*
-- [ ] Doc browser navigates the full `.planning/` file tree
-- [ ] ROADMAP.md, STATE.md, active PLAN.md, and REQUIREMENTS.md all renderable
-- [ ] App feels fast — no sluggish scanning or UI blocking
+- [x] Doc browser navigates the full `.planning/` file tree — *Validated in Phase 03: doc-browser*
+- [x] ROADMAP.md, STATE.md, active PLAN.md, and REQUIREMENTS.md all renderable — *Validated in Phase 03: doc-browser*
+- [x] App feels fast — no sluggish scanning or UI blocking — *Validated in Phase 04: performance-correctness*
 
 ### Out of Scope
 
@@ -57,7 +57,10 @@ The codebase already exists with a working Python/FastAPI backend and React fron
 | Deduplicate by canonical repo root (resolve `.git` file → main worktree) | Worktrees share the same `.planning/` — showing duplicates is the primary complaint | ✓ Phase 01 |
 | VS Code dark theme | User explicitly requested; familiar to target audience | — Pending |
 | All `.planning/` files browsable (not just a curated subset) | User wants full access; curated defaults (ROADMAP/STATE/PLAN) shown first | — Pending |
-| Non-blocking trylock for FS watcher refreshes | Drop duplicate events instead of queuing them — eliminates redundant rescans | — Pending |
+| Non-blocking trylock for FS watcher refreshes | Drop duplicate events instead of queuing them — eliminates redundant rescans | ✓ Phase 04 |
+| `os.walk` + `_EXCLUDED_DIRS` for discovery | Skip `node_modules`/`.venv`/`.git`/`build`/`dist` — eliminates slow scans on large repos | ✓ Phase 04 |
+| `StateParser` wired into discovery pipeline | `STATE.md` current position is now authoritative active phase name on dashboard | ✓ Phase 04 |
+| Settings save no longer triggers reload | WS handler filters on `projects_updated` type — prevents stale-data flash after settings save | ✓ Phase 04 |
 
 ## Evolution
 
@@ -77,4 +80,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-03 — Phase 01 complete (worktree deduplication)*
+*Last updated: 2026-04-04 — Phase 04 complete (performance-correctness)*
