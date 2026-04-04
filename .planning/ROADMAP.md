@@ -58,7 +58,10 @@ Plans:
   2. Clicking any markdown file renders it inline as formatted HTML (not raw text)
   3. ROADMAP.md, STATE.md, the active PLAN.md, and REQUIREMENTS.md appear as prominent quick-access shortcuts
   4. Navigating the file tree does not require any page reload or full re-fetch
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 03-01-PLAN.md — Backend doc tree/file endpoints, frontend API client, route + nav wiring
+- [ ] 03-02-PLAN.md — DocsPage two-column layout with tree panel, quick-access, markdown rendering
 **UI hint**: yes
 
 ### Phase 4: Performance & Correctness
@@ -81,5 +84,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Worktree Deduplication | 1/2 | In progress | - |
 | 2. Visual Redesign | 1/2 | In Progress|  |
-| 3. Doc Browser | 0/? | Not started | - |
+| 3. Doc Browser | 0/2 | Not started | - |
 | 4. Performance & Correctness | 0/? | Not started | - |
