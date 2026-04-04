@@ -7,18 +7,18 @@
 
 ### Worktree Deduplication
 
-- [ ] **WRKTR-01**: Project dropdown shows exactly one entry per canonical repo root (`.git` directory), regardless of how many worktrees exist
-- [ ] **WRKTR-02**: App detects git worktrees by checking if `.git` is a file (not a directory) and reads the `gitdir:` pointer to resolve the canonical repo root
+- [x] **WRKTR-01**: Project dropdown shows exactly one entry per canonical repo root (`.git` directory), regardless of how many worktrees exist
+- [x] **WRKTR-02**: App detects git worktrees by checking if `.git` is a file (not a directory) and reads the `gitdir:` pointer to resolve the canonical repo root
 - [ ] **WRKTR-03**: Project entry in dropdown shows a badge with the count of active worktrees when more than one exists
 - [ ] **WRKTR-04**: Hovering or clicking the badge shows the list of worktree branch/directory names
-- [ ] **WRKTR-05**: An indicator marks which worktree is currently active (checked out)
+- [x] **WRKTR-05**: An indicator marks which worktree is currently active (checked out)
 
 ### Dashboard & Visual
 
-- [ ] **DASH-01**: Stats bar is visible immediately above the fold: % complete, phases done/total, active phase name
-- [ ] **DASH-02**: Phase list shows all phases with status colors (done=green, active=blue, todo=gray) without any click required
-- [ ] **DASH-03**: Breadcrumb is always visible: repo name → project name → active phase
-- [ ] **DASH-04**: UI uses VS Code dark theme: dark background (#1e1e1e range), sidebar, matching typography and contrast
+- [x] **DASH-01**: Stats bar is visible immediately above the fold: % complete, phases done/total, active phase name
+- [x] **DASH-02**: Phase list shows all phases with status colors (done=green, active=blue, todo=gray) without any click required
+- [x] **DASH-03**: Breadcrumb is always visible: repo name → project name → active phase
+- [x] **DASH-04**: UI uses VS Code dark theme: dark background (#1e1e1e range), sidebar, matching typography and contrast
 - [ ] **DASH-05**: Doc browser panel shows `.planning/` file tree and renders selected markdown inline
 - [ ] **DASH-06**: ROADMAP.md, STATE.md, active PLAN.md, and REQUIREMENTS.md are surfaced as default quick-access files
 - [ ] **DASH-07**: Any file in `.planning/` is navigable and renderable in the doc browser
@@ -57,15 +57,15 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WRKTR-01 | Phase 1 | Pending |
-| WRKTR-02 | Phase 1 | Pending |
+| WRKTR-01 | Phase 1 | Complete (01-01) |
+| WRKTR-02 | Phase 1 | Complete (01-01) |
 | WRKTR-03 | Phase 1 | Pending |
 | WRKTR-04 | Phase 1 | Pending |
-| WRKTR-05 | Phase 1 | Pending |
-| DASH-01 | Phase 2 | Pending |
-| DASH-02 | Phase 2 | Pending |
-| DASH-03 | Phase 2 | Pending |
-| DASH-04 | Phase 2 | Pending |
+| WRKTR-05 | Phase 1 | Complete (01-01) |
+| DASH-01 | Phase 2 | Complete |
+| DASH-02 | Phase 2 | Complete |
+| DASH-03 | Phase 2 | Complete |
+| DASH-04 | Phase 2 | Complete |
 | DASH-05 | Phase 3 | Pending |
 | DASH-06 | Phase 3 | Pending |
 | DASH-07 | Phase 3 | Pending |

@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: executing
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-04-04T00:05:53.709Z"
+last_activity: 2026-04-04
+progress:
+  total_phases: 4
+  completed_phases: 1
+  total_plans: 4
+  completed_plans: 3
+  percent: 15
+---
+
 # Project State
 
 ## Project Reference
@@ -5,35 +21,38 @@
 See: .planning/PROJECT.md (updated 2026-04-03)
 
 **Core value:** Developer opens GSD Monitor and immediately understands every project's status with zero duplicate entries and zero confusion
-**Current focus:** Phase 1 — Worktree Deduplication
+**Current focus:** Phase 02 — visual-redesign
 
 ## Current Position
 
-Phase: 1 of 4 (Worktree Deduplication)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-04-03 — Roadmap created; project initialized
+Phase: 02 (visual-redesign) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-04-04
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██░░░░░░░░] 15%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+
+- Total plans completed: 2
+- Average duration: ~20 min
+- Total execution time: ~40 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 01-worktree-deduplication | 2 | ~40m | ~20m |
 
 **Recent Trend:**
-- Last 5 plans: -
-- Trend: -
+
+- Last 5 plans: 01-01 (~20 min), 01-02 (~20 min)
+- Trend: On pace
 
 *Updated after each plan completion*
+| Phase 02-visual-redesign P01 | 2 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -46,6 +65,15 @@ Recent decisions affecting current work:
 - Initialization: VS Code dark theme throughout
 - Initialization: All `.planning/` files browsable; curated defaults (ROADMAP/STATE/PLAN) surfaced first
 - Initialization: Non-blocking trylock for FS watcher refreshes (drop, not queue)
+- 01-01: Resolve canonical root via gitdir pointer 3-level parent walk (gitdir -> worktrees -> .git -> canonical)
+- 01-01: GSD-1 segments collected only from first worktree per canonical root; all worktrees tracked regardless
+- 01-01: Single-worktree repos get one WorktreeInfo entry with is_primary=True for API consistency
+- 01-02: Badge shown only when worktrees.length > 1 — normal single-worktree repos show nothing
+- 01-02: CSS-only tooltip via Tailwind group/group-hover:visible — no JS state for visibility
+- 01-02: Defensive optional chaining (worktrees?.length ?? 0) for backward compat during development
+- [Phase 02-01]: VS Code hex tokens via Tailwind arbitrary values — no tailwind.config.js needed in v4
+- [Phase 02-01]: statusBorderClass() maps phase status to Tailwind border-l color class; border-l-[3px] after general border shorthand
+- [Phase 02-01]: Breadcrumb falls back: in_progress title -> last complete title -> em dash
 
 ### Pending Todos
 
@@ -53,11 +81,16 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 1: `ProjectDiscoveryService` currently groups by filesystem path — worktree detection logic needs to be added before deduplication can work
 - Phase 4: `StateParser` exists but is unused — wiring it into discovery is a prerequisite for accurate active-phase display (PERF-03)
+
+### Quick Tasks Completed
+
+| # | Description | Date | Directory |
+|---|-------------|------|-----------|
+| 260403-qh8 | Reverse-chronological ordering with dates for phases, drift, quick tasks, and verification on all pages | 2026-04-03 | [260403-qh8-reverse-chronological-ordering-with-date](.planning/quick/260403-qh8-reverse-chronological-ordering-with-date/) |
 
 ## Session Continuity
 
-Last session: 2026-04-03
-Stopped at: Roadmap and STATE.md created; ready to plan Phase 1
+Last session: 2026-04-04T00:05:53.705Z
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None
