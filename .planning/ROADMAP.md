@@ -112,7 +112,7 @@ Plans:
 - [x] 06-02-PLAN.md — Migrate app.py from deprecated @on_event to lifespan context manager
 
 ### Phase 7: Frontend Source Completion & Bundle Rebuild
-**Goal**: Master branch has a complete, compilable frontend source tree and a fresh dist bundle that reflects all Phase 02–05 work
+**Goal**: Master branch has a complete, compilable frontend source tree and a fresh dist bundle that reflects all Phase 02-05 work
 **Depends on**: Phase 6
 **Requirements**: DASH-01, DASH-02, DASH-03, DASH-04, DASH-05, DASH-06, DASH-07, PERF-03, PERF-04 (currently broken in source/bundle)
 **Gap Closure**: Closes INT-01 (missing source files) and INT-02 (stale bundle) from v1.0 audit
@@ -122,8 +122,10 @@ Plans:
   3. `tsc -b` completes with zero errors
   4. `npm run build` produces a fresh `frontend/dist` bundle
   5. Bundle contains DocsPage, AppProvider, stateCurrentPosition, and ReactMarkdown rendering
-**Plans**: 0 plans
+**Plans**: 2 plans
 Plans:
+- [ ] 07-01-PLAN.md — Reconstruct config files, cherry-pick context.tsx + SettingsPage.tsx, create Drawer + stub pages
+- [ ] 07-02-PLAN.md — Build frontend bundle and verify Phase 02-05 features in output
 
 ### Phase 8: Phase 01 Verification & Metadata Cleanup
 **Goal**: Close all remaining documentation gaps — Phase 01 VERIFICATION.md written, planning metadata current, Python deprecation fixed
@@ -141,7 +143,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -151,5 +153,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 4. Performance & Correctness | 2/2 | Complete | 2026-04-04 |
 | 5. GSD-2 StateParser Wiring | 1/1 | Complete | 2026-04-04 |
 | 6. Tech Debt Remediation | 2/2 | Complete | 2026-04-04 |
-| 7. Frontend Source Completion & Bundle Rebuild | 0/0 | Pending | |
+| 7. Frontend Source Completion & Bundle Rebuild | 0/2 | Pending | |
 | 8. Phase 01 Verification & Metadata Cleanup | 0/0 | Pending | |
