@@ -152,3 +152,19 @@ None — source tree repair proceeded exactly as documented in RESEARCH.md.
 ---
 *Phase: 07-frontend-source-completion*
 *Completed: 2026-04-04*
+
+## Self-Check: PASSED
+
+- FOUND: frontend/package.json
+- FOUND: frontend/tsconfig.json
+- FOUND: frontend/vite.config.ts
+- FOUND: frontend/index.html
+- FOUND: frontend/src/main.tsx
+- FOUND: frontend/src/context.tsx
+- FOUND: frontend/src/Drawer.tsx
+- FOUND: frontend/src/pages/SettingsPage.tsx
+- FOUND: frontend/src/pages/DriftPage.tsx
+- FOUND: frontend/src/pages/QuickTasksPage.tsx
+- FOUND: frontend/src/pages/VerificationPage.tsx
+- FOUND: .planning/phases/07-frontend-source-completion/07-01-SUMMARY.md
+- FOUND commit: f76a718 feat(07-01): reconstruct missing frontend config and source files
