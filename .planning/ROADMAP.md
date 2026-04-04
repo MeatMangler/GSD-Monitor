@@ -12,10 +12,12 @@ GSD Monitor already has a working Python/FastAPI/React skeleton — these phases
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Worktree Deduplication** - Fix the backend so each canonical repo appears exactly once, with a worktree badge
-- [ ] **Phase 2: Visual Redesign** - VS Code dark theme, stats bar, phase list, breadcrumb
-- [ ] **Phase 3: Doc Browser** - Full `.planning/` file tree navigation with inline markdown rendering
-- [ ] **Phase 4: Performance & Correctness** - Non-blocking lock, scan exclusions, StateParser wiring, settings race fix
+- [x] **Phase 1: Worktree Deduplication** - Fix the backend so each canonical repo appears exactly once, with a worktree badge
+- [x] **Phase 2: Visual Redesign** - VS Code dark theme, stats bar, phase list, breadcrumb
+- [x] **Phase 3: Doc Browser** - Full `.planning/` file tree navigation with inline markdown rendering
+- [x] **Phase 4: Performance & Correctness** - Non-blocking lock, scan exclusions, StateParser wiring, settings race fix
+- [ ] **Phase 5: GSD-2 StateParser Wiring** - Wire StateParser into GSD-2 discovery path so stateCurrentPosition is populated for GSD-2 projects
+- [ ] **Phase 6: Tech Debt Remediation** - Fix stale REQUIREMENTS.md checkboxes, tick 03-VERIFICATION.md UAT items, upgrade FastAPI lifespan pattern
 
 ## Phase Details
 
@@ -33,6 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Backend worktree detection, deduplication in discover_groups, API serialization
 - [x] 01-02-PLAN.md — Frontend WorktreeInfo interface, badge + CSS-only hover tooltip
+**Status**: Complete — verified 2026-04-04
 
 ### Phase 2: Visual Redesign
 **Goal**: The dashboard immediately communicates project status without any navigation or clicks, using a VS Code dark aesthetic
@@ -61,7 +64,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 03-01-PLAN.md — Backend doc tree/file endpoints, frontend API client, route + nav wiring
-- [ ] 03-02-PLAN.md — DocsPage two-column layout with tree panel, quick-access, markdown rendering
+- [x] 03-02-PLAN.md — DocsPage two-column layout with tree panel, quick-access, markdown rendering
 **UI hint**: yes
 
 ### Phase 4: Performance & Correctness
@@ -75,17 +78,40 @@ Plans:
   4. The active phase name on the dashboard matches what STATE.md reports as the current position
 **Plans**: 2 plans
 Plans:
-- [ ] 04-01-PLAN.md — Non-blocking trylock, scan exclusions, settings save race fix
+- [x] 04-01-PLAN.md — Non-blocking trylock, scan exclusions, settings save race fix
 - [x] 04-02-PLAN.md — StateParser wiring into discovery pipeline and dashboard display
+
+### Phase 5: GSD-2 StateParser Wiring
+**Goal**: GSD-2 projects show the correct active phase from STATE.md, not just the fallback in-progress roadmap phase
+**Depends on**: Phase 4
+**Requirements**: PERF-03 (GSD-2 path)
+**Gap Closure**: Closes PERF-03 partial gap and Flow 4 integration gap from audit
+**Success Criteria** (what must be TRUE):
+  1. `_discover_gsd2()` calls `StateParser.parse()` before constructing `SegmentModel`
+  2. `state_current_position` is populated on GSD-2 segments when STATE.md exists
+  3. DashboardPage displays STATE.md active phase for GSD-2 projects (same as GSD-1 behavior)
+
+### Phase 6: Tech Debt Remediation
+**Goal**: Documentation and code hygiene — stale checkboxes corrected, UAT items ticked, FastAPI deprecation removed
+**Depends on**: Phase 5
+**Requirements**: WRKTR-03, WRKTR-04, PERF-01, PERF-02, PERF-04 (checkbox/traceability fixes), DASH-06 (UAT tick)
+**Gap Closure**: Closes all tech debt items from audit
+**Success Criteria** (what must be TRUE):
+  1. REQUIREMENTS.md checkboxes for WRKTR-03, WRKTR-04, PERF-01, PERF-02, PERF-04 are `[x]`
+  2. Traceability table shows Complete for those 5 requirements
+  3. `03-VERIFICATION.md` UAT items are checked off
+  4. `app.py` uses lifespan context manager instead of deprecated `@on_event`
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Worktree Deduplication | 1/2 | In progress | - |
-| 2. Visual Redesign | 1/2 | In Progress|  |
-| 3. Doc Browser | 1/2 | In Progress|  |
-| 4. Performance & Correctness | 1/2 | In Progress|  |
+| 1. Worktree Deduplication | 2/2 | Complete | 2026-04-04 |
+| 2. Visual Redesign | 2/2 | Complete | 2026-04-03 |
+| 3. Doc Browser | 2/2 | Complete | 2026-04-04 |
+| 4. Performance & Correctness | 2/2 | Complete | 2026-04-04 |
+| 5. GSD-2 StateParser Wiring | 0/0 | Pending | — |
+| 6. Tech Debt Remediation | 0/0 | Pending | — |
