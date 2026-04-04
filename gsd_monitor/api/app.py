@@ -115,6 +115,7 @@ def _segment_to_json(seg: SegmentModel) -> dict[str, Any]:
         "quickPlanningRoot": quick_root,
         "groupId": seg.group_id,
         "project": json.loads(seg.project.model_dump_json()),
+        "stateCurrentPosition": seg.state_current_position,
     }
 
 
