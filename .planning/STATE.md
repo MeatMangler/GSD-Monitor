@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 08-02-PLAN.md
-last_updated: "2026-04-04T14:29:16.853Z"
+status: archived
+stopped_at: Milestone v1.0 archived 2026-04-04
+last_updated: "2026-04-04T00:00:00.000Z"
 last_activity: 2026-04-04
 progress:
   total_phases: 8
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 15
   percent: 100
 ---
 
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-04-03)
 
 ## Current Position
 
-Phase: 08
-Plan: Not started
-Status: All phases complete — milestone v1.0 done
+Phase: —
+Plan: —
+Status: Milestone v1.0 archived — ready for v2.0
 Last activity: 2026-04-04
 
-Note: Phase 8 closes all documentation gaps. All 16 v1 requirements satisfied. Zero deprecated datetime calls remain.
+Note: All 16 v1 requirements satisfied. 8/8 phases complete. Archived to .planning/milestones/v1.0-ROADMAP.md. Tag: v1.0.
 
 Progress: [██████████] 100%
 

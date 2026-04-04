@@ -8,40 +8,28 @@ GSD Monitor is a Windows desktop companion app (Python + pywebview + React) that
 
 A developer opens GSD Monitor and within seconds understands exactly where every project stands — which phases are done, what's active, and can read any planning doc — with zero duplicate entries and zero confusion about which project they're looking at.
 
-## Requirements
+## Current State (v1.0 — Shipped 2026-04-04)
 
-### Validated
+All 16 v1 requirements delivered across 8 phases:
 
-- [x] Project dropdown shows exactly ONE entry per canonical repo, regardless of how many git worktrees exist — *Validated in Phase 01: worktree-deduplication*
-- [x] Worktree count shown as a badge on the project entry when multiple worktrees exist — *Validated in Phase 01: worktree-deduplication*
+- **Worktree deduplication**: One entry per canonical repo, worktree badge + hover tooltip
+- **VS Code dark dashboard**: Stats bar, breadcrumb, color-coded phase list above the fold
+- **Doc browser**: Full `.planning/` file tree with inline markdown rendering; quick-access for ROADMAP, STATE, PLAN, REQUIREMENTS
+- **Performance**: Non-blocking FS watcher coalescing, `node_modules`/`.venv`/`build`/`dist` excluded from scan
+- **StateParser wired**: Active phase from `STATE.md` authoritative for both GSD-1 and GSD-2 projects
+- **Modern stack**: FastAPI lifespan context manager, timezone-aware `datetime` throughout
 
-### Active
+**Tech debt carried to v2:** 7 items (0 critical) — see [v1.0 audit](.planning/v1.0-MILESTONE-AUDIT.md)
 
-- [x] Stats bar visible immediately above fold: % complete, phases done/total, active phase name — *Validated in Phase 02: visual-redesign*
-- [x] Phase list with clear status colors (done/active/todo) visible without clicking — *Validated in Phase 02: visual-redesign*
-- [x] Breadcrumb always shows: repo → project → active phase — *Validated in Phase 02: visual-redesign*
-- [x] VS Code dark visual theme throughout (sidebar, content area, typography) — *Validated in Phase 02: visual-redesign*
-- [x] Doc browser navigates the full `.planning/` file tree — *Validated in Phase 03: doc-browser*
-- [x] ROADMAP.md, STATE.md, active PLAN.md, and REQUIREMENTS.md all renderable — *Validated in Phase 03: doc-browser*
-- [x] App feels fast — no sluggish scanning or UI blocking — *Validated in Phase 04: performance-correctness*
+## Next Milestone Goals (v2.0)
 
-### Out of Scope
+*Not yet defined. Key candidates from v1.0 audit tech debt:*
 
-- Editing or writing any GSD markdown files from within the app
-- macOS/Linux support — Windows + WebView2 only
-- Multi-user or cloud sync
-- Replacing the GSD CLI or Claude Code
-
-## Context
-
-The codebase already exists with a working Python/FastAPI backend and React frontend. Previous revisions failed on four dimensions: worktree duplicates (same project appeared once per worktree directory), poor visual quality, slow scanning, and wrong/missing docs shown. The visual structure gave no clarity — no phase list above the fold, no breadcrumb, no summary stats. The backend has multiple known bugs documented in `.planning/codebase/CONCERNS.md`.
-
-**Key technical facts:**
-- Git worktrees have `.git` as a FILE (not a directory) pointing back to the main repo via `gitdir:` — this is how to detect and deduplicate them
-- The `RuntimeState._refresh_lock` is a blocking lock (not coalescing) — causes queued redundant rescans
-- `StateParser` exists but is never called — active phase context is lost
-- Discovery traverses `node_modules/` and `.venv/` causing slow scans
-- Frontend settings save has a race condition causing stale-data flash
+- Drift detection with real git commit dates (DRIFT-01, DRIFT-02)
+- Quick Tasks UI (QuickTasksPage — backend already implemented)
+- Verification detail page (VERIF-01)
+- Notifications on phase completion (NOTIF-01, NOTIF-02)
+- Fix case-sensitive `startsWith()` in DocsPage PLAN.md quick-access (Windows filesystem safety)
 
 ## Constraints
 
@@ -55,8 +43,8 @@ The codebase already exists with a working Python/FastAPI backend and React fron
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Deduplicate by canonical repo root (resolve `.git` file → main worktree) | Worktrees share the same `.planning/` — showing duplicates is the primary complaint | ✓ Phase 01 |
-| VS Code dark theme | User explicitly requested; familiar to target audience | — Pending |
-| All `.planning/` files browsable (not just a curated subset) | User wants full access; curated defaults (ROADMAP/STATE/PLAN) shown first | — Pending |
+| VS Code dark theme | User explicitly requested; familiar to target audience | ✓ Phase 02 |
+| All `.planning/` files browsable (not just a curated subset) | User wants full access; curated defaults (ROADMAP/STATE/PLAN) shown first | ✓ Phase 03 |
 | Non-blocking trylock for FS watcher refreshes | Drop duplicate events instead of queuing them — eliminates redundant rescans | ✓ Phase 04 |
 | `os.walk` + `_EXCLUDED_DIRS` for discovery | Skip `node_modules`/`.venv`/`.git`/`build`/`dist` — eliminates slow scans on large repos | ✓ Phase 04 |
 | `StateParser` wired into discovery pipeline | `STATE.md` current position is now authoritative active phase name on dashboard | ✓ Phase 04 |
@@ -83,4 +71,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-04 — Phase 08 complete (phase01-verification-cleanup) — all 16 v1 requirements verified, zero deprecated datetime calls, milestone v1.0 done*
+*Last updated: 2026-04-04 — v1.0 milestone complete and archived*
