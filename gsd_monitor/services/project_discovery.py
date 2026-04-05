@@ -214,11 +214,6 @@ class ProjectDiscoveryService:
             pass
         return out
 
-    def _read_active_workstream(self, planning_dir: Path) -> str | None:
-        f = planning_dir / "active-workstream"
-        t = _try_read(f)
-        return t.strip() if t else None
-
     def _build_gsd1_segment(
         self, ctx: PlanningContext, is_workspace: bool, active_hint: str | None
     ) -> SegmentModel | None:

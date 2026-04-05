@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-03)
 Phase: —
 Plan: —
 Status: Milestone v1.0 archived — ready for v2.0
-Last activity: 2026-04-04
+Last activity: 2026-04-05 - Completed quick task 260405-759: Fix stale data in the Projects/Docs UI
 
 Note: All 16 v1 requirements satisfied. 8/8 phases complete. Archived to .planning/milestones/v1.0-ROADMAP.md. Tag: v1.0.
 
@@ -116,6 +116,7 @@ None yet.
 | # | Description | Date | Directory |
 |---|-------------|------|-----------|
 | 260403-qh8 | Reverse-chronological ordering with dates for phases, drift, quick tasks, and verification on all pages | 2026-04-03 | [260403-qh8-reverse-chronological-ordering-with-date](.planning/quick/260403-qh8-reverse-chronological-ordering-with-date/) |
+| 260405-759 | Fix stale data in the Projects/Docs UI | 2026-04-05 | [260405-759-fix-stale-data-in-the-projects-docs-ui](.planning/quick/260405-759-fix-stale-data-in-the-projects-docs-ui/) |
 
 ## Session Continuity
 

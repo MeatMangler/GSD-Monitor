@@ -66,9 +66,14 @@ class RuntimeState:
             self._dirty = True  # Signal that a change arrived during an active scan
             return
         try:
-            s = self.settings_service.load()
-            self.groups = self.discovery.discover_groups(s.scan_roots)
-            self.watcher.set_roots(list(s.scan_roots))
+            while True:
+                self._dirty = False
+                s = self.settings_service.load()
+                self.groups = self.discovery.discover_groups(s.scan_roots)
+                # Do NOT rebuild watchers here — roots only change on settings save,
+                # and stop()/restart on every FS event creates brief monitoring gaps.
+                if not self._dirty:
+                    break
         finally:
             self._refresh_lock.release()
         if self._loop:
