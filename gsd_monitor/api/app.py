@@ -58,11 +58,13 @@ class RuntimeState:
         self._ws: set[WebSocket] = set()
         self._loop: asyncio.AbstractEventLoop | None = None
         self._refresh_lock = threading.Lock()
+        self._dirty: bool = False
 
     def _on_fs_change(self, _root: str) -> None:
         acquired = self._refresh_lock.acquire(blocking=False)
         if not acquired:
-            return  # Drop event — scan already in progress (PERF-01)
+            self._dirty = True  # Signal that a change arrived during an active scan
+            return
         try:
             s = self.settings_service.load()
             self.groups = self.discovery.discover_groups(s.scan_roots)
@@ -74,8 +76,12 @@ class RuntimeState:
 
     def refresh(self) -> None:
         with self._refresh_lock:
-            s = self.settings_service.load()
-            self.groups = self.discovery.discover_groups(s.scan_roots)
+            while True:
+                self._dirty = False
+                s = self.settings_service.load()
+                self.groups = self.discovery.discover_groups(s.scan_roots)
+                if not self._dirty:
+                    break
             self.watcher.set_roots(list(s.scan_roots))
 
     async def connect_ws(self, ws: WebSocket) -> None:
