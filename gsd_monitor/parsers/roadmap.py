@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from pathlib import Path
 
 from gsd_monitor.models.core import GsdProject, Milestone, ParseResult, PhaseEntry
 from gsd_monitor.models.enums import MilestoneStatus, PhaseStatus
+
+logger = logging.getLogger(__name__)
 
 
 _GSD_PHASE = re.compile(
@@ -32,8 +35,6 @@ class RoadmapParser:
                 arch = RoadmapParser._try_extract_from_milestone_archives(file_path)
                 if arch:
                     milestones = arch
-            if not milestones:
-                milestones = RoadmapParser._extract_milestones_fallback(text)
             parent = str(p.parent)
             return ParseResult.ok(
                 GsdProject(name=project_name, path=parent, milestones=milestones)
@@ -159,7 +160,8 @@ class RoadmapParser:
                     )
                 )
             return out if out else None
-        except Exception:
+        except Exception as ex:
+            logger.warning("Failed to extract milestone archives from %s: %s", main_roadmap_path, ex)
             return None
 
     @staticmethod

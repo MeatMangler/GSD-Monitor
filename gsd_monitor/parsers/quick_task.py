@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 
 from pydantic import BaseModel
+
+logger = logging.getLogger(__name__)
 
 
 class QuickTaskStatus(str, Enum):
@@ -54,10 +57,12 @@ class QuickTaskParser:
                             file_path=str(fp.resolve()),
                         )
                     )
-                except Exception:
+                except Exception as ex:
+                    logger.warning("Failed to parse quick task file %s: %s", fp, ex)
                     continue
             return out
-        except Exception:
+        except Exception as ex:
+            logger.warning("Failed to scan quick tasks in %s: %s", planning_dir, ex)
             return []
 
     @staticmethod

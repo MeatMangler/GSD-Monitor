@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import uuid
@@ -9,6 +10,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 from gsd_monitor.models.core import GsdProject, Milestone, PhaseEntry, TodoItem
 from gsd_monitor.models.enums import (
@@ -34,7 +37,7 @@ _EXCLUDED_DIRS: set[str] = {"node_modules", ".venv", ".git", "build", "dist"}
 def _try_read(path: Path) -> str | None:
     try:
         return path.read_text(encoding="utf-8", errors="replace")
-    except Exception:
+    except OSError:
         return None
 
 
@@ -64,7 +67,7 @@ def _resolve_canonical_root(repo_dir: Path) -> Path:
                 canonical = gitdir_path.parent.parent.parent
                 if canonical.is_dir():
                     return canonical
-        except Exception:
+        except OSError:
             pass
     return repo_dir
 
@@ -309,7 +312,7 @@ class ProjectDiscoveryService:
                     lu = datetime.fromtimestamp(sp.stat().st_mtime, tz=timezone.utc)
                     if best is None or lu > best:
                         best = lu
-                except Exception:
+                except OSError:
                     pass
         if best is None:
             return project
@@ -425,7 +428,8 @@ class ProjectDiscoveryService:
                 archive_milestone=archive_milestone,
                 archive_root=archive_root,
             )
-        except Exception:
+        except Exception as ex:
+            logger.warning("Failed to enrich phase %s in %s: %s", phase.number, planning_dir, ex)
             return phase
 
     def _find_archive_phase_dir(
@@ -445,7 +449,8 @@ class ProjectDiscoveryService:
                         ver = container.name[: -len("-phases")] if container.name.endswith("-phases") else container.name
                         return d, ver
             return None
-        except Exception:
+        except Exception as ex:
+            logger.warning("Failed to search archive phase dirs under %s: %s", planning_dir, ex)
             return None
 
     @staticmethod
@@ -458,7 +463,7 @@ class ProjectDiscoveryService:
             if not m:
                 return None
             return m.group(1).lower() == "true"
-        except Exception:
+        except OSError:
             return None
 
     def _discover_gsd2(self, repo_dir: Path, gsd_dir: Path) -> SegmentModel | None:
@@ -523,7 +528,7 @@ class ProjectDiscoveryService:
                 try:
                     lu = datetime.fromtimestamp(state_path.stat().st_mtime, tz=timezone.utc)
                     proj = proj.model_copy(update={"last_updated": lu})
-                except Exception:
+                except OSError:
                     pass
             proj = self._enrich_gsd2_project(gsd_dir, proj)
             # PERF-03 (GSD-2): Wire StateParser for active phase position
@@ -547,7 +552,8 @@ class ProjectDiscoveryService:
                 project=proj,
                 state_current_position=state_position,
             )
-        except Exception:
+        except Exception as ex:
+            logger.warning("Failed to discover GSD-2 project at %s: %s", repo_dir, ex)
             return SegmentModel(
                 segment_key="gsd2",
                 gsd_project=None,
@@ -586,7 +592,7 @@ class ProjectDiscoveryService:
             if summary_file.is_file():
                 try:
                     last_updated = datetime.fromtimestamp(summary_file.stat().st_mtime, tz=timezone.utc)
-                except Exception:
+                except OSError:
                     pass
             plan_content = None
             if has_plan:
@@ -602,7 +608,7 @@ class ProjectDiscoveryService:
             if has_plan:
                 try:
                     plan_write_time = datetime.fromtimestamp(plan_file.stat().st_mtime, tz=timezone.utc)
-                except Exception:
+                except OSError:
                     pass
             tasks_dir = slice_dir / "tasks"
             nyq: bool | None = None
@@ -647,5 +653,6 @@ class ProjectDiscoveryService:
                     "research_content": research_content,
                 }
             )
-        except Exception:
+        except Exception as ex:
+            logger.warning("Failed to enrich GSD-2 slice %s in milestone %s: %s", sl.code, milestone_code, ex)
             return sl
