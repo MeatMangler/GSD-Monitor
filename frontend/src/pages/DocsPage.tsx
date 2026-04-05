@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -14,8 +14,9 @@ export function DocsPage() {
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set());
   const [treeError, setTreeError] = useState<string | null>(null);
   const [contentError, setContentError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  const { activeSegment, activeProject, loading } = useApp();
+  const { activeSegment, activeProject, loading, groups } = useApp();
 
   // Active PLAN.md resolution (D-07)
   const activePlanPath = useMemo(() => {
@@ -56,6 +57,16 @@ export function DocsPage() {
     return items;
   }, [activePlanPath, activePlanLabel]);
 
+  // Increment refreshKey whenever groups changes, but skip the initial render
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    setRefreshKey((k) => k + 1);
+  }, [groups]);
+
   // Reset on project change (D-19)
   useEffect(() => {
     setSelectedPath("ROADMAP.md");
@@ -65,7 +76,7 @@ export function DocsPage() {
     setTreeError(null);
   }, [activeSegment?.planningPath]);
 
-  // Fetch tree when segment changes
+  // Fetch tree when segment changes or groups refresh
   useEffect(() => {
     if (!activeSegment?.planningPath) return;
     void fetchDocTree(activeSegment.planningPath)
@@ -79,9 +90,9 @@ export function DocsPage() {
           "Could not load file tree. Try switching projects or restarting the app.",
         );
       });
-  }, [activeSegment?.planningPath]);
+  }, [activeSegment?.planningPath, refreshKey]);
 
-  // Fetch file content when selectedPath changes
+  // Fetch file content when selectedPath changes or groups refresh
   useEffect(() => {
     if (!activeSegment?.planningPath || !selectedPath) return;
     setContentLoading(true);
@@ -98,7 +109,7 @@ export function DocsPage() {
         );
       })
       .finally(() => setContentLoading(false));
-  }, [activeSegment?.planningPath, selectedPath]);
+  }, [activeSegment?.planningPath, selectedPath, refreshKey]);
 
   function handleFileClick(path: string) {
     if (path === selectedPath) return;
