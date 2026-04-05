@@ -3,7 +3,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useApp } from "../context";
 import { Drawer } from "../Drawer";
-import type { PhasePayload } from "../api";
 
 function byLastUpdated(
   a: { last_updated?: string | null; number: number },
@@ -48,7 +47,20 @@ function statusBorderClass(status: string): string {
 export function DashboardPage() {
   const { activeProject, activeSegment, groups, loading } = useApp();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selected, setSelected] = useState<PhasePayload | null>(null);
+  const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
+
+  const phases = useMemo(
+    () =>
+      activeProject?.milestones
+        .flatMap((m) => m.phases.map((p) => ({ ...p, milestoneTitle: m.title })))
+        .sort(byLastUpdated) ?? [],
+    [activeProject],
+  );
+
+  const selected = useMemo(
+    () => (selectedNumber !== null ? (phases.find((p) => p.number === selectedNumber) ?? null) : null),
+    [phases, selectedNumber],
+  );
 
   const stats = useMemo(() => {
     if (!activeProject) return null;
@@ -90,10 +102,6 @@ export function DashboardPage() {
         Add scan roots in Settings and select a project.
       </div>
     );
-
-  const phases = activeProject.milestones
-    .flatMap((m) => m.phases.map((p) => ({ ...p, milestoneTitle: m.title })))
-    .sort(byLastUpdated);
 
   return (
     <div className="p-6">
@@ -149,7 +157,7 @@ export function DashboardPage() {
             key={`${p.number}-${p.title}`}
             className={`w-full rounded-md border border-[#474747] border-l-[3px] ${statusBorderClass(p.status)} bg-[#1e1e1e] p-4 text-left transition-colors hover:bg-[#2a2d2e]`}
             onClick={() => {
-              setSelected(p);
+              setSelectedNumber(p.number);
               setDrawerOpen(true);
             }}
           >
