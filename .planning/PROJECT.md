@@ -21,14 +21,15 @@ All 16 v1 requirements delivered across 8 phases:
 
 **Tech debt carried to v2:** 7 items (0 critical) — see [v1.0 audit](.planning/v1.0-MILESTONE-AUDIT.md)
 
-## Current Milestone: v2.0 Feature Pages
+## Current Milestone: v2.0 Feature Pages — Complete (2026-04-12)
 
-**Goal:** Surface the three stub pages — Drift, Quick Tasks, and Verification — with real data from the already-built backend.
+All 13 v2.0 requirements delivered across 2 phases (Phase 09 + Phase 10):
 
-**Target features:**
-- Drift: Git-based staleness per phase (real commit dates vs plan write times), highlight drifted phases
-- Quick Tasks: List all `quick/` tasks with status, title, dates; link to PLAN.md in doc browser
-- Verification: Per-phase `has_validation`, Nyquist status, and validation content in a readable UI
+- **Drift page**: Per-phase drift table sorted MAJOR→MINOR→NONE→DEFERRED, color-coded badges, plan age in days, deferred phase toggle
+- **Quick Tasks page**: Fetches live tasks per segment, color-coded status badges, sorted by last_updated, friendly empty state
+- **Verification page**: Per-phase has_validation/nyquist_compliant/has_uat badges, inline markdown expand for validated phases, collapsible unvalidated section
+- **Shared utils**: `utils.ts` module with shared fmtDate, statusLabel, byLastUpdated, statusBorderClass helpers
+- **Drift computation**: Real DriftIndicator values from plan age and phase status (Phase 09)
 
 ## Constraints
 
@@ -71,4 +72,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-12 — Phase 09 complete (drift computation)*
+*Last updated: 2026-04-12 — Phase 10 complete (feature pages); v2.0 milestone done*
