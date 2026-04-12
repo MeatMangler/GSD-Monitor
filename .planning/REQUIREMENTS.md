@@ -22,11 +22,11 @@ Surface the three stub pages — Drift, Quick Tasks, and Verification — with r
 
 ### Quick Tasks
 
-- [ ] **QTSK-01**: `QuickTasksPage` fetches from the existing `/api/quick-tasks/{planningPath}` endpoint and renders the task list for the active segment
-- [ ] **QTSK-02**: Each task row shows: title, status badge, created date, last updated date
-- [ ] **QTSK-03**: Status badges are color-coded — open=gray, in_progress=yellow, complete=green
-- [ ] **QTSK-04**: Empty state is shown when no quick tasks exist for the active project (not an error)
-- [ ] **QTSK-05**: Tasks are sorted by last_updated descending (most recently active first)
+- [x] **QTSK-01**: `QuickTasksPage` fetches from the existing `/api/quick-tasks/{planningPath}` endpoint and renders the task list for the active segment
+- [x] **QTSK-02**: Each task row shows: title, status badge, created date, last updated date
+- [x] **QTSK-03**: Status badges are color-coded — open=gray, in_progress=yellow, complete=green
+- [x] **QTSK-04**: Empty state is shown when no quick tasks exist for the active project (not an error)
+- [x] **QTSK-05**: Tasks are sorted by last_updated descending (most recently active first)
 
 ### Verification
 
