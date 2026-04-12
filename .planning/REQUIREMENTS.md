@@ -58,17 +58,17 @@ Surface the three stub pages — Drift, Quick Tasks, and Verification — with r
 
 | Requirement | Phase |
 |-------------|-------|
-| DRFT-01     | TBD   |
-| DRFT-02     | TBD   |
-| DRFT-03     | TBD   |
-| DRFT-04     | TBD   |
-| DRFT-05     | TBD   |
-| QTSK-01     | TBD   |
-| QTSK-02     | TBD   |
-| QTSK-03     | TBD   |
-| QTSK-04     | TBD   |
-| QTSK-05     | TBD   |
-| VERIF-01    | TBD   |
-| VERIF-02    | TBD   |
-| VERIF-03    | TBD   |
-| VERIF-04    | TBD   |
+| DRFT-01     | 9     |
+| DRFT-02     | 10    |
+| DRFT-03     | 10    |
+| DRFT-04     | 10    |
+| DRFT-05     | 10    |
+| QTSK-01     | 10    |
+| QTSK-02     | 10    |
+| QTSK-03     | 10    |
+| QTSK-04     | 10    |
+| QTSK-05     | 10    |
+| VERIF-01    | 10    |
+| VERIF-02    | 10    |
+| VERIF-03    | 10    |
+| VERIF-04    | 10    |
