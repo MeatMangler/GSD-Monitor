@@ -121,6 +121,7 @@ export interface PhasePayload {
   todos: { is_checked: boolean; text: string }[];
   artifact_paths: string[];
   last_updated?: string | null;
+  plan_write_time?: string | null;
   has_context: boolean;
   has_research: boolean;
   has_plan: boolean;
