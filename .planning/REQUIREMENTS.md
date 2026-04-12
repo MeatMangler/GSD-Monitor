@@ -10,7 +10,7 @@ Surface the three stub pages — Drift, Quick Tasks, and Verification — with r
 
 ### Drift Detection
 
-- [ ] **DRFT-01**: Backend computes `DriftIndicator` from `plan_write_time`, `last_updated`, and phase `status` — replacing the hardcoded `DEFERRED` placeholder in `_enrich_phase` and `_enrich_gsd2_slice`
+- [x] **DRFT-01**: Backend computes `DriftIndicator` from `plan_write_time`, `last_updated`, and phase `status` — replacing the hardcoded `DEFERRED` placeholder in `_enrich_phase` and `_enrich_gsd2_slice`
   - NONE: no plan, or phase complete with recent last_updated (≤30 days)
   - MINOR: has plan, last_updated is 7–30 days old (or plan written but no summary yet and < 14 days)
   - MAJOR: has plan, no summary and plan > 14 days old, or last_updated > 30 days old on active phase

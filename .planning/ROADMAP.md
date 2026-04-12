@@ -11,7 +11,7 @@
 
 ### Phases
 
-- [ ] **Phase 9: Drift Computation** - Backend computes real DriftIndicator values from plan age and phase status
+- [x] **Phase 9: Drift Computation** - Backend computes real DriftIndicator values from plan age and phase status (completed 2026-04-12)
 - [ ] **Phase 10: Feature Pages** - Drift, Quick Tasks, and Verification pages wired to live API data
 
 ---
@@ -27,9 +27,9 @@
   2. A phase with a plan file last updated more than 30 days ago returns DriftIndicator.MAJOR
   3. A phase with a plan file last updated 7–30 days ago returns DriftIndicator.MINOR
   4. A completed phase with recent activity returns DriftIndicator.NONE
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 09-01-PLAN.md — TDD: implement _compute_drift helper and wire into GSD-1/GSD-2 enrichment
+- [x] 09-01-PLAN.md — TDD: implement _compute_drift helper and wire into GSD-1/GSD-2 enrichment
 
 ### Phase 10: Feature Pages
 **Goal**: The three stub pages — Drift, Quick Tasks, and Verification — display real data from the existing API, giving users an actionable view of phase health, task status, and validation coverage
@@ -49,5 +49,5 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 9. Drift Computation | 0/1 | Not started | - |
+| 9. Drift Computation | 1/1 | Complete   | 2026-04-12 |
 | 10. Feature Pages | 0/? | Not started | - |
