@@ -21,15 +21,14 @@ All 16 v1 requirements delivered across 8 phases:
 
 **Tech debt carried to v2:** 7 items (0 critical) — see [v1.0 audit](.planning/v1.0-MILESTONE-AUDIT.md)
 
-## Next Milestone Goals (v2.0)
+## Current Milestone: v2.0 Feature Pages
 
-*Not yet defined. Key candidates from v1.0 audit tech debt:*
+**Goal:** Surface the three stub pages — Drift, Quick Tasks, and Verification — with real data from the already-built backend.
 
-- Drift detection with real git commit dates (DRIFT-01, DRIFT-02)
-- Quick Tasks UI (QuickTasksPage — backend already implemented)
-- Verification detail page (VERIF-01)
-- Notifications on phase completion (NOTIF-01, NOTIF-02)
-- Fix case-sensitive `startsWith()` in DocsPage PLAN.md quick-access (Windows filesystem safety)
+**Target features:**
+- Drift: Git-based staleness per phase (real commit dates vs plan write times), highlight drifted phases
+- Quick Tasks: List all `quick/` tasks with status, title, dates; link to PLAN.md in doc browser
+- Verification: Per-phase `has_validation`, Nyquist status, and validation content in a readable UI
 
 ## Constraints
 
@@ -71,4 +70,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-04 — v1.0 milestone complete and archived*
+*Last updated: 2026-04-12 — v2.0 milestone started*

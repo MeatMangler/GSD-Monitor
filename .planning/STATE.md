@@ -1,69 +1,34 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: archived
-stopped_at: Milestone v1.0 archived 2026-04-04
-last_updated: "2026-04-04T00:00:00.000Z"
-last_activity: 2026-04-04
+milestone: v2.0
+milestone_name: Feature Pages
+status: active
+stopped_at: Milestone v2.0 started 2026-04-12
+last_updated: "2026-04-12T00:00:00.000Z"
+last_activity: 2026-04-12
 progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 15
-  completed_plans: 15
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-03)
+See: .planning/PROJECT.md (updated 2026-04-12)
 
 **Core value:** Developer opens GSD Monitor and immediately understands every project's status with zero duplicate entries and zero confusion
-**Current focus:** Phase 08 — phase01-verification-cleanup
+**Current focus:** Defining requirements for v2.0
 
 ## Current Position
 
-Phase: —
+Phase: Not started (defining requirements)
 Plan: —
-Status: Milestone v1.0 archived — ready for v2.0
-Last activity: 2026-04-05 - Completed quick task 260405-759: Fix stale data in the Projects/Docs UI
-
-Note: All 16 v1 requirements satisfied. 8/8 phases complete. Archived to .planning/milestones/v1.0-ROADMAP.md. Tag: v1.0.
-
-Progress: [██████████] 100%
-
-## Performance Metrics
-
-**Velocity:**
-
-- Total plans completed: 2
-- Average duration: ~20 min
-- Total execution time: ~40 min
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 01-worktree-deduplication | 2 | ~40m | ~20m |
-
-**Recent Trend:**
-
-- Last 5 plans: 01-01 (~20 min), 01-02 (~20 min)
-- Trend: On pace
-
-*Updated after each plan completion*
-| Phase 02-visual-redesign P01 | 2 | 1 tasks | 2 files |
-| Phase 02-visual-redesign P02 | 2 | 1 tasks | 1 files |
-| Phase 03-doc-browser P03-01 | 10 | 2 tasks | 5 files |
-| Phase 04-performance-correctness P04-02 | 2 | 2 tasks | 4 files |
-| Phase 05-gsd2-stateparser-wiring P01 | 8 | 1 tasks | 2 files |
-| Phase 06-tech-debt-remediation P01 | 5 | 2 tasks | 2 files |
-| Phase 07-frontend-source-completion P01 | 7min | 1 tasks | 13 files |
-| Phase 07-frontend-source-completion P02 | 2min | 1 tasks | 3 files |
-| Phase 08-phase01-verification-cleanup P08-01 | ~10min | 2 tasks | 2 files |
-| Phase 08-phase01-verification-cleanup P08-02 | 8min | 2 tasks | 3 files |
+Status: Defining requirements
+Last activity: 2026-04-12 — Milestone v2.0 started
 
 ## Accumulated Context
 
@@ -72,44 +37,17 @@ Progress: [██████████] 100%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- Initialization: Deduplicate by canonical repo root (resolve `.git` file pointer)
-- Initialization: VS Code dark theme throughout
-- Initialization: All `.planning/` files browsable; curated defaults (ROADMAP/STATE/PLAN) surfaced first
-- Initialization: Non-blocking trylock for FS watcher refreshes (drop, not queue)
-- 01-01: Resolve canonical root via gitdir pointer 3-level parent walk (gitdir -> worktrees -> .git -> canonical)
-- 01-01: GSD-1 segments collected only from first worktree per canonical root; all worktrees tracked regardless
-- 01-01: Single-worktree repos get one WorktreeInfo entry with is_primary=True for API consistency
-- 01-02: Badge shown only when worktrees.length > 1 — normal single-worktree repos show nothing
-- 01-02: CSS-only tooltip via Tailwind group/group-hover:visible — no JS state for visibility
-- 01-02: Defensive optional chaining (worktrees?.length ?? 0) for backward compat during development
-- [Phase 02-01]: VS Code hex tokens via Tailwind arbitrary values — no tailwind.config.js needed in v4
-- [Phase 02-01]: statusBorderClass() maps phase status to Tailwind border-l color class; border-l-[3px] after general border shorthand
-- [Phase 02-01]: Breadcrumb falls back: in_progress title -> last complete title -> em dash
-- [Phase 02-02]: VS Code hex tokens applied as Tailwind arbitrary values in ShellLayout.tsx — no tailwind.config.js needed in v4
-- [Phase 02-02]: text-red-400 preserved for error display per UI-SPEC semantic color contract
-- [Phase 03-doc-browser]: HTTPException added to fastapi import — was not previously present
-- [Phase 03-doc-browser]: Doc endpoints placed before WebSocket handler to prevent SPA catch-all from swallowing them
-- [Phase 03-02]: Depth-based indentation uses inline `style={{ paddingLeft }}` — dynamic Tailwind class strings are not JIT-safe in v4
-- [Phase 04-02]: StateParser called in _build_gsd1_segment; STATE.md position text is authoritative source for active phase display on dashboard
-- [Phase 04-02]: stateCurrentPosition is optional (? nullable) in TypeScript SegmentPayload — null-safe at both ends; falls back to ROADMAP in_progress phase title
-- [Phase 05-gsd2-stateparser-wiring]: GSD-2 state_current_position uses active_slice -> status priority (inverse of GSD-1)
-- [Phase 05-gsd2-stateparser-wiring]: No uppercase STATE.md fallback for GSD-2 — lowercase state.md only by convention
-- [Phase 06-01]: No code changes needed — stale doc artifacts corrected to reflect actual completed state
-- [Phase 07-01]: git checkout worktree-agent-a9b06372 single-file pattern used to retrieve context.tsx + SettingsPage.tsx without reverting stateCurrentPosition in api.ts
-- [Phase 07-01]: @tailwindcss/typography installed and wired via @plugin in index.css; required for prose prose-invert classes in DashboardPage + DocsPage (Tailwind v4 convention)
-- [Phase 07-02]: Vite minifies component names in production build — Drawer verified by code pattern not class name string
-- [Phase 07-02]: npm run build exits 0 with zero tsc errors confirming Phase 07-01 source tree completeness
-- [Phase 08-01]: 01-VERIFICATION.md modeled after 04-VERIFICATION.md format for cross-phase consistency
-- [Phase 08-01]: All 5 WRKTR requirements covered in verification artifact for completeness
-- [Phase 08-02]: datetime.fromtimestamp(ts, tz=timezone.utc) used to replace deprecated utcfromtimestamp() -- produces timezone-aware UTC datetimes eliminating Python 3.12+ deprecation warning
+- v2.0: Backend artifact_paths, has_uat, has_validation, nyquist_compliant, validation_content all fixed this session — frontend pages can consume directly
+- v2.0: QuickTaskParser rewritten to treat quick/ subdirectories as single tasks (PLAN.md + SUMMARY.md per task)
+- v2.0: VERIFICATION.md now surfaced alongside VALIDATION.md — has_validation true for either
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-- Phase 4: `StateParser` exists but is unused — wiring it into discovery is a prerequisite for accurate active-phase display (PERF-03)
+None.
 
 ### Quick Tasks Completed
 
@@ -120,6 +58,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-04T14:21:14.571Z
-Stopped at: Completed 08-02-PLAN.md
+Last session: 2026-04-12
+Stopped at: Milestone v2.0 initialized
 Resume file: None
