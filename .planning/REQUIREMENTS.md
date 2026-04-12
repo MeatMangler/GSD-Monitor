@@ -30,10 +30,10 @@ Surface the three stub pages — Drift, Quick Tasks, and Verification — with r
 
 ### Verification
 
-- [ ] **VERIF-01**: `VerificationPage` shows a per-phase verification summary for the active project
-- [ ] **VERIF-02**: Each row shows: phase number, title, `has_validation` badge, `nyquist_compliant` status (pass/fail/unknown), and `has_uat` badge
-- [ ] **VERIF-03**: Selecting a phase row expands inline to show `validation_content` rendered as markdown
-- [ ] **VERIF-04**: Phases without any validation file (`has_validation=false`) are shown in a dimmed/collapsed section with a toggle to reveal them
+- [x] **VERIF-01**: `VerificationPage` shows a per-phase verification summary for the active project
+- [x] **VERIF-02**: Each row shows: phase number, title, `has_validation` badge, `nyquist_compliant` status (pass/fail/unknown), and `has_uat` badge
+- [x] **VERIF-03**: Selecting a phase row expands inline to show `validation_content` rendered as markdown
+- [x] **VERIF-04**: Phases without any validation file (`has_validation=false`) are shown in a dimmed/collapsed section with a toggle to reveal them
 
 ---
 
