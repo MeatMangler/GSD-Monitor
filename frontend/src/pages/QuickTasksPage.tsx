@@ -34,18 +34,20 @@ export function QuickTasksPage() {
 
   useEffect(() => {
     if (!activeSegment?.planningPath) return;
+    let cancelled = false;
     setFetchLoading(true);
-    void fetchQuickTasks(activeSegment.planningPath)
+    fetchQuickTasks(activeSegment.planningPath)
       .then((t) => {
-        setTasks(t);
-        setError(null);
+        if (!cancelled) { setTasks(t); setError(null); }
       })
-      .catch(() =>
-        setError(
-          "Could not load quick tasks. Check your project path and try refreshing.",
-        ),
-      )
-      .finally(() => setFetchLoading(false));
+      .catch(() => {
+        if (!cancelled)
+          setError(
+            "Could not load quick tasks. Check your project path and try refreshing.",
+          );
+      })
+      .finally(() => { if (!cancelled) setFetchLoading(false); });
+    return () => { cancelled = true; };
   }, [activeSegment?.planningPath]);
 
   const sorted = useMemo(
