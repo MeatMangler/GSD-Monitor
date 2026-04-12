@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useApp } from "../context";
+import type { PhasePayload } from "../api";
 import { fmtDate, statusLabel, statusBorderClass } from "../utils";
 
 function driftBadgeClass(drift: string): string {
@@ -34,6 +35,31 @@ function planAgeDays(planWriteTime: string | null | undefined): number | null {
 }
 
 const DRIFT_ORDER: Record<string, number> = { major: 0, minor: 1, none: 2, deferred: 3 };
+
+function PhaseCard({ p }: { p: PhasePayload }) {
+  return (
+    <div className={`w-full rounded-md border border-[#474747] border-l-[3px] ${statusBorderClass(p.status)} bg-[#1e1e1e] p-4`}>
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-mono font-medium text-[#cccccc]">
+          {String(p.number).padStart(2, "0")} — {p.title}
+        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-[#858585]">{statusLabel(p.status)}</span>
+          <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${driftBadgeClass(p.drift)}`}>
+            {driftLabel(p.drift)}
+          </span>
+          <span className="text-xs text-[#858585]">
+            {(() => {
+              const age = planAgeDays(p.plan_write_time);
+              return age !== null ? `${age} day${age === 1 ? "" : "s"}` : "—";
+            })()}
+          </span>
+          <span className="text-xs text-[#858585]">{fmtDate(p.last_updated)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function DriftPage() {
   const { activeProject, loading } = useApp();
@@ -73,29 +99,7 @@ export function DriftPage() {
         <>
           <div className="space-y-2">
             {activePhases.map((p) => (
-              <div
-                key={p.number}
-                className={`w-full rounded-md border border-[#474747] border-l-[3px] ${statusBorderClass(p.status)} bg-[#1e1e1e] p-4`}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono font-medium text-[#cccccc]">
-                    {String(p.number).padStart(2, "0")} — {p.title}
-                  </span>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-[#858585]">{statusLabel(p.status)}</span>
-                    <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${driftBadgeClass(p.drift)}`}>
-                      {driftLabel(p.drift)}
-                    </span>
-                    <span className="text-xs text-[#858585]">
-                      {(() => {
-                        const age = planAgeDays(p.plan_write_time);
-                        return age !== null ? `${age} day${age === 1 ? "" : "s"}` : "—";
-                      })()}
-                    </span>
-                    <span className="text-xs text-[#858585]">{fmtDate(p.last_updated)}</span>
-                  </div>
-                </div>
-              </div>
+              <PhaseCard key={p.number} p={p} />
             ))}
           </div>
           {deferredPhases.length > 0 && (
@@ -115,29 +119,7 @@ export function DriftPage() {
               {showDeferred && (
                 <div id="deferred-phases" className="mt-2 space-y-2 opacity-60">
                   {deferredPhases.map((p) => (
-                    <div
-                      key={p.number}
-                      className={`w-full rounded-md border border-[#474747] border-l-[3px] ${statusBorderClass(p.status)} bg-[#1e1e1e] p-4`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono font-medium text-[#cccccc]">
-                          {String(p.number).padStart(2, "0")} — {p.title}
-                        </span>
-                        <div className="flex items-center gap-3">
-                          <span className="text-xs text-[#858585]">{statusLabel(p.status)}</span>
-                          <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${driftBadgeClass(p.drift)}`}>
-                            {driftLabel(p.drift)}
-                          </span>
-                          <span className="text-xs text-[#858585]">
-                            {(() => {
-                              const age = planAgeDays(p.plan_write_time);
-                              return age !== null ? `${age} day${age === 1 ? "" : "s"}` : "—";
-                            })()}
-                          </span>
-                          <span className="text-xs text-[#858585]">{fmtDate(p.last_updated)}</span>
-                        </div>
-                      </div>
-                    </div>
+                    <PhaseCard key={p.number} p={p} />
                   ))}
                 </div>
               )}
