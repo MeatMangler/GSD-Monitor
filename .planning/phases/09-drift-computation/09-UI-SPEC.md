@@ -1,8 +1,9 @@
 ---
 phase: 9
 phase_name: Drift Computation
-status: draft
+status: approved
 created: 2026-04-12
+reviewed_at: 2026-04-12
 design_system: none (Tailwind CSS v4, no shadcn)
 ---
 
