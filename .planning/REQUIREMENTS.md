@@ -15,10 +15,10 @@ Surface the three stub pages — Drift, Quick Tasks, and Verification — with r
   - MINOR: has plan, last_updated is 7–30 days old (or plan written but no summary yet and < 14 days)
   - MAJOR: has plan, no summary and plan > 14 days old, or last_updated > 30 days old on active phase
   - DEFERRED: phase intentionally parked (status NOT_STARTED with no plan) — keep as fallback
-- [ ] **DRFT-02**: `DriftPage` displays a per-phase drift table for the active project, sorted by drift severity (MAJOR first, then MINOR, then NONE/DEFERRED)
-- [ ] **DRFT-03**: Each drift row shows: phase number, title, current status, drift level badge, plan age (days since `plan_write_time`), and last updated date
-- [ ] **DRFT-04**: Drift badges are color-coded — MAJOR=red, MINOR=yellow, NONE=muted green, DEFERRED=gray
-- [ ] **DRFT-05**: Phases with no plan and NOT_STARTED status are collapsed/hidden by default with a "Show N un-started" toggle
+- [x] **DRFT-02**: `DriftPage` displays a per-phase drift table for the active project, sorted by drift severity (MAJOR first, then MINOR, then NONE/DEFERRED)
+- [x] **DRFT-03**: Each drift row shows: phase number, title, current status, drift level badge, plan age (days since `plan_write_time`), and last updated date
+- [x] **DRFT-04**: Drift badges are color-coded — MAJOR=red, MINOR=yellow, NONE=muted green, DEFERRED=gray
+- [x] **DRFT-05**: Phases with no plan and NOT_STARTED status are collapsed/hidden by default with a "Show N un-started" toggle
 
 ### Quick Tasks
 

@@ -40,9 +40,9 @@ Plans:
   2. QuickTasksPage fetches and renders all quick tasks for the active project with color-coded status badges, sorted by last_updated descending, with an empty state when none exist
   3. VerificationPage shows a per-phase summary with has_validation, nyquist_compliant, and has_uat columns, and clicking a row expands inline validation content rendered as markdown
   4. Phases without a validation file are dimmed and hidden behind a toggle on the Verification page
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 Plans:
-- [ ] 10-01-PLAN.md — Extract shared utils, add plan_write_time to PhasePayload, implement DriftPage
+- [x] 10-01-PLAN.md — Extract shared utils, add plan_write_time to PhasePayload, implement DriftPage
 - [ ] 10-02-PLAN.md — Implement QuickTasksPage with fetch, sort, badges, and empty state
 - [ ] 10-03-PLAN.md — Implement VerificationPage with badges, inline expand, and collapsible section
 **UI hint**: yes
@@ -54,4 +54,4 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 9. Drift Computation | 1/1 | Complete   | 2026-04-12 |
-| 10. Feature Pages | 0/3 | Not started | - |
+| 10. Feature Pages | 1/3 | In Progress|  |
