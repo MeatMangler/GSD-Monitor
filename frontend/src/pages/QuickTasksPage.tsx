@@ -103,10 +103,10 @@ export function QuickTasksPage() {
               >
                 {taskStatusLabel(t.status)}
               </span>
-              <span className="text-xs text-[#858585]">
+              <span className="text-xs text-[#858585]" title="Created">
                 {fmtDate(t.created)}
               </span>
-              <span className="text-xs text-[#858585]">
+              <span className="text-xs text-[#858585]" title="Last updated">
                 {fmtDate(t.last_updated)}
               </span>
             </div>
