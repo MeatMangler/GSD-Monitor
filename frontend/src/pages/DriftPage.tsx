@@ -61,9 +61,13 @@ export function DriftPage() {
   if (!activeProject)
     return <div className="p-6 text-[#858585] text-sm">Add scan roots in Settings and select a project.</div>;
 
+  const hasActionableDrift = activePhases.some(
+    (p) => p.drift === "major" || p.drift === "minor",
+  );
+
   return (
     <div className="p-6">
-      {activePhases.length === 0 && deferredPhases.length === 0 ? (
+      {!hasActionableDrift && deferredPhases.length === 0 ? (
         <p className="text-[#858585] text-sm">No drift data — all phases are on track or not yet started.</p>
       ) : (
         <>
