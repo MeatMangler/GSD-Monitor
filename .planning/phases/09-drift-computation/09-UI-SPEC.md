@@ -66,12 +66,13 @@ Source: `frontend/src/ShellLayout.tsx`, `frontend/src/pages/DashboardPage.tsx`
 | Value | Tailwind Class | Usage |
 |-------|---------------|-------|
 | 4px | `p-1`, `gap-1` | Tight inline spacing (breadcrumb separators) |
-| 6px | `p-1.5`, `px-1.5` | Input padding, badge padding |
 | 8px | `p-2`, `gap-2` | Nav padding, gap between badge elements |
 | 12px | `p-3` | Sidebar section padding |
 | 16px | `p-4` | Stat card padding, phase card padding |
 | 24px | `p-6` | Page content padding (`DashboardPage`) |
 | 32px | `p-8` | Stub page padding (used by current `DriftPage`, `QuickTasksPage`, `VerificationPage`) |
+
+**Legacy exceptions:** `p-1.5`/`px-1.5` (6px) exists in pre-Phase-9 badge components — do not introduce in new Phase 10 components.
 
 Source: `frontend/src/ShellLayout.tsx`, `frontend/src/pages/DashboardPage.tsx`
 
@@ -84,7 +85,7 @@ Exactly 3 sizes in use across the application:
 | Size | Tailwind Class | Weight | Line Height | Usage |
 |------|---------------|--------|-------------|-------|
 | 24px | `text-2xl` | `font-semibold` (600) | default | Stat card numeric values |
-| 14px (default) | `text-sm` | `font-medium` (500) or `font-semibold` (600) | default | Phase titles, nav items, select inputs, body text |
+| 14px (default) | `text-sm` | `font-medium` (500) or `font-semibold` (600) | `leading-5` (20px / 1.25rem) | Phase titles, nav items, select inputs, body text |
 | 12px | `text-xs` | `font-medium` (500) or normal (400) | default | Labels, dates, stat card captions, badges, section headers |
 
 **Two weights only:** 400 (normal, used for dates and secondary labels) and 600/500 (`font-semibold`/`font-medium`, used for titles and values).
