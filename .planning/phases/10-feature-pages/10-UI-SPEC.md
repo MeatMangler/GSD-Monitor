@@ -1,7 +1,8 @@
 ---
 phase: 10
 slug: feature-pages
-status: draft
+status: approved
+reviewed_at: 2026-04-12
 shadcn_initialized: false
 preset: none
 created: 2026-04-12
@@ -60,13 +61,14 @@ Source: `DashboardPage.tsx` p-6 container, p-4 cards, `DocsPage.tsx` min-h-7 row
 | Body / row text | 14px (text-sm) | 400 (normal) | 1.5 |
 | Label / secondary | 12px (text-xs) | 400 (normal) | 1.4 |
 | Section heading | 12px (text-xs) | 500 (medium), uppercase, tracking-wider | 1.4 |
-| Card metric / stat | 24px (text-2xl) | 600 (semibold) | 1.2 |
+| Card metric / stat | 24px (text-2xl) | 500 (medium) | 1.2 |
 
 Notes:
 - Phase titles use `font-mono font-medium text-[#cccccc]` (established in DashboardPage row pattern)
 - Section labels use `font-medium uppercase tracking-wider text-[#858585]` (established in DocsPage)
 - No heading larger than text-2xl appears on data pages — these are data tables, not marketing pages
 - Do NOT introduce text-lg, text-xl, or text-3xl on these pages
+- The text-2xl size provides sufficient visual differentiation for stat values without requiring a heavier weight
 
 Source: `DashboardPage.tsx` phase rows, stat cards; `DocsPage.tsx` section headers.
 
