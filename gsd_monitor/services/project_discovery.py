@@ -48,6 +48,42 @@ def _strip_frontmatter(raw: str) -> str:
     return raw
 
 
+def _compute_drift(
+    status: PhaseStatus,
+    plan_write_time: datetime | None,
+    last_updated: datetime | None,
+    now: datetime | None = None,
+) -> DriftIndicator:
+    """Compute drift indicator from phase status, plan age, and last activity.
+
+    Args:
+        status: Current phase status.
+        plan_write_time: Timestamp of the most recent plan file (st_mtime).
+        last_updated: Timestamp of latest activity (summary mtime, or plan mtime fallback).
+        now: Current time; injectable for testing (D-04). Defaults to UTC now.
+    """
+    now = now or datetime.now(tz=timezone.utc)
+
+    # No plan at all → DEFERRED (D-01: includes IN_PROGRESS with no plan)
+    if plan_write_time is None:
+        if status == PhaseStatus.COMPLETE:
+            return DriftIndicator.NONE  # done without a formal plan
+        return DriftIndicator.DEFERRED
+
+    # Phase is complete → never drifts regardless of age (D-02)
+    if status == PhaseStatus.COMPLETE:
+        return DriftIndicator.NONE
+
+    # Has a plan; compute age from last_updated, falling back to plan_write_time
+    age_days = (now - last_updated).days if last_updated else (now - plan_write_time).days
+
+    if age_days > 30:
+        return DriftIndicator.MAJOR
+    if age_days >= 7:
+        return DriftIndicator.MINOR
+    return DriftIndicator.NONE
+
+
 def _resolve_canonical_root(repo_dir: Path) -> Path:
     """Return canonical repo root. For linked worktrees, resolves .git file pointer."""
     dot_git = repo_dir / ".git"
@@ -223,6 +259,8 @@ class ProjectDiscoveryService:
         base = ctx.planning_base
         roadmap = base / "ROADMAP.md"
         if not roadmap.is_file():
+            roadmap = base / "roadmap.md"
+        if not roadmap.is_file():
             if not (base / "phases").is_dir():
                 return None
         res = RoadmapParser.parse(str(roadmap)) if roadmap.is_file() else None
@@ -360,13 +398,7 @@ class ProjectDiscoveryService:
                     plan_content = _strip_frontmatter(raw)
                     todos = pr.value.todos
 
-            artifacts = sorted(
-                [
-                    str(f)
-                    for f in phase_dir.glob("*.md")
-                    if f.name.endswith("-PLAN.md") or f.name.endswith("-SUMMARY.md")
-                ]
-            )
+            artifacts = sorted(str(f) for f in phase_dir.glob("*.md"))
             summary_files = list(phase_dir.glob("*-SUMMARY.md"))
             last_updated = None
             if summary_files:
@@ -383,6 +415,7 @@ class ProjectDiscoveryService:
                 )
 
             validation_file = phase_dir / f"{padded}-VALIDATION.md"
+            verification_file = phase_dir / f"{padded}-VERIFICATION.md"
             nyq = self._read_nyquist(validation_file)
             final_status = phase.status
             if nyq is False and phase.status in (PhaseStatus.IN_PROGRESS, PhaseStatus.COMPLETE):
@@ -390,10 +423,12 @@ class ProjectDiscoveryService:
 
             ctx_file = phase_dir / f"{padded}-CONTEXT.md"
             research_file = phase_dir / f"{padded}-RESEARCH.md"
+            uat_file = phase_dir / f"{padded}-UAT.md"
             has_context = ctx_file.is_file()
             has_research = research_file.is_file()
             has_plan = len(plan_files) > 0
-            has_validation = validation_file.is_file()
+            has_uat = uat_file.is_file()
+            has_validation = validation_file.is_file() or verification_file.is_file()
 
             if not has_research:
                 coverage = ResearchCoverage.NONE
@@ -403,13 +438,13 @@ class ProjectDiscoveryService:
                 coverage = ResearchCoverage.PARTIAL
 
             research_content = _try_read(research_file) if has_research else None
-            validation_content = _try_read(validation_file) if has_validation else None
+            validation_content = _try_read(validation_file) or (_try_read(verification_file) if verification_file.is_file() else None)
 
             return PhaseEntry(
                 number=phase.number,
                 title=phase.title,
                 status=final_status,
-                drift=DriftIndicator.DEFERRED,
+                drift=_compute_drift(final_status, latest_plan_write, last_updated),
                 plan_write_time=latest_plan_write,
                 goal=phase.goal,
                 plan_content=plan_content,
@@ -419,6 +454,7 @@ class ProjectDiscoveryService:
                 has_context=has_context,
                 has_research=has_research,
                 has_plan=has_plan,
+                has_uat=has_uat,
                 has_validation=has_validation,
                 nyquist_compliant=nyq,
                 research_coverage=coverage,
@@ -473,7 +509,7 @@ class ProjectDiscoveryService:
             m_root = gsd_dir / "milestones"
             if m_root.is_dir():
                 m_dirs = sorted(
-                    [p for p in m_root.iterdir() if p.is_dir() and len(p.name) >= 3 and p.name.startswith("M")],
+                    [p for p in m_root.iterdir() if p.is_dir() and len(p.name) >= 2 and p.name.startswith("M")],
                     key=lambda p: p.name.lower(),
                 )
                 for ordinal, m_dir in enumerate(m_dirs, start=1):
@@ -594,6 +630,11 @@ class ProjectDiscoveryService:
                     last_updated = datetime.fromtimestamp(summary_file.stat().st_mtime, tz=timezone.utc)
                 except OSError:
                     pass
+            elif plan_file.is_file():
+                try:
+                    last_updated = datetime.fromtimestamp(plan_file.stat().st_mtime, tz=timezone.utc)
+                except OSError:
+                    pass
             plan_content = None
             if has_plan:
                 raw = _try_read(plan_file)
@@ -639,7 +680,7 @@ class ProjectDiscoveryService:
             return sl.model_copy(
                 update={
                     "status": final_status,
-                    "drift": DriftIndicator.DEFERRED,
+                    "drift": _compute_drift(final_status, plan_write_time, last_updated),
                     "plan_write_time": plan_write_time,
                     "has_plan": has_plan,
                     "has_context": has_context,
