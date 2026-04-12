@@ -51,6 +51,7 @@ All 16 v1 requirements delivered across 8 phases:
 | `StateParser` wired into GSD-2 discovery | GSD-2 segments now surface `active_slice` as `stateCurrentPosition` — closes PERF-03 GSD-2 gap | ✓ Phase 05 |
 | FastAPI lifespan context manager | Replace deprecated `@on_event` decorators — eliminates deprecation warnings and future breakage risk | ✓ Phase 06 |
 | `datetime.fromtimestamp(ts, tz=timezone.utc)` replaces `utcfromtimestamp()` | Python 3.12 deprecated `utcfromtimestamp` — timezone-aware replacement eliminates warnings across 9 call sites | ✓ Phase 08 |
+| `_compute_drift` module-level helper with injectable `now` | Real drift computation replaces hardcoded DEFERRED; injectable `now` enables deterministic TDD without freezegun | ✓ Phase 09 |
 
 ## Evolution
 
@@ -70,4 +71,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-12 — v2.0 milestone started*
+*Last updated: 2026-04-12 — Phase 09 complete (drift computation)*
