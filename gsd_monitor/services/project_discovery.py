@@ -261,7 +261,9 @@ class ProjectDiscoveryService:
         if not roadmap.is_file():
             roadmap = base / "roadmap.md"
         if not roadmap.is_file():
-            if not (base / "phases").is_dir():
+            milestones_dir = base / "milestones"
+            has_milestone_roadmaps = milestones_dir.is_dir() and any(milestones_dir.glob("*-ROADMAP.md"))
+            if not (base / "phases").is_dir() and not has_milestone_roadmaps:
                 return None
         res = RoadmapParser.parse(str(roadmap)) if roadmap.is_file() else None
         if res and res.is_success and res.value:
@@ -273,6 +275,10 @@ class ProjectDiscoveryService:
                 path=str(ctx.repo_root),
                 version=GsdVersion.V1,
             )
+            if not roadmap.is_file():
+                arch = RoadmapParser._try_extract_from_milestone_archives(str(base / "ROADMAP.md"))
+                if arch:
+                    proj = proj.model_copy(update={"milestones": arch})
         proj = self._enrich_planning(ctx.planning_base, proj)
         proj = self._apply_state_mtime(ctx, proj)
 

@@ -62,6 +62,7 @@ None — human verification of Drift/QuickTasks/Verification page rendering is t
 |---|-------------|------|-----------|
 | 260403-qh8 | Reverse-chronological ordering with dates for phases, drift, quick tasks, and verification on all pages | 2026-04-03 | [260403-qh8-reverse-chronological-ordering-with-date](.planning/quick/260403-qh8-reverse-chronological-ordering-with-date/) |
 | 260405-759 | Fix stale data in the Projects/Docs UI | 2026-04-05 | [260405-759-fix-stale-data-in-the-projects-docs-ui](.planning/quick/260405-759-fix-stale-data-in-the-projects-docs-ui/) |
+| 260508-m1d | Fix discovery for milestone-based GSD-1 layout (no root ROADMAP.md) | 2026-05-08 | [260508-m1d-fix-milestone-layout-discovery](.planning/quick/260508-m1d-fix-milestone-layout-discovery/) |
 
 ## Session Continuity
 
