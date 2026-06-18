@@ -99,6 +99,12 @@ export interface GsdProjectPayload {
   last_updated?: string | null;
   milestones: MilestonePayload[];
   version: string;
+  handoff_info?: { phase?: string; plan?: string; timestamp?: string; paused?: boolean } | null;
+  continue_here?: boolean;
+  config_info?: { workflow_mode?: string; model_profile?: string; branching_strategy?: string } | null;
+  progress_percent?: number;
+  completed_phases?: number;
+  total_phases?: number;
 }
 
 export interface MilestonePayload {
@@ -126,6 +132,10 @@ export interface PhasePayload {
   has_research: boolean;
   has_plan: boolean;
   has_validation: boolean;
+  has_ui_spec: boolean;
+  has_ui_review: boolean;
+  has_summary: boolean;
+  has_requirements: boolean;
   nyquist_compliant?: boolean | null;
   research_coverage: string;
   research_content?: string | null;

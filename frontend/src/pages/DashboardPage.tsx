@@ -56,6 +56,21 @@ export function DashboardPage() {
     return { groupName, projectName, activePhaseTitle };
   }, [activeProject, activeSegment, groups]);
 
+  // Progress data — from STATE.md-sourced fields on activeProject (per PROG-02, D-08)
+  const progressData = useMemo(() => {
+    if (!activeProject) return null;
+    const { progress_percent, completed_phases, total_phases } = activeProject;
+    if (
+      progress_percent === undefined ||
+      completed_phases === undefined ||
+      total_phases === undefined ||
+      total_phases === 0
+    ) {
+      return null;
+    }
+    return { progress_percent, completed_phases, total_phases };
+  }, [activeProject]);
+
   if (loading) return <div className="p-8 text-[#858585]">Loading…</div>;
   if (!activeProject)
     return (
@@ -63,6 +78,10 @@ export function DashboardPage() {
         Add scan roots in Settings and select a project.
       </div>
     );
+
+  const handoffInfo = activeProject.handoff_info;
+  const isPaused = handoffInfo?.paused === true;
+  const configInfo = activeProject.config_info;
 
   return (
     <div className="p-6">
@@ -75,12 +94,35 @@ export function DashboardPage() {
         <span className="max-w-[240px] truncate text-[#cccccc]">{breadcrumb.activePhaseTitle}</span>
       </div>
 
+      {/* Pause banner — per DOCS-06, D-06, UI-SPEC section 2 */}
+      {isPaused && handoffInfo && (
+        <div className="mb-4 rounded-md border border-amber-800/40 bg-amber-900/20 px-4 py-2 flex items-center justify-between">
+          <span className="flex items-center">
+            <span className="inline-block w-1 h-1 rounded-full bg-amber-400 mr-2" />
+            <span className="text-xs font-semibold text-amber-400">Paused</span>
+          </span>
+          <span className="text-xs text-[#858585]">
+            Phase {handoffInfo.phase}, Plan {handoffInfo.plan}
+            {" · paused "}
+            {handoffInfo.timestamp ? fmtDate(handoffInfo.timestamp) : ""}
+          </span>
+        </div>
+      )}
+
       {/* Stats bar — per D-01 through D-05 */}
       <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-        {/* Card 1: Completion % (D-01, unchanged content) */}
+        {/* Card 1: Completion % (D-01) with compact progress bar (PROG-02, UI-SPEC section 1) */}
         <div className="rounded-md border border-[#474747] bg-[#1e1e1e] p-4 text-center">
           <div className="text-2xl font-semibold text-[#cccccc]">{stats?.completion ?? 0}%</div>
           <div className="text-xs text-[#858585]">Completion</div>
+          {progressData && (
+            <div className="mt-2 w-full h-1 rounded-full bg-[#474747]">
+              <div
+                className="h-1 rounded-full bg-[#4ec994]"
+                style={{ width: `${progressData.progress_percent}%` }}
+              />
+            </div>
+          )}
         </div>
         {/* Card 2: Phases done/total (D-02) */}
         <div className="rounded-md border border-[#474747] bg-[#1e1e1e] p-4 text-center">
@@ -103,44 +145,91 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* GSD version badge — keep existing, update colors */}
+      {/* Detail progress bar — per PROG-02, UI-SPEC section 1 */}
+      {progressData && (
+        <div className="mb-4">
+          <div className="mb-1 text-xs text-[#858585]">
+            {progressData.completed_phases} of {progressData.total_phases} phases complete
+            {" "}
+            <span className="text-[#cccccc]">{progressData.progress_percent}%</span>
+          </div>
+          <div className="w-full h-2 rounded-full bg-[#474747]">
+            <div
+              className="h-2 rounded-full bg-[#4ec994]"
+              style={{ width: `${progressData.progress_percent}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* GSD version badge — per DETECT-01, UI-SPEC section 6 */}
       <div className="mb-4 flex items-center gap-2">
-        <span className="rounded bg-[#007acc]/30 px-2 py-0.5 text-xs font-medium text-[#cccccc]">
-          {stats?.gsdVersion === "gsd2" ? "GSD-2" : "GSD-1"}
-        </span>
+        {stats?.gsdVersion === "gsd-core" ? (
+          <span className="rounded bg-[#007acc]/30 px-2 py-0.5 text-xs font-medium text-[#cccccc]">
+            gsd-core
+          </span>
+        ) : (
+          <span className="rounded bg-[#2a2d2e] px-2 py-0.5 text-xs font-medium text-[#858585]">
+            GSD-1
+          </span>
+        )}
       </div>
+
+      {/* Config badge row — per DOCS-08, D-07, UI-SPEC section 3 */}
+      {configInfo && (
+        <div className="mb-4 flex items-center gap-2">
+          {configInfo.workflow_mode && (
+            <span className="rounded bg-[#2a2d2e] px-1.5 py-0.5 text-xs text-[#858585]">
+              {configInfo.workflow_mode}
+            </span>
+          )}
+          {configInfo.model_profile && (
+            <span className="rounded bg-[#2a2d2e] px-1.5 py-0.5 text-xs text-[#858585]">
+              {configInfo.model_profile}
+            </span>
+          )}
+          {configInfo.branching_strategy && (
+            <span className="rounded bg-[#2a2d2e] px-1.5 py-0.5 text-xs text-[#858585]">
+              {configInfo.branching_strategy}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Phase list — per D-06, D-07, D-08 */}
       <div className="space-y-2">
-        {phases.map((p) => (
-          <button
-            type="button"
-            key={`${p.number}-${p.title}`}
-            className={`w-full rounded-md border border-[#474747] border-l-[3px] ${statusBorderClass(p.status)} bg-[#1e1e1e] p-4 text-left transition-colors hover:bg-[#2a2d2e]`}
-            onClick={() => {
-              setSelectedNumber(p.number);
-              setDrawerOpen(true);
-            }}
-          >
-            <div className="flex items-center justify-between gap-2">
-              <span className="font-mono font-medium text-[#cccccc]">
-                {String(p.number).padStart(2, "0")} — {p.title}
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-[#858585]">{statusLabel(p.status)}</span>
-                <span className="text-xs text-[#858585]">{fmtDate(p.last_updated)}</span>
+        {phases.map((p) => {
+          const phaseId = p.code ? p.code : String(p.number).padStart(2, "0");
+          return (
+            <button
+              type="button"
+              key={`${p.number}-${p.title}`}
+              className={`w-full rounded-md border border-[#474747] border-l-[3px] ${statusBorderClass(p.status)} bg-[#1e1e1e] p-4 text-left transition-colors hover:bg-[#2a2d2e]`}
+              onClick={() => {
+                setSelectedNumber(p.number);
+                setDrawerOpen(true);
+              }}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-mono font-medium text-[#cccccc]">
+                  {phaseId} — {p.title}
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-[#858585]">{statusLabel(p.status)}</span>
+                  <span className="text-xs text-[#858585]">{fmtDate(p.last_updated)}</span>
+                </div>
               </div>
-            </div>
-            {p.goal && <p className="mt-1 line-clamp-2 text-xs text-[#858585]">{p.goal}</p>}
-          </button>
-        ))}
+              {p.goal && <p className="mt-1 line-clamp-2 text-xs text-[#858585]">{p.goal}</p>}
+            </button>
+          );
+        })}
       </div>
 
-      {/* Drawer — unchanged per D-08 */}
+      {/* Drawer — per D-08, UI-SPEC section 5 */}
       <Drawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        title={selected ? `${String(selected.number).padStart(2, "0")} — ${selected.title}` : "Phase"}
+        title={selected ? `${selected.code ? selected.code : String(selected.number).padStart(2, "0")} — ${selected.title}` : "Phase"}
       >
         {selected && (
           <div className="space-y-4">
