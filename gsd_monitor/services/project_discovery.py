@@ -1,7 +1,8 @@
-"""Discover GSD projects with GSD-1 (multi-context) + GSD-2 — ports WinGsdMonitor.Core logic."""
+"""Discover GSD projects — GSD-1 (checkbox format) and gsd-core (heading-based format)."""
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import re
@@ -21,7 +22,7 @@ from gsd_monitor.models.enums import (
     PhaseStatus,
     ResearchCoverage,
 )
-from gsd_monitor.parsers.gsd2_roadmap import Gsd2RoadmapParser
+from gsd_monitor.parsers.gsd_core_roadmap import GsdCoreRoadmapParser
 from gsd_monitor.parsers.plan_parser import PlanParser
 from gsd_monitor.parsers.roadmap import RoadmapParser
 from gsd_monitor.parsers.state_parser import StateParser
@@ -32,6 +33,9 @@ _FRONTMATTER = re.compile(r"^---\s*\n.*?^---\s*\n", re.DOTALL | re.MULTILINE)
 _NYQUIST = re.compile(r"nyquist_compliant:\s*(true|false)", re.IGNORECASE)
 _VERIFICATION = re.compile(r"verification_result:\s*(pass|fail)", re.IGNORECASE)
 _EXCLUDED_DIRS: set[str] = {"node_modules", ".venv", ".git", "build", "dist"}
+
+# Pattern to sniff heading-based ROADMAP format (fallback when no config.json)
+_HEADING_PHASE_SNIFF = re.compile(r"^#{2,3} Phase \d", re.MULTILINE)
 
 
 def _try_read(path: Path) -> str | None:
@@ -46,6 +50,18 @@ def _strip_frontmatter(raw: str) -> str:
     if m:
         return raw[m.end() :].lstrip()
     return raw
+
+
+def _try_read_json(path: Path) -> dict | None:
+    """Read and parse a JSON file. Returns None on any error (missing, invalid JSON)."""
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        data = json.loads(text)
+        if not isinstance(data, dict):
+            return None
+        return data
+    except (OSError, json.JSONDecodeError, ValueError):
+        return None
 
 
 def _compute_drift(
@@ -148,26 +164,7 @@ class ProjectDiscoveryService:
     def discover_groups(self, scan_roots: list[str]) -> list[ProjectGroup]:
         roots = [r for r in scan_roots if r and Path(r).is_dir()]
         by_repo: dict[str, list[SegmentModel]] = {}
-        gsd2_repos: set[str] = set()
         by_repo_worktrees: dict[str, list[tuple[Path, bool]]] = {}
-
-        for root in roots:
-            root_path = Path(root).resolve()
-            try:
-                for gsd_dir in self._find_dirs(root_path, ".gsd"):
-                    repo_dir = gsd_dir.parent
-                    canonical = _resolve_canonical_root(repo_dir)
-                    canon_key = str(canonical)
-                    is_primary = (repo_dir / ".git").is_dir()
-                    seg = self._discover_gsd2(repo_dir, gsd_dir)
-                    if seg:
-                        by_repo.setdefault(canon_key, []).append(seg)
-                        gsd2_repos.add(canon_key)
-                        wt_list = by_repo_worktrees.setdefault(canon_key, [])
-                        if not any(str(p) == str(repo_dir) for p, _ in wt_list):
-                            wt_list.append((repo_dir, is_primary))
-            except PermissionError:
-                continue
 
         for root in roots:
             root_path = Path(root).resolve()
@@ -178,8 +175,6 @@ class ProjectDiscoveryService:
                     repo_dir = planning_dir.parent
                     canonical = _resolve_canonical_root(repo_dir)
                     canon_key = str(canonical)
-                    if canon_key in gsd2_repos:
-                        continue
                     # Accumulate worktree info regardless of segment deduplication
                     is_primary = (repo_dir / ".git").is_dir()
                     wt_list = by_repo_worktrees.setdefault(canon_key, [])
@@ -265,24 +260,48 @@ class ProjectDiscoveryService:
             has_milestone_roadmaps = milestones_dir.is_dir() and any(milestones_dir.glob("*-ROADMAP.md"))
             if not (base / "phases").is_dir() and not has_milestone_roadmaps:
                 return None
-        res = RoadmapParser.parse(str(roadmap)) if roadmap.is_file() else None
+
+        # --- gsd-core DETECTION (per D-02, DETECT-01) ---
+        # Primary signal: config.json existence
+        config_path = base / "config.json"
+        config_data = _try_read_json(config_path)
+        is_gsd_core = config_data is not None
+
+        # Fallback: sniff ROADMAP.md for heading-based phase format
+        if not is_gsd_core and roadmap.is_file():
+            roadmap_preview = _try_read(roadmap) or ""
+            if _HEADING_PHASE_SNIFF.search(roadmap_preview[:2000]):
+                is_gsd_core = True
+
+        # Choose parser based on detection
+        if roadmap.is_file():
+            if is_gsd_core:
+                res = GsdCoreRoadmapParser.parse(str(roadmap))
+            else:
+                res = RoadmapParser.parse(str(roadmap))
+        else:
+            res = None
+
+        version = GsdVersion.CORE if is_gsd_core else GsdVersion.V1
+
         if res and res.is_success and res.value:
             proj = res.value
-            proj = proj.model_copy(update={"path": str(ctx.repo_root)})
+            proj = proj.model_copy(update={"path": str(ctx.repo_root), "version": version})
         else:
             proj = GsdProject(
                 name=ctx.repo_root.name,
                 path=str(ctx.repo_root),
-                version=GsdVersion.V1,
+                version=version,
             )
             if not roadmap.is_file():
                 arch = RoadmapParser._try_extract_from_milestone_archives(str(base / "ROADMAP.md"))
                 if arch:
                     proj = proj.model_copy(update={"milestones": arch})
+
         proj = self._enrich_planning(ctx.planning_base, proj)
         proj = self._apply_state_mtime(ctx, proj)
 
-        # PERF-03: Wire StateParser for active phase position
+        # --- STATE.md parsing for position and progress metrics ---
         state_position: str | None = None
         for state_name in ("STATE.md", "state.md"):
             state_path = base / state_name
@@ -290,17 +309,57 @@ class ProjectDiscoveryService:
                 state_result = StateParser.parse(str(state_path))
                 if state_result.is_success and state_result.value:
                     si = state_result.value
-                    # GSD-1: prefer status text; GSD-2: prefer active_slice
                     pos = si.status or si.active_slice or ""
                     if pos.strip():
                         state_position = pos.strip()
+                    # PROG-01, PROG-02: wire progress fields from StateParser
+                    if si.total_phases or si.completed_phases or si.progress_percent:
+                        proj = proj.model_copy(
+                            update={
+                                "total_phases": si.total_phases,
+                                "completed_phases": si.completed_phases,
+                                "progress_percent": si.progress_percent,
+                            }
+                        )
                 break  # Only try the first existing file
+
+        # --- HANDOFF.JSON (per DOCS-06, D-06) ---
+        handoff_path = base / "HANDOFF.json"
+        handoff_data = _try_read_json(handoff_path)
+        if handoff_data is not None:
+            handoff_info = {
+                "phase": handoff_data.get("phase", ""),
+                "plan": handoff_data.get("plan", ""),
+                "timestamp": handoff_data.get("timestamp", ""),
+                "paused": True,
+            }
+            proj = proj.model_copy(update={"handoff_info": handoff_info})
+
+        # --- .CONTINUE-HERE.MD (per DOCS-07) ---
+        continue_here_path = base / ".continue-here.md"
+        if continue_here_path.is_file():
+            proj = proj.model_copy(update={"continue_here": True})
+
+        # --- CONFIG.JSON SURFACING (per DOCS-08, D-07) ---
+        if config_data is not None:
+            # Extract summary fields with safe .get() defaults (T-11-02 mitigation)
+            workflow = config_data.get("workflow") or {}
+            git_cfg = config_data.get("git") or {}
+            config_info = {
+                "workflow_mode": (
+                    config_data.get("mode")
+                    or workflow.get("discuss_mode")
+                ),
+                "model_profile": config_data.get("model_profile"),
+                "branching_strategy": git_cfg.get("branching_strategy"),
+            }
+            proj = proj.model_copy(update={"config_info": config_info})
 
         sm = SegmentModel(
             segment_key=ctx.segment_key,
             gsd_project=ctx.gsd_project,
             workstream=ctx.workstream,
-            gsd_version=GsdVersion.V1,
+            gsd_version=version,
             planning_path=str(ctx.planning_base),
             repo_root=str(ctx.repo_root),
             project=proj,
@@ -430,11 +489,19 @@ class ProjectDiscoveryService:
             ctx_file = phase_dir / f"{padded}-CONTEXT.md"
             research_file = phase_dir / f"{padded}-RESEARCH.md"
             uat_file = phase_dir / f"{padded}-UAT.md"
+            ui_spec_file = phase_dir / f"{padded}-UI-SPEC.md"
+            ui_review_file = phase_dir / f"{padded}-UI-REVIEW.md"
+
             has_context = ctx_file.is_file()
             has_research = research_file.is_file()
             has_plan = len(plan_files) > 0
             has_uat = uat_file.is_file()
             has_validation = validation_file.is_file() or verification_file.is_file()
+            has_ui_spec = ui_spec_file.is_file()
+            has_ui_review = ui_review_file.is_file()
+            has_summary = len(summary_files) > 0
+            # has_requirements: project-level REQUIREMENTS.md in planning_dir
+            has_requirements = (planning_dir / "REQUIREMENTS.md").is_file()
 
             if not has_research:
                 coverage = ResearchCoverage.NONE
@@ -448,6 +515,7 @@ class ProjectDiscoveryService:
 
             return PhaseEntry(
                 number=phase.number,
+                code=phase.code,
                 title=phase.title,
                 status=final_status,
                 drift=_compute_drift(final_status, latest_plan_write, last_updated),
@@ -462,6 +530,10 @@ class ProjectDiscoveryService:
                 has_plan=has_plan,
                 has_uat=has_uat,
                 has_validation=has_validation,
+                has_ui_spec=has_ui_spec,
+                has_ui_review=has_ui_review,
+                has_summary=has_summary,
+                has_requirements=has_requirements,
                 nyquist_compliant=nyq,
                 research_coverage=coverage,
                 research_content=research_content,
@@ -507,199 +579,3 @@ class ProjectDiscoveryService:
             return m.group(1).lower() == "true"
         except OSError:
             return None
-
-    def _discover_gsd2(self, repo_dir: Path, gsd_dir: Path) -> SegmentModel | None:
-        try:
-            name = repo_dir.name
-            milestones: list[Milestone] = []
-            m_root = gsd_dir / "milestones"
-            if m_root.is_dir():
-                m_dirs = sorted(
-                    [p for p in m_root.iterdir() if p.is_dir() and len(p.name) >= 2 and p.name.startswith("M")],
-                    key=lambda p: p.name.lower(),
-                )
-                for ordinal, m_dir in enumerate(m_dirs, start=1):
-                    roadmap = m_dir / "roadmap.md"
-                    if not roadmap.is_file():
-                        continue
-                    pr = Gsd2RoadmapParser.parse(str(roadmap))
-                    if not pr.is_success or not pr.value:
-                        continue
-                    g2 = pr.value
-                    phases: list[PhaseEntry] = []
-                    for s in g2.slices:
-                        n = 0
-                        if len(s.code) > 1 and s.code[1:].isdigit():
-                            n = int(s.code[1:])
-                        phases.append(
-                            PhaseEntry(
-                                number=n,
-                                code=s.code,
-                                title=s.title,
-                                status=PhaseStatus.COMPLETE if s.is_complete else PhaseStatus.NOT_STARTED,
-                                goal=s.demo_sentence,
-                                risk_tag=s.risk_tag,
-                                depends_on=s.depends_on,
-                            )
-                        )
-                    total = len(phases)
-                    completed = sum(1 for p in phases if p.status == PhaseStatus.COMPLETE)
-                    if total == 0:
-                        mst = MilestoneStatus.PLANNED
-                    elif completed == total:
-                        mst = MilestoneStatus.COMPLETED
-                    elif completed > 0:
-                        mst = MilestoneStatus.ACTIVE
-                    else:
-                        mst = MilestoneStatus.PLANNED
-                    progress = 0 if total == 0 else int(round(completed * 100.0 / total))
-                    milestones.append(
-                        Milestone(
-                            number=ordinal,
-                            title=m_dir.name,
-                            code=g2.code,
-                            vision=g2.vision,
-                            status=mst,
-                            progress=progress,
-                            phases=phases,
-                        )
-                    )
-            proj = GsdProject(name=name, path=str(repo_dir), version=GsdVersion.V2, milestones=milestones)
-            state_path = gsd_dir / "state.md"
-            if state_path.is_file():
-                try:
-                    lu = datetime.fromtimestamp(state_path.stat().st_mtime, tz=timezone.utc)
-                    proj = proj.model_copy(update={"last_updated": lu})
-                except OSError:
-                    pass
-            proj = self._enrich_gsd2_project(gsd_dir, proj)
-            # PERF-03 (GSD-2): Wire StateParser for active phase position
-            state_position: str | None = None
-            state_path_sp = gsd_dir / "state.md"
-            if state_path_sp.is_file():
-                state_result = StateParser.parse(str(state_path_sp))
-                if state_result.is_success and state_result.value:
-                    si = state_result.value
-                    # GSD-2: prefer active_slice; fall back to status text
-                    pos = si.active_slice or si.status or ""
-                    if pos.strip():
-                        state_position = pos.strip()
-            return SegmentModel(
-                segment_key="gsd2",
-                gsd_project=None,
-                workstream=None,
-                gsd_version=GsdVersion.V2,
-                planning_path=str(gsd_dir),
-                repo_root=str(repo_dir),
-                project=proj,
-                state_current_position=state_position,
-            )
-        except Exception as ex:
-            logger.warning("Failed to discover GSD-2 project at %s: %s", repo_dir, ex)
-            return SegmentModel(
-                segment_key="gsd2",
-                gsd_project=None,
-                workstream=None,
-                gsd_version=GsdVersion.V2,
-                planning_path=str(gsd_dir),
-                repo_root=str(repo_dir),
-                project=GsdProject(name=repo_dir.name, path=str(repo_dir), version=GsdVersion.V2),
-            )
-
-    def _enrich_gsd2_project(self, gsd_dir: Path, project: GsdProject) -> GsdProject:
-        new_ms: list[Milestone] = []
-        for m in project.milestones:
-            mcode = m.code or m.title
-            new_phases = [self._enrich_gsd2_slice(gsd_dir, mcode, p) for p in m.phases]
-            new_ms.append(m.model_copy(update={"phases": new_phases}))
-        return project.model_copy(update={"milestones": new_ms})
-
-    def _enrich_gsd2_slice(self, gsd_dir: Path, milestone_code: str | None, sl: PhaseEntry) -> PhaseEntry:
-        try:
-            if not milestone_code or not sl.code:
-                return sl
-            slice_dir = gsd_dir / "milestones" / milestone_code / "slices" / sl.code
-            if not slice_dir.is_dir():
-                return sl
-            plan_file = slice_dir / "plan.md"
-            context_file = slice_dir / "context.md"
-            research_file = slice_dir / "research.md"
-            uat_file = slice_dir / "uat.md"
-            summary_file = slice_dir / "summary.md"
-            has_plan = plan_file.is_file()
-            has_context = context_file.is_file()
-            has_research = research_file.is_file()
-            has_uat = uat_file.is_file()
-            last_updated = None
-            if summary_file.is_file():
-                try:
-                    last_updated = datetime.fromtimestamp(summary_file.stat().st_mtime, tz=timezone.utc)
-                except OSError:
-                    pass
-            elif plan_file.is_file():
-                try:
-                    last_updated = datetime.fromtimestamp(plan_file.stat().st_mtime, tz=timezone.utc)
-                except OSError:
-                    pass
-            plan_content = None
-            if has_plan:
-                raw = _try_read(plan_file)
-                if raw:
-                    plan_content = _strip_frontmatter(raw)
-            artifact_paths = sorted(
-                str(p)
-                for p in [plan_file, summary_file, research_file, context_file, uat_file]
-                if p.is_file()
-            )
-            plan_write_time = None
-            if has_plan:
-                try:
-                    plan_write_time = datetime.fromtimestamp(plan_file.stat().st_mtime, tz=timezone.utc)
-                except OSError:
-                    pass
-            tasks_dir = slice_dir / "tasks"
-            nyq: bool | None = None
-            final_status = sl.status
-            if tasks_dir.is_dir():
-                summaries = sorted(tasks_dir.glob("T*-summary.md"))
-                if summaries:
-                    any_fail = False
-                    all_pass = True
-                    for tf in summaries:
-                        txt = _try_read(tf)
-                        if not txt:
-                            continue
-                        vm = _VERIFICATION.search(txt)
-                        if not vm:
-                            all_pass = False
-                            continue
-                        if vm.group(1).lower() == "fail":
-                            any_fail = True
-                            all_pass = False
-                    if any_fail:
-                        nyq = False
-                        if sl.status in (PhaseStatus.IN_PROGRESS, PhaseStatus.COMPLETE):
-                            final_status = PhaseStatus.NEEDS_VERIFICATION
-                    elif all_pass:
-                        nyq = True
-            research_content = _try_read(research_file) if has_research else None
-            return sl.model_copy(
-                update={
-                    "status": final_status,
-                    "drift": _compute_drift(final_status, plan_write_time, last_updated),
-                    "plan_write_time": plan_write_time,
-                    "has_plan": has_plan,
-                    "has_context": has_context,
-                    "has_research": has_research,
-                    "has_uat": has_uat,
-                    "has_validation": False,
-                    "nyquist_compliant": nyq,
-                    "plan_content": plan_content,
-                    "artifact_paths": artifact_paths,
-                    "last_updated": last_updated,
-                    "research_content": research_content,
-                }
-            )
-        except Exception as ex:
-            logger.warning("Failed to enrich GSD-2 slice %s in milestone %s: %s", sl.code, milestone_code, ex)
-            return sl
