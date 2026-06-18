@@ -1,74 +1,93 @@
-# Requirements: GSD Monitor v2.0
+# Requirements: GSD Monitor
 
-## Milestone Goal
+**Defined:** 2026-06-18
+**Core Value:** Developer opens GSD Monitor and immediately understands every project's status with zero duplicate entries and zero confusion
 
-Surface the three stub pages — Drift, Quick Tasks, and Verification — with real data from the already-built backend.
+## v3.0 Requirements
 
----
+Requirements for gsd-core migration. Each maps to roadmap phases.
 
-## Active Requirements
+### Detection & Parsing
 
-### Drift Detection
+- [ ] **DETECT-01**: Monitor detects gsd-core projects via .planning/config.json presence
+- [ ] **DETECT-02**: Monitor parses gsd-core ROADMAP.md heading-based phase format (## Phase N: Title with **Goal:** fields)
+- [ ] **DETECT-03**: Monitor extracts milestones from ROADMAP.md emoji-marked headings (active, shipped)
+- [ ] **DETECT-04**: Monitor supports milestone-prefixed phase IDs (Phase 1-01, Phase 2-03) and displays them as-is
+- [ ] **DETECT-05**: Monitor continues to parse legacy GSD-1 checkbox ROADMAP format (- [x] **Phase N: Title**)
+- [ ] **DETECT-06**: Monitor no longer discovers or displays GSD-2 (.gsd/) projects
 
-- [x] **DRFT-01**: Backend computes `DriftIndicator` from `plan_write_time`, `last_updated`, and phase `status` — replacing the hardcoded `DEFERRED` placeholder in `_enrich_phase` and `_enrich_gsd2_slice`
-  - NONE: no plan, or phase complete with recent last_updated (≤30 days)
-  - MINOR: has plan, last_updated is 7–30 days old (or plan written but no summary yet and < 14 days)
-  - MAJOR: has plan, no summary and plan > 14 days old, or last_updated > 30 days old on active phase
-  - DEFERRED: phase intentionally parked (status NOT_STARTED with no plan) — keep as fallback
-- [x] **DRFT-02**: `DriftPage` displays a per-phase drift table for the active project, sorted by drift severity (MAJOR first, then MINOR, then NONE/DEFERRED)
-- [x] **DRFT-03**: Each drift row shows: phase number, title, current status, drift level badge, plan age (days since `plan_write_time`), and last updated date
-- [x] **DRFT-04**: Drift badges are color-coded — MAJOR=red, MINOR=yellow, NONE=muted green, DEFERRED=gray
-- [x] **DRFT-05**: Phases with no plan and NOT_STARTED status are collapsed/hidden by default with a "Show N un-started" toggle
+### Document Surfacing
 
-### Quick Tasks
+- [ ] **DOCS-01**: Monitor detects and displays REQUIREMENTS.md content for gsd-core projects
+- [ ] **DOCS-02**: Monitor detects and displays VERIFICATION.md content per phase
+- [ ] **DOCS-03**: Monitor detects and displays per-plan SUMMARY.md content
+- [ ] **DOCS-04**: Monitor detects and displays UI-SPEC.md content per phase
+- [ ] **DOCS-05**: Monitor detects and displays UI-REVIEW.md content per phase
+- [ ] **DOCS-06**: Monitor detects HANDOFF.json and shows pause status (current phase, plan, paused timestamp)
+- [ ] **DOCS-07**: Monitor detects .continue-here.md and displays resume context
+- [ ] **DOCS-08**: Monitor reads config.json and surfaces workflow mode, model profile, and branching strategy
 
-- [x] **QTSK-01**: `QuickTasksPage` fetches from the existing `/api/quick-tasks/{planningPath}` endpoint and renders the task list for the active segment
-- [x] **QTSK-02**: Each task row shows: title, status badge, created date, last updated date
-- [x] **QTSK-03**: Status badges are color-coded — open=gray, in_progress=yellow, complete=green
-- [x] **QTSK-04**: Empty state is shown when no quick tasks exist for the active project (not an error)
-- [x] **QTSK-05**: Tasks are sorted by last_updated descending (most recently active first)
+### Progress & State
 
-### Verification
+- [ ] **PROG-01**: Monitor extracts progress metrics from STATE.md (total_phases, completed_phases, progress_percent)
+- [ ] **PROG-02**: Monitor displays progress bar or metric widget on project dashboard
+- [ ] **PROG-03**: Monitor parses all three STATE.md syntax variants (bold inline, line-start, pipe-table)
 
-- [x] **VERIF-01**: `VerificationPage` shows a per-phase verification summary for the active project
-- [x] **VERIF-02**: Each row shows: phase number, title, `has_validation` badge, `nyquist_compliant` status (pass/fail/unknown), and `has_uat` badge
-- [x] **VERIF-03**: Selecting a phase row expands inline to show `validation_content` rendered as markdown
-- [x] **VERIF-04**: Phases without any validation file (`has_validation=false`) are shown in a dimmed/collapsed section with a toggle to reveal them
+### Enhanced Visibility
 
----
+- [ ] **VIS-01**: Monitor displays requirements traceability table showing which phases cover which requirements
+- [ ] **VIS-02**: Monitor shows plan wave assignments and parallelization grouping
+- [ ] **VIS-03**: Monitor can browse shipped milestones from details blocks in ROADMAP.md
+- [ ] **VIS-04**: Monitor highlights requirements with no phase coverage (unmapped gaps)
 
-## Future Requirements (Deferred)
+## Validated (v2.0 — shipped)
 
-- **DRFT-06**: Git-based drift — compare latest commit date on phase files against plan write date (needs `GitService.get_latest_file_commit_date()`)
-- **QTSK-06**: Clicking a task navigates to the Docs page with that task's PLAN.md pre-selected (requires shared routing state or URL param on DocsPage)
+- [x] **DRFT-01**: Backend computes DriftIndicator from plan_write_time, last_updated, and phase status
+- [x] **DRFT-02**: DriftPage displays a per-phase drift table sorted by severity
+- [x] **DRFT-03**: Each drift row shows phase number, title, status, drift badge, plan age, last updated
+- [x] **DRFT-04**: Drift badges are color-coded (MAJOR=red, MINOR=yellow, NONE=green, DEFERRED=gray)
+- [x] **DRFT-05**: Un-started phases collapsed behind toggle
+- [x] **QTSK-01**: QuickTasksPage fetches and renders tasks per segment
+- [x] **QTSK-02**: Each task row shows title, status badge, dates
+- [x] **QTSK-03**: Status badges color-coded
+- [x] **QTSK-04**: Empty state when no quick tasks
+- [x] **QTSK-05**: Tasks sorted by last_updated descending
+- [x] **VERIF-01**: VerificationPage shows per-phase verification summary
+- [x] **VERIF-02**: Each row shows has_validation, nyquist_compliant, has_uat badges
+- [x] **VERIF-03**: Phase row expands inline validation content as markdown
+- [x] **VERIF-04**: Phases without validation dimmed/collapsed with toggle
+
+## Future Requirements
+
+- **DRFT-06**: Git-based drift — compare latest commit date on phase files against plan write date
+- **QTSK-06**: Clicking a task navigates to Docs page with that task's PLAN.md pre-selected
 - **NOTIF-01**: System notification on phase completion (Windows toast)
 - **NOTIF-02**: System notification on verification failure
 
----
-
 ## Out of Scope
 
-- **Drift push notifications** — DriftPage is pull-only (load on visit); no background alerting in v2
-- **Creating or editing quick tasks from the UI** — app is read-only
-- **UAT detail page** — `has_uat` badge shown on Verification page but no dedicated UAT viewer in v2
-
----
+| Feature | Reason |
+|---------|--------|
+| GSD-2 (.gsd/) support | Deprecated by gsd-core; removing in this milestone |
+| Writing to project files | App is read-only by design constraint |
+| gsd-core workflow execution | Monitor is a viewer, not a workflow runner |
+| Cross-project dependency visualization | High complexity, not core to monitoring value |
+| Drift push notifications | DriftPage is pull-only; no background alerting |
+| Creating/editing quick tasks from UI | App is read-only |
 
 ## Traceability
 
-| Requirement | Phase |
-|-------------|-------|
-| DRFT-01     | 9     |
-| DRFT-02     | 10    |
-| DRFT-03     | 10    |
-| DRFT-04     | 10    |
-| DRFT-05     | 10    |
-| QTSK-01     | 10    |
-| QTSK-02     | 10    |
-| QTSK-03     | 10    |
-| QTSK-04     | 10    |
-| QTSK-05     | 10    |
-| VERIF-01    | 10    |
-| VERIF-02    | 10    |
-| VERIF-03    | 10    |
-| VERIF-04    | 10    |
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| — | — | — |
+
+**Coverage:**
+- v3.0 requirements: 20 total
+- Mapped to phases: 0
+- Unmapped: 20
+
+---
+*Requirements defined: 2026-06-18*
+*Last updated: 2026-06-18 after initial definition*
