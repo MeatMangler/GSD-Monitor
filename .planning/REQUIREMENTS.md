@@ -35,10 +35,10 @@ Requirements for gsd-core migration. Each maps to roadmap phases.
 
 ### Enhanced Visibility
 
-- [ ] **VIS-01**: Monitor displays requirements traceability table showing which phases cover which requirements
-- [ ] **VIS-02**: Monitor shows plan wave assignments and parallelization grouping
-- [ ] **VIS-03**: Monitor can browse shipped milestones from details blocks in ROADMAP.md
-- [ ] **VIS-04**: Monitor highlights requirements with no phase coverage (unmapped gaps)
+- [x] **VIS-01**: Monitor displays requirements traceability table showing which phases cover which requirements
+- [x] **VIS-02**: Monitor shows plan wave assignments and parallelization grouping
+- [x] **VIS-03**: Monitor can browse shipped milestones from details blocks in ROADMAP.md
+- [x] **VIS-04**: Monitor highlights requirements with no phase coverage (unmapped gaps)
 
 ## Validated (v2.0 — shipped)
 
@@ -98,10 +98,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROG-01 | Phase 11 | Complete |
 | PROG-02 | Phase 11 | Complete |
 | PROG-03 | Phase 11 | Complete |
-| VIS-01 | Phase 12 | Pending |
-| VIS-02 | Phase 12 | Pending |
-| VIS-03 | Phase 12 | Pending |
-| VIS-04 | Phase 12 | Pending |
+| VIS-01 | Phase 12 | Complete |
+| VIS-02 | Phase 12 | Complete |
+| VIS-03 | Phase 12 | Complete |
+| VIS-04 | Phase 12 | Complete |
 
 **Coverage:**
 
