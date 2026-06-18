@@ -4,8 +4,8 @@ milestone: v3.0
 milestone_name: — gsd-core Migration
 current_phase: 11
 status: completed
-stopped_at: Phase 11 UI-SPEC approved
-last_updated: "2026-06-18T21:09:55.241Z"
+stopped_at: Phase 12 context gathered
+last_updated: "2026-06-18T21:42:52.639Z"
 last_activity: 2026-06-18
 last_activity_desc: Phase 11 marked complete
 progress:
@@ -68,9 +68,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-18T20:55:17.383Z
-Stopped at: Phase 11 UI-SPEC approved
-Resume file: .planning/phases/11-gsd-core-support/11-UI-SPEC.md
+Last session: 2026-06-18T21:42:52.629Z
+Stopped at: Phase 12 context gathered
+Resume file: .planning/phases/12-enhanced-visibility/12-CONTEXT.md
 
 ## Performance Metrics
 
