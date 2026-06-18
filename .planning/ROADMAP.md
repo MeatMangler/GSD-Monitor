@@ -62,7 +62,7 @@ Plans:
 
 ### Phases
 
-- [ ] **Phase 11: gsd-core Support** - Detect, parse, and surface gsd-core projects with all new document types, progress metrics, and GSD-2 removal
+- [x] **Phase 11: gsd-core Support** - Detect, parse, and surface gsd-core projects with all new document types, progress metrics, and GSD-2 removal (completed 2026-06-18)
 - [ ] **Phase 12: Enhanced Visibility** - Requirements traceability, wave visualization, milestone archive browsing, and coverage gap highlighting
 
 ---
@@ -82,7 +82,7 @@ Plans:
   4. The project dashboard shows a progress bar or metric widget with completed/total phases and percentage from STATE.md
   5. Legacy GSD-1 checkbox-format projects still render correctly, and no GSD-2 (.gsd/) projects appear
 
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 **Wave 1**
 
@@ -90,7 +90,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 11-02-PLAN.md — Frontend: version badge, progress bars, pause banner, config badges, quick-access shortcuts, phase IDs, GSD-2 cleanup
+- [x] 11-02-PLAN.md — Frontend: version badge, progress bars, pause banner, config badges, quick-access shortcuts, phase IDs, GSD-2 cleanup
 
 **UI hint**: yes
 
@@ -117,5 +117,5 @@ Plans:
 |-------|----------------|--------|-----------|
 | 9. Drift Computation | 1/1 | Complete | 2026-04-12 |
 | 10. Feature Pages | 3/3 | Complete | 2026-04-12 |
-| 11. gsd-core Support | 1/2 | In Progress|  |
+| 11. gsd-core Support | 2/2 | Complete   | 2026-06-18 |
 | 12. Enhanced Visibility | 0/0 | Not started | - |
