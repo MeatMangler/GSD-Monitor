@@ -62,6 +62,39 @@ export interface QuickTaskPayload {
   last_updated?: string;
 }
 
+export interface RequirementEntryPayload {
+  id: string;
+  category: string;
+  description: string;
+  is_checked: boolean;
+  phase: string | null;
+  status: string | null;
+  is_gap: boolean;
+}
+
+export interface PlanWaveEntry {
+  plan_name: string;
+  wave: number;
+}
+
+export interface PhaseWavePayload {
+  phase_number: number;
+  phase_title: string;
+  plans: PlanWaveEntry[];
+}
+
+export interface InsightsPayload {
+  requirements: RequirementEntryPayload[];
+  wave_phases: PhaseWavePayload[];
+}
+
+export async function fetchInsights(planningPath: string): Promise<InsightsPayload> {
+  const enc = encodeURIComponent(planningPath);
+  const r = await fetch(`${base}/api/insights/${enc}`, noStore);
+  if (!r.ok) throw new Error(await r.text());
+  return r.json() as Promise<InsightsPayload>;
+}
+
 export interface WorktreeInfo {
   path: string;
   branch: string;
@@ -115,6 +148,8 @@ export interface MilestonePayload {
   phases: PhasePayload[];
   code?: string | null;
   vision?: string | null;
+  is_archived?: boolean;
+  completion_date?: string | null;
 }
 
 export interface PhasePayload {
