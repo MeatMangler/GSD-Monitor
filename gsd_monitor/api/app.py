@@ -21,6 +21,7 @@ from starlette.requests import Request
 from gsd_monitor.file_watcher import ScanWatcher
 from gsd_monitor.models.core import AppSettings
 from gsd_monitor.parsers.quick_task import QuickTaskParser
+from gsd_monitor.parsers.requirements_parser import RequirementsParser
 from gsd_monitor.services.project_discovery import ProjectDiscoveryService, ProjectGroup, SegmentModel, WorktreeInfo
 from gsd_monitor.services.settings_service import SettingsService
 
@@ -183,6 +184,101 @@ def _group_to_json(g: ProjectGroup) -> dict[str, Any]:
     }
 
 
+def _extract_wave_data(planning_dir: str) -> list[dict[str, Any]]:
+    """Extract multi-wave phase data from PLAN.md frontmatter.
+
+    Reads all *-PLAN.md files under planning_dir/phases/, extracts the wave:
+    field from YAML-like frontmatter (bounded by --- delimiters), and returns
+    only phases where plans span more than one distinct wave value.
+
+    Args:
+        planning_dir: Path to the .planning/ directory.
+
+    Returns:
+        List of dicts, each with phase_number (int), phase_title (str), and
+        plans (list of dicts with plan_name and wave). Sorted by phase_number;
+        plans within each phase sorted by wave ascending.
+    """
+    import re as _re
+
+    _WAVE_RE = _re.compile(r"^wave:\s*(\d+)", _re.MULTILINE)
+    _PLAN_NUM_RE = _re.compile(r"^plan:\s*(\S+)", _re.MULTILINE)
+
+    phases_dir = Path(planning_dir) / "phases"
+    if not phases_dir.is_dir():
+        return []
+
+    # Map: phase_dir_name -> list of (plan_name, wave)
+    phase_data: dict[str, list[dict[str, Any]]] = {}
+
+    for subdir in sorted(phases_dir.iterdir()):
+        if not subdir.is_dir():
+            continue
+        dir_name = subdir.name
+        plan_files = sorted(subdir.glob("*-PLAN.md"))
+        if not plan_files:
+            continue
+
+        plans_in_phase: list[dict[str, Any]] = []
+        for plan_file in plan_files:
+            try:
+                content = plan_file.read_text(encoding="utf-8", errors="replace")
+            except Exception:
+                continue
+
+            # Extract YAML frontmatter between first pair of --- delimiters
+            frontmatter = ""
+            if content.startswith("---"):
+                end_idx = content.find("---", 3)
+                if end_idx != -1:
+                    frontmatter = content[3:end_idx]
+
+            wave_m = _WAVE_RE.search(frontmatter)
+            if wave_m is None:
+                continue
+            wave = int(wave_m.group(1))
+
+            # Use plan: field from frontmatter for plan name, fall back to filename stem
+            plan_num_m = _PLAN_NUM_RE.search(frontmatter)
+            plan_name = plan_num_m.group(1).strip() if plan_num_m else plan_file.stem
+
+            plans_in_phase.append({"plan_name": str(plan_name), "wave": wave})
+
+        if plans_in_phase:
+            phase_data[dir_name] = plans_in_phase
+
+    # Build result list — only include phases with more than one distinct wave value
+    result: list[dict[str, Any]] = []
+    for dir_name, plans in phase_data.items():
+        distinct_waves = {p["wave"] for p in plans}
+        if len(distinct_waves) <= 1:
+            continue
+
+        # Extract phase_number and phase_title from directory name
+        # Pattern: "11-gsd-core-support" -> number=11, title="gsd-core-support"
+        num_m = _re.match(r"^(\d+)-(.+)$", dir_name)
+        if num_m:
+            phase_number = int(num_m.group(1))
+            phase_title = num_m.group(2).replace("-", " ").title()
+        else:
+            phase_number = 0
+            phase_title = dir_name
+
+        # Sort plans by wave ascending
+        sorted_plans = sorted(plans, key=lambda p: p["wave"])
+        result.append(
+            {
+                "phase_number": phase_number,
+                "phase_title": phase_title,
+                "plans": sorted_plans,
+            }
+        )
+
+    # Sort result by phase_number ascending
+    result.sort(key=lambda x: x["phase_number"])
+    return result
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup: capture event loop and trigger initial scan. Shutdown: stop file watcher."""
@@ -257,6 +353,18 @@ def create_app() -> FastAPI:
         p = unquote(planning_path)
         tasks = QuickTaskParser.parse(p)
         return {"tasks": [t.model_dump(mode="json") for t in tasks]}
+
+    @application.get("/api/insights/{planning_path:path}")
+    async def insights(planning_path: str) -> dict[str, Any]:
+        from urllib.parse import unquote
+
+        p = unquote(planning_path)
+        requirements = RequirementsParser.parse(p)
+        wave_phases = _extract_wave_data(p)
+        return {
+            "requirements": [r.model_dump() for r in requirements],
+            "wave_phases": wave_phases,
+        }
 
     @application.get("/api/docs/{planning_path:path}/tree")
     async def docs_tree(planning_path: str) -> dict[str, Any]:
