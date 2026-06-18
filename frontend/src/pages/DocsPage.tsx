@@ -44,7 +44,14 @@ export function DocsPage() {
     return `PLAN (${String(inProgress.number).padStart(2, "0")})`;
   }, [activeProject]);
 
-  // Quick-access items
+  // Helper: convert an absolute artifact path to a planning-root-relative path
+  function toRelPath(root: string, absPath: string): string | null {
+    return absPath.startsWith(root)
+      ? absPath.slice(root.length).replace(/^[/\\]+/, "").replace(/\\/g, "/")
+      : null;
+  }
+
+  // Quick-access items — per UI-SPEC section 4, DOCS-01 through DOCS-05
   const quickAccess = useMemo(() => {
     const items: { label: string; path: string }[] = [
       { label: "ROADMAP.md", path: "ROADMAP.md" },
@@ -54,8 +61,55 @@ export function DocsPage() {
       items.push({ label: activePlanLabel, path: activePlanPath });
     }
     items.push({ label: "REQUIREMENTS.md", path: "REQUIREMENTS.md" });
+
+    // Add quick-access for new doc types when present on the in-progress phase
+    if (activeProject && activeSegment) {
+      const phases = activeProject.milestones.flatMap((m) => m.phases);
+      const inProgress = phases.find((p) => p.status === "in_progress");
+      if (inProgress) {
+        const root = activeSegment.planningPath;
+        const padded = String(inProgress.number).padStart(2, "0");
+
+        // VERIFICATION — per DOCS-01, has_validation flag
+        if (inProgress.has_validation) {
+          const artifact = inProgress.artifact_paths.find((a) => a.endsWith("-VERIFICATION.md"));
+          if (artifact) {
+            const rel = toRelPath(root, artifact);
+            if (rel) items.push({ label: `VERIFICATION (${padded})`, path: rel });
+          }
+        }
+
+        // UI-SPEC — per DOCS-02, has_ui_spec flag
+        if (inProgress.has_ui_spec) {
+          const artifact = inProgress.artifact_paths.find((a) => a.endsWith("-UI-SPEC.md"));
+          if (artifact) {
+            const rel = toRelPath(root, artifact);
+            if (rel) items.push({ label: `UI-SPEC (${padded})`, path: rel });
+          }
+        }
+
+        // UI-REVIEW — per DOCS-03, has_ui_review flag
+        if (inProgress.has_ui_review) {
+          const artifact = inProgress.artifact_paths.find((a) => a.endsWith("-UI-REVIEW.md"));
+          if (artifact) {
+            const rel = toRelPath(root, artifact);
+            if (rel) items.push({ label: `UI-REVIEW (${padded})`, path: rel });
+          }
+        }
+
+        // SUMMARY — per DOCS-04, has_summary flag
+        if (inProgress.has_summary) {
+          const artifact = inProgress.artifact_paths.find((a) => a.endsWith("-SUMMARY.md"));
+          if (artifact) {
+            const rel = toRelPath(root, artifact);
+            if (rel) items.push({ label: `SUMMARY (${padded})`, path: rel });
+          }
+        }
+      }
+    }
+
     return items;
-  }, [activePlanPath, activePlanLabel]);
+  }, [activePlanPath, activePlanLabel, activeProject, activeSegment]);
 
   // Increment refreshKey whenever groups changes, but skip the initial render
   const isInitialMount = useRef(true);
