@@ -70,7 +70,10 @@ Plans:
   3. A paused gsd-core project displays HANDOFF.json pause status (phase, plan, timestamp) and .continue-here.md resume context in the project view
   4. The project dashboard shows a progress bar or metric widget with completed/total phases and percentage from STATE.md
   5. Legacy GSD-1 checkbox-format projects still render correctly, and no GSD-2 (.gsd/) projects appear
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 11-01-PLAN.md — Backend: gsd-core parser, models, detection, enrichment, GSD-2 removal, progress, HANDOFF, config
+- [ ] 11-02-PLAN.md — Frontend: version badge, progress bars, pause banner, config badges, quick-access shortcuts, phase IDs, GSD-2 cleanup
 **UI hint**: yes
 
 ### Phase 12: Enhanced Visibility
@@ -93,5 +96,5 @@ Plans:
 |-------|----------------|--------|-----------|
 | 9. Drift Computation | 1/1 | Complete | 2026-04-12 |
 | 10. Feature Pages | 3/3 | Complete | 2026-04-12 |
-| 11. gsd-core Support | 0/0 | Not started | - |
+| 11. gsd-core Support | 0/2 | Not started | - |
 | 12. Enhanced Visibility | 0/0 | Not started | - |
