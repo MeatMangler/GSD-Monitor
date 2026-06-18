@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+:root {
+  --color-surface: #1e1e1e;
+  --color-surface-raised: #2a2d2e;
+  --color-border: #474747;
+  --color-text-primary: #cccccc;
+  --color-text-muted: #858585;
+  --color-accent-green: #4ec994;
+}
+
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
 }
