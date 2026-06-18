@@ -1,37 +1,37 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: — Feature Pages
-status: verifying
-stopped_at: Phase 10 verification complete — milestone v2.0 at 100%
-last_updated: "2026-04-12T10:04:35.774Z"
-last_activity: 2026-04-12
+milestone: v3.0
+milestone_name: gsd-core Migration
+status: planning
+stopped_at: Defining requirements for v3.0
+last_updated: "2026-06-18T00:00:00.000Z"
+last_activity: 2026-06-18
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-12)
+See: .planning/PROJECT.md (updated 2026-06-18)
 
 **Core value:** Developer opens GSD Monitor and immediately understands every project's status with zero duplicate entries and zero confusion
-**Current focus:** Milestone v2.0 complete — awaiting human verification of UI pages
+**Current focus:** Milestone v3.0 — gsd-core migration
 
 ## Current Position
 
-Phase: 10
-Plan: Not started
-Status: Complete — pending human verification (visual/interactive checks)
-Last activity: 2026-04-12
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-06-18 — Milestone v3.0 started
 
 ```
-v2.0 Progress: [##########] 100% (2/2 phases)
+v3.0 Progress: [..........] 0% (0/0 phases)
 ```
 
 ## Accumulated Context
@@ -45,8 +45,6 @@ Recent decisions affecting current work:
 - v2.0: QuickTaskParser rewritten to treat quick/ subdirectories as single tasks (PLAN.md + SUMMARY.md per task)
 - v2.0: VERIFICATION.md now surfaced alongside VALIDATION.md — has_validation true for either
 - v2.0: Phase 9 (backend only) delivers real DriftIndicator before Phase 10 builds the UI — backend correctness first
-- [Phase 09-drift-computation]: D-01: IN_PROGRESS with no plan returns DEFERRED; D-02: COMPLETE always returns NONE; D-04: injectable now param for deterministic testing; D-05: GSD-2 falls back to plan_file mtime for last_updated
-- [Phase 10-feature-pages]: Unvalidated rows use div not button per UI-SPEC accessibility contract (no expand behavior on phases without validation)
 
 ### Pending Todos
 
@@ -54,7 +52,7 @@ None.
 
 ### Blockers/Concerns
 
-None — human verification of Drift/QuickTasks/Verification page rendering is the only remaining step before milestone closure.
+None.
 
 ### Quick Tasks Completed
 
@@ -66,6 +64,6 @@ None — human verification of Drift/QuickTasks/Verification page rendering is t
 
 ## Session Continuity
 
-Last session: 2026-04-12T10:15:00.000Z
-Stopped at: Phase 10 verification complete — milestone v2.0 at 100%
+Last session: 2026-06-18T00:00:00.000Z
+Stopped at: Defining requirements for v3.0
 Resume file: None

@@ -21,7 +21,25 @@ All 16 v1 requirements delivered across 8 phases:
 
 **Tech debt carried to v2:** 7 items (0 critical) — see [v1.0 audit](.planning/v1.0-MILESTONE-AUDIT.md)
 
-## Current Milestone: v2.0 Feature Pages — Complete (2026-04-12)
+## Current Milestone: v3.0 gsd-core Migration
+
+**Goal:** Update parsers, models, and UI to support gsd-core project format with full document visibility, while deprecating GSD-2
+
+**Target features:**
+- Detect gsd-core projects via config.json / ROADMAP heading format
+- Parse gsd-core ROADMAP.md (heading-based phases, milestone headings, emoji markers, `<details>` archives)
+- Support milestone-prefixed phase IDs (Phase 1-01)
+- Surface all new document types (REQUIREMENTS, VERIFICATION, SUMMARY, UI-SPEC, UI-REVIEW, HANDOFF)
+- Display progress metrics from STATE.md
+- Show HANDOFF.json / .continue-here.md pause status
+- Surface config.json workflow settings
+- Drop GSD-2 (.gsd/) support
+- Requirements viewer with traceability
+- Wave visualization for plan parallelization
+- Milestone archive browsing
+- Coverage gap highlighting
+
+## v2.0 Feature Pages — Complete (2026-04-12)
 
 All 13 v2.0 requirements delivered across 2 phases (Phase 09 + Phase 10):
 
@@ -72,4 +90,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-12 — Phase 10 complete (feature pages); v2.0 milestone done*
+*Last updated: 2026-06-18 — Milestone v3.0 started (gsd-core migration)*
