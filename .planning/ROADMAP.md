@@ -82,11 +82,11 @@ Plans:
   4. The project dashboard shows a progress bar or metric widget with completed/total phases and percentage from STATE.md
   5. Legacy GSD-1 checkbox-format projects still render correctly, and no GSD-2 (.gsd/) projects appear
 
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 **Wave 1**
 
-- [ ] 11-01-PLAN.md — Backend: gsd-core parser, models, detection, enrichment, GSD-2 removal, progress, HANDOFF, config
+- [x] 11-01-PLAN.md — Backend: gsd-core parser, models, detection, enrichment, GSD-2 removal, progress, HANDOFF, config
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -117,5 +117,5 @@ Plans:
 |-------|----------------|--------|-----------|
 | 9. Drift Computation | 1/1 | Complete | 2026-04-12 |
 | 10. Feature Pages | 3/3 | Complete | 2026-04-12 |
-| 11. gsd-core Support | 0/2 | Not started | - |
+| 11. gsd-core Support | 1/2 | In Progress|  |
 | 12. Enhanced Visibility | 0/0 | Not started | - |

@@ -9,29 +9,29 @@ Requirements for gsd-core migration. Each maps to roadmap phases.
 
 ### Detection & Parsing
 
-- [ ] **DETECT-01**: Monitor detects gsd-core projects via .planning/config.json presence
-- [ ] **DETECT-02**: Monitor parses gsd-core ROADMAP.md heading-based phase format (## Phase N: Title with **Goal:** fields)
-- [ ] **DETECT-03**: Monitor extracts milestones from ROADMAP.md emoji-marked headings (active, shipped)
-- [ ] **DETECT-04**: Monitor supports milestone-prefixed phase IDs (Phase 1-01, Phase 2-03) and displays them as-is
-- [ ] **DETECT-05**: Monitor continues to parse legacy GSD-1 checkbox ROADMAP format (- [x] **Phase N: Title**)
-- [ ] **DETECT-06**: Monitor no longer discovers or displays GSD-2 (.gsd/) projects
+- [x] **DETECT-01**: Monitor detects gsd-core projects via .planning/config.json presence
+- [x] **DETECT-02**: Monitor parses gsd-core ROADMAP.md heading-based phase format (## Phase N: Title with **Goal:** fields)
+- [x] **DETECT-03**: Monitor extracts milestones from ROADMAP.md emoji-marked headings (active, shipped)
+- [x] **DETECT-04**: Monitor supports milestone-prefixed phase IDs (Phase 1-01, Phase 2-03) and displays them as-is
+- [x] **DETECT-05**: Monitor continues to parse legacy GSD-1 checkbox ROADMAP format (- [x] **Phase N: Title**)
+- [x] **DETECT-06**: Monitor no longer discovers or displays GSD-2 (.gsd/) projects
 
 ### Document Surfacing
 
-- [ ] **DOCS-01**: Monitor detects and displays REQUIREMENTS.md content for gsd-core projects
-- [ ] **DOCS-02**: Monitor detects and displays VERIFICATION.md content per phase
-- [ ] **DOCS-03**: Monitor detects and displays per-plan SUMMARY.md content
-- [ ] **DOCS-04**: Monitor detects and displays UI-SPEC.md content per phase
-- [ ] **DOCS-05**: Monitor detects and displays UI-REVIEW.md content per phase
-- [ ] **DOCS-06**: Monitor detects HANDOFF.json and shows pause status (current phase, plan, paused timestamp)
-- [ ] **DOCS-07**: Monitor detects .continue-here.md and displays resume context
-- [ ] **DOCS-08**: Monitor reads config.json and surfaces workflow mode, model profile, and branching strategy
+- [x] **DOCS-01**: Monitor detects and displays REQUIREMENTS.md content for gsd-core projects
+- [x] **DOCS-02**: Monitor detects and displays VERIFICATION.md content per phase
+- [x] **DOCS-03**: Monitor detects and displays per-plan SUMMARY.md content
+- [x] **DOCS-04**: Monitor detects and displays UI-SPEC.md content per phase
+- [x] **DOCS-05**: Monitor detects and displays UI-REVIEW.md content per phase
+- [x] **DOCS-06**: Monitor detects HANDOFF.json and shows pause status (current phase, plan, paused timestamp)
+- [x] **DOCS-07**: Monitor detects .continue-here.md and displays resume context
+- [x] **DOCS-08**: Monitor reads config.json and surfaces workflow mode, model profile, and branching strategy
 
 ### Progress & State
 
-- [ ] **PROG-01**: Monitor extracts progress metrics from STATE.md (total_phases, completed_phases, progress_percent)
-- [ ] **PROG-02**: Monitor displays progress bar or metric widget on project dashboard
-- [ ] **PROG-03**: Monitor parses all three STATE.md syntax variants (bold inline, line-start, pipe-table)
+- [x] **PROG-01**: Monitor extracts progress metrics from STATE.md (total_phases, completed_phases, progress_percent)
+- [x] **PROG-02**: Monitor displays progress bar or metric widget on project dashboard
+- [x] **PROG-03**: Monitor parses all three STATE.md syntax variants (bold inline, line-start, pipe-table)
 
 ### Enhanced Visibility
 
@@ -81,29 +81,30 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DETECT-01 | Phase 11 | Pending |
-| DETECT-02 | Phase 11 | Pending |
-| DETECT-03 | Phase 11 | Pending |
-| DETECT-04 | Phase 11 | Pending |
-| DETECT-05 | Phase 11 | Pending |
-| DETECT-06 | Phase 11 | Pending |
-| DOCS-01 | Phase 11 | Pending |
-| DOCS-02 | Phase 11 | Pending |
-| DOCS-03 | Phase 11 | Pending |
-| DOCS-04 | Phase 11 | Pending |
-| DOCS-05 | Phase 11 | Pending |
-| DOCS-06 | Phase 11 | Pending |
-| DOCS-07 | Phase 11 | Pending |
-| DOCS-08 | Phase 11 | Pending |
-| PROG-01 | Phase 11 | Pending |
-| PROG-02 | Phase 11 | Pending |
-| PROG-03 | Phase 11 | Pending |
+| DETECT-01 | Phase 11 | Complete |
+| DETECT-02 | Phase 11 | Complete |
+| DETECT-03 | Phase 11 | Complete |
+| DETECT-04 | Phase 11 | Complete |
+| DETECT-05 | Phase 11 | Complete |
+| DETECT-06 | Phase 11 | Complete |
+| DOCS-01 | Phase 11 | Complete |
+| DOCS-02 | Phase 11 | Complete |
+| DOCS-03 | Phase 11 | Complete |
+| DOCS-04 | Phase 11 | Complete |
+| DOCS-05 | Phase 11 | Complete |
+| DOCS-06 | Phase 11 | Complete |
+| DOCS-07 | Phase 11 | Complete |
+| DOCS-08 | Phase 11 | Complete |
+| PROG-01 | Phase 11 | Complete |
+| PROG-02 | Phase 11 | Complete |
+| PROG-03 | Phase 11 | Complete |
 | VIS-01 | Phase 12 | Pending |
 | VIS-02 | Phase 12 | Pending |
 | VIS-03 | Phase 12 | Pending |
 | VIS-04 | Phase 12 | Pending |
 
 **Coverage:**
+
 - v3.0 requirements: 21 total
 - Mapped to phases: 21
 - Unmapped: 0
