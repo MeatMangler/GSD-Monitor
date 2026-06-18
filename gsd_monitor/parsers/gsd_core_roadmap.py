@@ -50,6 +50,9 @@ _CHECKBOX_PHASE = re.compile(
 _DETAILS_OPEN = re.compile(r"<details>", re.IGNORECASE)
 _DETAILS_CLOSE = re.compile(r"</details>", re.IGNORECASE)
 
+# Extract completion date from summary text: "SHIPPED 2026-04-12" or "SHIPPED: 2026-04-12"
+_SHIPPED_DATE = re.compile(r"SHIPPED\s+(\d{4}-\d{2}-\d{2})")
+
 # "## Phase Details" section marker
 _PHASE_DETAILS_HDR = re.compile(r"^## Phase Details\s*$", re.MULTILINE | re.IGNORECASE)
 
@@ -254,6 +257,8 @@ class GsdCoreRoadmapParser:
                     title=arch_ms.title,
                     status=arch_ms.status,
                     phases=arch_ms.phases,
+                    is_archived=arch_ms.is_archived,
+                    completion_date=arch_ms.completion_date,
                 )
             )
 
@@ -407,12 +412,16 @@ class GsdCoreRoadmapParser:
 
             if phase_entries:
                 ms_status = _determine_milestone_status(summary_title, phase_entries)
+                shipped_m = _SHIPPED_DATE.search(summary_title)
+                completion_date = shipped_m.group(1) if shipped_m else None
                 archived.append(
                     Milestone(
                         number=0,  # Will be renumbered by caller
                         title=summary_title,
                         status=ms_status,
                         phases=phase_entries,
+                        is_archived=True,
+                        completion_date=completion_date,
                     )
                 )
 

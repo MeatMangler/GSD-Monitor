@@ -61,6 +61,8 @@ class Milestone(BaseModel):
     phases: list[PhaseEntry] = Field(default_factory=list)
     code: str | None = None
     vision: str | None = None
+    is_archived: bool = False
+    completion_date: str | None = None
 
 
 class GsdProject(BaseModel):
