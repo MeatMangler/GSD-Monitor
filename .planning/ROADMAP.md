@@ -106,7 +106,16 @@ Plans:
   3. User can browse shipped milestones from collapsed archive sections in the ROADMAP, viewing their phases and completion dates
   4. Requirements with no phase coverage are visually distinct (color or icon) so gaps are immediately obvious
 
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+**Wave 1**
+
+- [ ] 12-01-PLAN.md — Backend: RequirementsParser, Milestone model updates, insights API endpoint with wave data
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 12-02-PLAN.md — Frontend: InsightsPage with Requirements/Waves/Archives tabs, routing and nav wiring
+
 **UI hint**: yes
 
 ---
@@ -118,4 +127,4 @@ Plans:
 | 9. Drift Computation | 1/1 | Complete | 2026-04-12 |
 | 10. Feature Pages | 3/3 | Complete | 2026-04-12 |
 | 11. gsd-core Support | 2/2 | Complete   | 2026-06-18 |
-| 12. Enhanced Visibility | 0/0 | Not started | - |
+| 12. Enhanced Visibility | 0/2 | Not started | - |
