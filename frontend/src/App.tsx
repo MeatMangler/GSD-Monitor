@@ -5,6 +5,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { DriftPage } from "./pages/DriftPage";
 import { QuickTasksPage } from "./pages/QuickTasksPage";
 import { VerificationPage } from "./pages/VerificationPage";
+import { InsightsPage } from "./pages/InsightsPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { DocsPage } from "./pages/DocsPage";
 
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/drift" element={<DriftPage />} />
           <Route path="/quick-tasks" element={<QuickTasksPage />} />
           <Route path="/verification" element={<VerificationPage />} />
+          <Route path="/insights" element={<InsightsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </ShellLayout>

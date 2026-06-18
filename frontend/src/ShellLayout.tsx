@@ -9,6 +9,7 @@ const nav = [
   { to: "/drift", label: "Drift" },
   { to: "/quick-tasks", label: "Quick Tasks" },
   { to: "/verification", label: "Verification" },
+  { to: "/insights", label: "Insights" },
   { to: "/settings", label: "Settings" },
 ];
 
@@ -58,7 +59,7 @@ export function ShellLayout({ children }: { children: ReactNode }) {
           {error && <p className="text-xs text-red-400">{error}</p>}
           <label className="block text-xs font-medium text-[#858585]">Workspace / repo</label>
           <select
-            className="w-full rounded-md border border-[#474747] bg-[#252526] px-2 py-1.5 text-sm"
+            className="w-full rounded-md border border-[#474747] bg-[#252526] px-2 py-1.5 text-sm text-[#cccccc]"
             value={selectedGroupId ?? ""}
             onChange={(e) => {
               setSelectedGroupId(e.target.value || null);
@@ -100,7 +101,7 @@ export function ShellLayout({ children }: { children: ReactNode }) {
             <>
               <label className="block text-xs font-medium text-[#858585]">GSD project</label>
               <select
-                className="w-full rounded-md border border-[#474747] bg-[#252526] px-2 py-1.5 text-sm"
+                className="w-full rounded-md border border-[#474747] bg-[#252526] px-2 py-1.5 text-sm text-[#cccccc]"
                 value={
                   activeGroup?.segments.find((s: SegmentPayload) => s.segmentKey === selectedSegmentKey)
                     ?.gsdProject ?? ""
@@ -131,7 +132,7 @@ export function ShellLayout({ children }: { children: ReactNode }) {
             <>
               <label className="block text-xs font-medium text-[#858585]">Workstream</label>
               <select
-                className="w-full rounded-md border border-[#474747] bg-[#252526] px-2 py-1.5 text-sm"
+                className="w-full rounded-md border border-[#474747] bg-[#252526] px-2 py-1.5 text-sm text-[#cccccc]"
                 value={
                   activeGroup?.segments.find((s: SegmentPayload) => s.segmentKey === selectedSegmentKey)
                     ?.workstream ?? ""
