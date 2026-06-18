@@ -81,13 +81,33 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| — | — | — |
+| DETECT-01 | Phase 11 | Pending |
+| DETECT-02 | Phase 11 | Pending |
+| DETECT-03 | Phase 11 | Pending |
+| DETECT-04 | Phase 11 | Pending |
+| DETECT-05 | Phase 11 | Pending |
+| DETECT-06 | Phase 11 | Pending |
+| DOCS-01 | Phase 11 | Pending |
+| DOCS-02 | Phase 11 | Pending |
+| DOCS-03 | Phase 11 | Pending |
+| DOCS-04 | Phase 11 | Pending |
+| DOCS-05 | Phase 11 | Pending |
+| DOCS-06 | Phase 11 | Pending |
+| DOCS-07 | Phase 11 | Pending |
+| DOCS-08 | Phase 11 | Pending |
+| PROG-01 | Phase 11 | Pending |
+| PROG-02 | Phase 11 | Pending |
+| PROG-03 | Phase 11 | Pending |
+| VIS-01 | Phase 12 | Pending |
+| VIS-02 | Phase 12 | Pending |
+| VIS-03 | Phase 12 | Pending |
+| VIS-04 | Phase 12 | Pending |
 
 **Coverage:**
-- v3.0 requirements: 20 total
-- Mapped to phases: 0
-- Unmapped: 20
+- v3.0 requirements: 21 total
+- Mapped to phases: 21
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-18*
-*Last updated: 2026-06-18 after initial definition*
+*Last updated: 2026-06-18 after roadmap creation*
