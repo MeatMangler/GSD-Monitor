@@ -4,7 +4,7 @@
 
 - [x] **v1.0** — Worktree deduplication, VS Code dark dashboard, doc browser, performance & correctness, GSD-2 StateParser wiring, FastAPI modernization, frontend source rebuild (8 phases, 15 plans, 2026-04-03 → 2026-04-04) — [Archive](milestones/v1.0-ROADMAP.md)
 - [x] **v2.0 Feature Pages** — Real drift computation, Drift page, Quick Tasks page, Verification page (2 phases, 4 plans, 2026-04-12) — [Archive](milestones/v2.0-ROADMAP.md)
-- [ ] **v3.0 gsd-core Migration** — gsd-core detection & parsing, new document surfacing, progress metrics, enhanced visibility (2 phases)
+- [x] **v3.0 gsd-core Migration** — gsd-core detection & parsing, new document surfacing, progress metrics, enhanced visibility (2 phases, 4 plans, 2026-06-18)
 
 ---
 
@@ -64,6 +64,8 @@ Plans:
 
 - [x] **Phase 11: gsd-core Support** - Detect, parse, and surface gsd-core projects with all new document types, progress metrics, and GSD-2 removal (completed 2026-06-18)
 - [x] **Phase 12: Enhanced Visibility** - Requirements traceability, wave visualization, milestone archive browsing, and coverage gap highlighting (completed 2026-06-18)
+
+**v3.0 SHIPPED 2026-06-18**
 
 ---
 
