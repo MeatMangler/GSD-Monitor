@@ -109,6 +109,15 @@ export function DashboardPage() {
         </div>
       )}
 
+      {/* Resume context banner — per DOCS-07 */}
+      {activeProject.continue_here && (
+        <div className="mb-4 rounded-md border border-sky-800/40 bg-sky-900/20 px-4 py-2 flex items-center">
+          <span className="inline-block w-1 h-1 rounded-full bg-sky-400 mr-2" />
+          <span className="text-xs font-semibold text-sky-400">Resume context available</span>
+          <span className="ml-2 text-xs text-[#858585]">.continue-here.md</span>
+        </div>
+      )}
+
       {/* Stats bar — per D-01 through D-05 */}
       <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
         {/* Card 1: Completion % (D-01) with compact progress bar (PROG-02, UI-SPEC section 1) */}

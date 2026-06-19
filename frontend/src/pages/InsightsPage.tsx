@@ -290,7 +290,7 @@ export function InsightsPage() {
             <p className="text-sm text-[var(--color-text-muted)]">Loading wave data\u2026</p>
           )}
           {insightsError && (
-            <p className="text-sm text-red-400">Could not load insights — check that this project has a REQUIREMENTS.md file.</p>
+            <p className="text-sm text-red-400">Could not load insights — check that this project has PLAN.md files with wave frontmatter.</p>
           )}
           {insightsData && <WavesTab data={insightsData} />}
         </>
