@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -15,8 +15,36 @@ export function DocsPage() {
   const [treeError, setTreeError] = useState<string | null>(null);
   const [contentError, setContentError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [sidebarWidth, setSidebarWidth] = useState(260);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragStartWidth = useRef(0);
 
   const { activeSegment, activeProject, loading, groups } = useApp();
+
+  const handleDragStart = useCallback((e: React.MouseEvent) => {
+    isDragging.current = true;
+    dragStartX.current = e.clientX;
+    dragStartWidth.current = sidebarWidth;
+    e.preventDefault();
+  }, [sidebarWidth]);
+
+  useEffect(() => {
+    function onMouseMove(e: MouseEvent) {
+      if (!isDragging.current) return;
+      const delta = e.clientX - dragStartX.current;
+      setSidebarWidth(Math.min(480, Math.max(160, dragStartWidth.current + delta)));
+    }
+    function onMouseUp() {
+      isDragging.current = false;
+    }
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+    return () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+  }, []);
 
   // Active PLAN.md resolution (D-07)
   const activePlanPath = useMemo(() => {
@@ -228,7 +256,8 @@ export function DocsPage() {
       ) : (
         <>
           <aside
-            className="w-[260px] shrink-0 border-r border-[#474747] overflow-auto bg-[#252526]"
+            className="shrink-0 border-r border-[#474747] overflow-auto bg-[#252526]"
+            style={{ width: `${sidebarWidth}px` }}
             role="navigation"
             aria-label="Planning files"
           >
@@ -261,6 +290,13 @@ export function DocsPage() {
               tree.map((node) => renderTreeNode(node, 0))
             )}
           </aside>
+          <div
+            className="w-1 shrink-0 cursor-col-resize bg-[#474747] hover:bg-[#007acc] transition-colors select-none"
+            onMouseDown={handleDragStart}
+            role="separator"
+            aria-orientation="vertical"
+            title="Drag to resize"
+          />
           <main
             className="flex-1 overflow-auto p-6 bg-[#1e1e1e]"
             role="region"
@@ -271,7 +307,7 @@ export function DocsPage() {
             ) : contentError ? (
               <p className="text-red-400 text-sm">{contentError}</p>
             ) : selectedPath.endsWith(".md") ? (
-              <div className="prose prose-invert prose-sm max-w-none">
+              <div className="prose prose-invert prose-sm max-w-none docs-content">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {content}
                 </ReactMarkdown>

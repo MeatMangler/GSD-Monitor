@@ -13,3 +13,103 @@
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
 }
+
+/* Docs markdown panel — enhanced readability */
+.docs-content h1 {
+  color: #569cd6;
+  border-bottom: 1px solid #474747;
+  padding-bottom: 0.4em;
+  margin-top: 0;
+}
+
+.docs-content h2 {
+  color: #4ec994;
+  border-left: 3px solid #4ec994;
+  padding-left: 0.6em;
+}
+
+.docs-content h3 {
+  color: #ce9178;
+  border-left: 2px solid #474747;
+  padding-left: 0.5em;
+}
+
+.docs-content h4,
+.docs-content h5,
+.docs-content h6 {
+  color: #9cdcfe;
+}
+
+.docs-content code:not(pre code) {
+  background: #2a2d2e;
+  color: #ce9178;
+  border: 1px solid #474747;
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+  font-size: 0.85em;
+}
+
+.docs-content pre {
+  background: #1a1a1a !important;
+  border: 1px solid #474747;
+  border-radius: 4px;
+}
+
+.docs-content pre code {
+  color: #cccccc;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.docs-content blockquote {
+  border-left: 3px solid #569cd6;
+  background: #252526;
+  padding: 0.5em 1em;
+  color: #858585;
+  border-radius: 0 4px 4px 0;
+  font-style: normal;
+}
+
+.docs-content table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.docs-content th {
+  background: #252526;
+  color: #cccccc;
+  border: 1px solid #474747;
+  padding: 0.4em 0.8em;
+}
+
+.docs-content td {
+  border: 1px solid #474747;
+  padding: 0.4em 0.8em;
+}
+
+.docs-content tr:nth-child(even) td {
+  background: #252526;
+}
+
+.docs-content hr {
+  border-color: #474747;
+}
+
+.docs-content ul li input[type="checkbox"] {
+  accent-color: #4ec994;
+  margin-right: 0.4em;
+}
+
+.docs-content a {
+  color: #569cd6;
+  text-decoration: none;
+}
+
+.docs-content a:hover {
+  text-decoration: underline;
+}
+
+.docs-content strong {
+  color: #e0e0e0;
+}
