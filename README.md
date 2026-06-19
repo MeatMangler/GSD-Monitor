@@ -1,8 +1,15 @@
 # GSD Monitor
 
-A Windows desktop companion app for [GSD](https://github.com/anthropics/claude-code) workflows. GSD Monitor scans your configured directories, discovers GSD projects on disk, and gives you an instant visual overview of every planning document, roadmap phase, and project status — all in a native Edge WebView2 window.
+A Windows desktop companion app for GSD workflow projects. GSD Monitor scans your configured directories, discovers GSD projects on disk, and gives you an instant visual overview of every planning document, roadmap phase, and project status — all in a native Edge WebView2 window.
 
 **Open the app. Know exactly where every project stands.**
+
+## About GSD
+
+GSD Monitor was built by and for users of the GSD developer workflow system — a lightweight, spec-driven development methodology for Claude Code.
+
+- **[get-shit-done](https://github.com/gsd-build/get-shit-done)** — the original GSD system by [TÂCHES](https://github.com/gsd-build). A light-weight and powerful meta-prompting, context engineering and spec-driven development system for Claude Code. GSD Monitor was created to serve this workflow and pays tribute to its design.
+- **[gsd-core](https://github.com/open-gsd/gsd-core)** — the current evolution of GSD, maintained by [open-gsd](https://github.com/open-gsd). GSD Monitor's active development is built around this project and its updated ROADMAP format.
 
 ## Features
 
@@ -82,10 +89,10 @@ The Vite dev server proxies `/api` and `/ws` to `http://127.0.0.1:8765` by defau
 
 GSD Monitor detects and renders both `.planning/` layout variants:
 
-| Format | ROADMAP style | Detection |
-|---|---|---|
-| **GSD-1** | Checkbox task lists (`- [ ]`, `- [x]`) | Checkbox lines in ROADMAP.md |
-| **gsd-core** | Heading-based phases (`## Phase N: Title`) | `## Phase N` headings in ROADMAP.md |
+| Format | Origin | ROADMAP style | Detection |
+|---|---|---|---|
+| **GSD-1** | [get-shit-done](https://github.com/gsd-build/get-shit-done) | Checkbox task lists (`- [ ]`, `- [x]`) | Checkbox lines in ROADMAP.md |
+| **gsd-core** | [gsd-core](https://github.com/open-gsd/gsd-core) | Heading-based phases (`## Phase N: Title`) | `## Phase N` headings in ROADMAP.md |
 
 Both variants support flat, workstream (`workstreams/`), and multi-project sub-directory layouts within `.planning/`.
 
