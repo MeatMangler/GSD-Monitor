@@ -16,6 +16,7 @@ export function DocsPage() {
   const [contentError, setContentError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [sidebarWidth, setSidebarWidth] = useState(260);
+  const [resizing, setResizing] = useState(false);
   const isDragging = useRef(false);
   const dragStartX = useRef(0);
   const dragStartWidth = useRef(0);
@@ -26,6 +27,7 @@ export function DocsPage() {
     isDragging.current = true;
     dragStartX.current = e.clientX;
     dragStartWidth.current = sidebarWidth;
+    setResizing(true);
     e.preventDefault();
   }, [sidebarWidth]);
 
@@ -36,7 +38,9 @@ export function DocsPage() {
       setSidebarWidth(Math.min(480, Math.max(160, dragStartWidth.current + delta)));
     }
     function onMouseUp() {
+      if (!isDragging.current) return;
       isDragging.current = false;
+      setResizing(false);
     }
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
@@ -246,7 +250,7 @@ export function DocsPage() {
   }
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full" style={{ userSelect: resizing ? "none" : undefined }}>
       {!activeSegment ? (
         <div className="p-6 text-[#858585] text-sm">
           Add scan roots in Settings and select a project.
@@ -256,7 +260,7 @@ export function DocsPage() {
       ) : (
         <>
           <aside
-            className="shrink-0 border-r border-[#474747] overflow-auto bg-[#252526]"
+            className="shrink-0 overflow-auto bg-[#252526]"
             style={{ width: `${sidebarWidth}px` }}
             role="navigation"
             aria-label="Planning files"
@@ -291,12 +295,14 @@ export function DocsPage() {
             )}
           </aside>
           <div
-            className="w-1 shrink-0 cursor-col-resize bg-[#474747] hover:bg-[#007acc] transition-colors select-none"
+            className="w-2 shrink-0 cursor-col-resize select-none transition-colors hover:bg-[#007acc]"
+            style={{ background: resizing ? "#007acc" : "#333" }}
             onMouseDown={handleDragStart}
             role="separator"
             aria-orientation="vertical"
             title="Drag to resize"
           />
+          {resizing && <div className="fixed inset-0 z-50 cursor-col-resize" />}
           <main
             className="flex-1 overflow-auto p-6 bg-[#1e1e1e]"
             role="region"

@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useMemo, type ReactNode } from "react";
 import { useApp } from "./context";
 import type { GroupPayload, SegmentPayload, WorktreeInfo } from "./api";
+import gsdIcon from "./assets/gsd-icon.png";
 
 const nav = [
   { to: "/dashboard", label: "Dashboard" },
@@ -52,12 +53,7 @@ export function ShellLayout({ children }: { children: ReactNode }) {
       <aside className="flex w-72 shrink-0 flex-col border-r border-[#474747] bg-[#252526]">
         <div className="border-b border-[#474747] p-3">
           <div className="flex items-center gap-2">
-            <div
-              className="h-8 w-8 shrink-0 rounded-md bg-contain bg-center bg-no-repeat"
-              style={{ backgroundImage: "url(/gsd-icon.png)" }}
-              role="img"
-              aria-label="GSD"
-            />
+            <img src={gsdIcon} alt="GSD" width={32} height={32} style={{ objectFit: "contain", borderRadius: "6px" }} />
             <div>
               <h1 className="text-sm font-semibold tracking-tight text-[#cccccc]">GSD Monitor</h1>
               <p className="mt-0.5 text-xs text-[#858585]">Grouped project roots</p>
