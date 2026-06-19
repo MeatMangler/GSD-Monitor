@@ -52,7 +52,12 @@ export function ShellLayout({ children }: { children: ReactNode }) {
       <aside className="flex w-72 shrink-0 flex-col border-r border-[#474747] bg-[#252526]">
         <div className="border-b border-[#474747] p-3">
           <div className="flex items-center gap-2">
-            <img src="/gsd-icon.png" alt="GSD" className="h-8 w-8 rounded-md shrink-0 object-contain" />
+            <div
+              className="h-8 w-8 shrink-0 rounded-md bg-contain bg-center bg-no-repeat"
+              style={{ backgroundImage: "url(/gsd-icon.png)" }}
+              role="img"
+              aria-label="GSD"
+            />
             <div>
               <h1 className="text-sm font-semibold tracking-tight text-[#cccccc]">GSD Monitor</h1>
               <p className="mt-0.5 text-xs text-[#858585]">Grouped project roots</p>
