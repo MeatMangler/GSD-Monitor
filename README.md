@@ -6,12 +6,14 @@ A Windows desktop companion app for [GSD](https://github.com/anthropics/claude-c
 
 ## Features
 
-- Discovers GSD-1 (`.planning/`) and GSD-2 (`.gsd/`) projects across multiple scan roots
+- Discovers GSD projects across multiple scan roots — supports both GSD-1 (checkbox-style ROADMAP) and gsd-core (heading-based ROADMAP) formats
+- All projects use a `.planning/` directory; format is auto-detected from ROADMAP structure
 - Displays roadmap phases with status (done, active, planned, drifted)
 - Renders any planning document (PLAN.md, RESEARCH.md, SPEC.md, etc.) in-app with full Markdown support
 - Git-aware: shows last commit date and drift indicators per project
 - Real-time updates via filesystem watcher — no manual refresh needed
 - Zero duplicate entries: git worktrees are resolved back to their canonical project
+- Supports flat, workstream, and multi-project `.planning/` layouts
 - Read-only: never modifies any project file
 
 ## Tech Stack
@@ -76,9 +78,20 @@ npm run dev
 
 The Vite dev server proxies `/api` and `/ws` to `http://127.0.0.1:8765` by default.
 
+## Project Format Support
+
+GSD Monitor detects and renders both `.planning/` layout variants:
+
+| Format | ROADMAP style | Detection |
+|---|---|---|
+| **GSD-1** | Checkbox task lists (`- [ ]`, `- [x]`) | Checkbox lines in ROADMAP.md |
+| **gsd-core** | Heading-based phases (`## Phase N: Title`) | `## Phase N` headings in ROADMAP.md |
+
+Both variants support flat, workstream (`workstreams/`), and multi-project sub-directory layouts within `.planning/`.
+
 ## Configuration
 
-Settings are stored at `%LOCALAPPDATA%\WinGSDMonitor\settings.json` and managed through the in-app Settings page. The schema uses PascalCase keys for historical compatibility:
+Settings are stored at `%LOCALAPPDATA%\WinGSDMonitor\settings.json` and managed through the in-app Settings page. The schema uses PascalCase keys:
 
 ```json
 {
@@ -94,22 +107,33 @@ Override the settings file path via the `GSD_MONITOR_SETTINGS_PATH` environment 
 ## Project Structure
 
 ```
-gsd_monitor/          # Python backend
-  api/app.py          # FastAPI app, REST endpoints, WebSocket
-  main_desktop.py     # Entry point: uvicorn + pywebview bootstrap
-  models/             # Pydantic data models and enums
-  parsers/            # Markdown parsers (roadmap, plan, state, quick tasks)
-  services/           # Business logic (discovery, settings, git, file watcher)
+gsd_monitor/               # Python backend
+  api/app.py               # FastAPI app, REST endpoints, WebSocket
+  main_desktop.py          # Entry point: uvicorn + pywebview bootstrap
+  models/                  # Pydantic data models and enums
+  parsers/
+    roadmap.py             # GSD-1 checkbox ROADMAP parser
+    gsd_core_roadmap.py    # gsd-core heading-based ROADMAP parser
+    plan_parser.py         # PLAN.md parser
+    state_parser.py        # STATE.md parser
+    quick_task.py          # Quick task parser
+    requirements_parser.py # Requirements parser
+  services/
+    project_discovery.py   # Scan roots → project groups
+    planning_layout.py     # .planning/ layout enumeration
+    settings_service.py    # Settings persistence
+    git_service.py         # pygit2 git history queries
+  file_watcher.py          # watchdog filesystem watcher
 
-frontend/             # React + TypeScript SPA
+frontend/                  # React + TypeScript SPA
   src/
-    pages/            # DashboardPage, DocsPage, SettingsPage, ...
-    context.tsx       # AppProvider — global state via React context
-    api.ts            # Typed API client
-    ShellLayout.tsx   # Navigation shell
+    pages/                 # DashboardPage, DocsPage, SettingsPage, ...
+    context.tsx            # AppProvider — global state via React context
+    api.ts                 # Typed API client
+    ShellLayout.tsx        # Navigation shell
 
-assets/               # App icon
-tests/                # pytest test suite
+assets/                    # App icon
+tests/                     # pytest test suite
 ```
 
 ## Running Tests
