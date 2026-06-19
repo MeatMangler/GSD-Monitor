@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: — gsd-core Migration
-current_phase: 12
-status: completed
+current_phase: 0
+status: Awaiting next milestone
 stopped_at: Phase 12 complete — v3.0 milestone done
-last_updated: "2026-06-18T23:30:00.000Z"
-last_activity: 2026-06-18
-last_activity_desc: Phase 12 complete — v3.0 milestone shipped
+last_updated: "2026-06-19T00:27:10.712Z"
+last_activity: 2026-06-19
+last_activity_desc: Milestone v3.0 completed and archived
 progress:
   total_phases: 2
   completed_phases: 2
@@ -28,14 +28,10 @@ See: .planning/PROJECT.md (updated 2026-06-18)
 
 ## Current Position
 
-Phase: 12 — COMPLETE
-Plan: All plans complete
-Status: v3.0 milestone shipped
-Last activity: 2026-06-18 — Phase 12 complete
-
-```
-v3.0 Progress: [##########] 100% (2/2 phases)
-```
+Phase: Milestone v3.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-19 — Milestone v3.0 completed and archived
 
 ## Accumulated Context
 
@@ -67,6 +63,17 @@ None.
 | 260508-m1d | Fix discovery for milestone-based GSD-1 layout (no root ROADMAP.md) | 2026-05-08 | [260508-m1d-fix-milestone-layout-discovery](.planning/quick/260508-m1d-fix-milestone-layout-discovery/) |
 | 260618-rat | Fix UI review findings: user-friendly errors, page heading, CSS tokens | 2026-06-18 | [260618-rat-fix-ui-review-findings-user-friendly-err](.planning/quick/260618-rat-fix-ui-review-findings-user-friendly-err/) |
 
+## Deferred Items
+
+Items acknowledged and deferred at milestone close on 2026-06-18:
+
+| Category | Item | Status |
+|----------|------|--------|
+| verification | 10-VERIFICATION.md | human_needed |
+| verification | 12-VERIFICATION.md | human_needed |
+| quick_task | 260405-759-fix-stale-data-in-the-projects-docs-ui | unknown |
+| quick_task | 260508-m1d-fix-milestone-layout-discovery | unknown |
+
 ## Session Continuity
 
 Last activity: 2026-06-18 - Completed quick task 260618-rat: Fix UI review findings: user-friendly errors, page heading, CSS tokens
@@ -78,3 +85,7 @@ Resume file: none
 | Phase | Plan | Duration | Notes |
 |-------|------|----------|-------|
 | Phase 11 P01 | 7m | 3 tasks | 8 files |
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
