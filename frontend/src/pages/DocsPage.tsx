@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -17,38 +17,10 @@ export function DocsPage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [sidebarWidth, setSidebarWidth] = useState(260);
   const [resizing, setResizing] = useState(false);
-  const isDragging = useRef(false);
   const dragStartX = useRef(0);
   const dragStartWidth = useRef(0);
 
   const { activeSegment, activeProject, loading, groups } = useApp();
-
-  const handleDragStart = useCallback((e: React.MouseEvent) => {
-    isDragging.current = true;
-    dragStartX.current = e.clientX;
-    dragStartWidth.current = sidebarWidth;
-    setResizing(true);
-    e.preventDefault();
-  }, [sidebarWidth]);
-
-  useEffect(() => {
-    function onMouseMove(e: MouseEvent) {
-      if (!isDragging.current) return;
-      const delta = e.clientX - dragStartX.current;
-      setSidebarWidth(Math.min(480, Math.max(160, dragStartWidth.current + delta)));
-    }
-    function onMouseUp() {
-      if (!isDragging.current) return;
-      isDragging.current = false;
-      setResizing(false);
-    }
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-    return () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
-  }, []);
 
   // Active PLAN.md resolution (D-07)
   const activePlanPath = useMemo(() => {
@@ -296,13 +268,26 @@ export function DocsPage() {
           </aside>
           <div
             className="w-2 shrink-0 cursor-col-resize select-none transition-colors hover:bg-[#007acc]"
-            style={{ background: resizing ? "#007acc" : "#333" }}
-            onMouseDown={handleDragStart}
+            style={{ background: resizing ? "#007acc" : "#3a3a3a" }}
             role="separator"
             aria-orientation="vertical"
             title="Drag to resize"
+            onPointerDown={(e) => {
+              e.currentTarget.setPointerCapture(e.pointerId);
+              dragStartX.current = e.clientX;
+              dragStartWidth.current = sidebarWidth;
+              setResizing(true);
+            }}
+            onPointerMove={(e) => {
+              if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
+              const delta = e.clientX - dragStartX.current;
+              setSidebarWidth(Math.min(480, Math.max(160, dragStartWidth.current + delta)));
+            }}
+            onPointerUp={(e) => {
+              e.currentTarget.releasePointerCapture(e.pointerId);
+              setResizing(false);
+            }}
           />
-          {resizing && <div className="fixed inset-0 z-50 cursor-col-resize" />}
           <main
             className="flex-1 overflow-auto p-6 bg-[#1e1e1e]"
             role="region"
@@ -313,7 +298,7 @@ export function DocsPage() {
             ) : contentError ? (
               <p className="text-red-400 text-sm">{contentError}</p>
             ) : selectedPath.endsWith(".md") ? (
-              <div className="prose prose-invert prose-sm max-w-none docs-content">
+              <div className="docs-content">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {content}
                 </ReactMarkdown>
