@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# PyInstaller
+*.spec.bak
+dist/
+build/
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+*.lcov
+
+# mypy / pyright
+.mypy_cache/
+.pytype/
+pyrightconfig.json
+
+# Node / npm
+frontend/node_modules/
+frontend/.vite/
+frontend/tsconfig.tsbuildinfo
+
+# Vite build output — committed as part of the PyInstaller bundle
+# Uncomment the next line if you do NOT want to commit the built frontend
+# frontend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Windows shortcuts
+*.lnk
+
+# Editor / IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# GSD planning artifacts (local workflow — not part of the public source)
+.planning/
+.gsd/
+
+# Claude Code local config (not project-level CLAUDE.md)
+.claude/
+
+# App user data / settings (runtime-generated, machine-specific)
+# %LOCALAPPDATA%\WinGSDMonitor\settings.json lives outside the repo
+
+# Dev artefacts
+DEV-REVIEW-*.md
