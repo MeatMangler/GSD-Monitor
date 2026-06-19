@@ -62,6 +62,7 @@ None.
 | 260405-759 | Fix stale data in the Projects/Docs UI | 2026-04-05 | [260405-759-fix-stale-data-in-the-projects-docs-ui](.planning/quick/260405-759-fix-stale-data-in-the-projects-docs-ui/) |
 | 260508-m1d | Fix discovery for milestone-based GSD-1 layout (no root ROADMAP.md) | 2026-05-08 | [260508-m1d-fix-milestone-layout-discovery](.planning/quick/260508-m1d-fix-milestone-layout-discovery/) |
 | 260618-rat | Fix UI review findings: user-friendly errors, page heading, CSS tokens | 2026-06-18 | [260618-rat-fix-ui-review-findings-user-friendly-err](.planning/quick/260618-rat-fix-ui-review-findings-user-friendly-err/) |
+| 260619-mrd | Improve Markdown Readability — resizable panel, colored prose headings/code/tables | 2026-06-19 | [260619-mrd-improve-markdown-readability](.planning/quick/260619-mrd-improve-markdown-readability/) |
 
 ## Deferred Items
 
