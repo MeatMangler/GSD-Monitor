@@ -51,8 +51,13 @@ export function ShellLayout({ children }: { children: ReactNode }) {
     <div className="flex h-screen overflow-hidden bg-[#1e1e1e]">
       <aside className="flex w-72 shrink-0 flex-col border-r border-[#474747] bg-[#252526]">
         <div className="border-b border-[#474747] p-3">
-          <h1 className="text-sm font-semibold tracking-tight text-[#cccccc]">GSD Monitor</h1>
-          <p className="mt-0.5 text-xs text-[#858585]">Grouped project roots</p>
+          <div className="flex items-center gap-2">
+            <img src="/gsd-icon.png" alt="GSD" className="h-8 w-8 rounded-md shrink-0" />
+            <div>
+              <h1 className="text-sm font-semibold tracking-tight text-[#cccccc]">GSD Monitor</h1>
+              <p className="mt-0.5 text-xs text-[#858585]">Grouped project roots</p>
+            </div>
+          </div>
         </div>
         <div className="space-y-2 p-3">
           {loading && <p className="text-xs text-[#858585]">Loading…</p>}
