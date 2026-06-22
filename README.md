@@ -40,9 +40,32 @@ GSD Monitor was built by and for users of the GSD developer workflow system — 
 
 - Windows 10/11 (Edge WebView2 is required — installed by default on Windows 10 1803+)
 - Python 3.11+
-- Node.js + npm (for frontend development only)
+- Node.js + npm
+- Git
 
-## Getting Started
+## Installation
+
+### One-liner installer (recommended)
+
+Open PowerShell and run:
+
+```powershell
+iex (irm https://raw.githubusercontent.com/MeatMangler/GSD-Monitor/main/install.ps1)
+```
+
+The installer will:
+1. Check prerequisites (Git, Python 3.11+, Node.js, WebView2)
+2. Clone the repository to `%LOCALAPPDATA%\GSDMonitor` (you can choose a different path)
+3. Create a Python virtual environment and install dependencies
+4. Build the React frontend
+5. Create a `Start GSD Monitor` shortcut on your Desktop
+
+Running the installer again on an existing installation offers an upgrade instead of re-installing.
+
+**Custom install path:**
+```powershell
+iex "& { $(irm https://raw.githubusercontent.com/MeatMangler/GSD-Monitor/main/install.ps1) } -InstallPath 'C:\Tools\GSDMonitor'"
+```
 
 ### Run from source
 
