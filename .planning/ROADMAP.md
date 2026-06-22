@@ -38,6 +38,28 @@
 
 </details>
 
+## Active
+
+- [ ] Phase 13: Installation Script — PowerShell guided installer; clone, venv, frontend build, .bat launcher, desktop shortcut, WebView2 check
+
+## Phase Details
+
+### Phase 13: Installation Script
+
+**Goal**: A developer or power user runs a single PowerShell script and ends up with GSD Monitor fully installed — repo cloned, virtualenv created, frontend built, a `.bat` launcher in place, a desktop shortcut created, and WebView2 presence verified
+**Depends on**: Phase 12
+**Requirements**: INST-01
+**Success Criteria** (what must be TRUE):
+
+  1. Running the installer script on a clean Windows machine with Git, Python 3.11+, and Node.js results in a working GSD Monitor launch via the created shortcut
+  2. The script checks for WebView2 and prints a clear message (with download link) if it is absent
+  3. If any prerequisite (Git, Python, Node) is missing, the script exits with a human-readable error naming the missing tool
+  4. Running the installer a second time on an already-installed location does not corrupt the existing installation
+
+**Plans:** 0/1 plans complete
+Plans:
+- [ ] 13-01-PLAN.md — PowerShell installer: prereq checks, clone, venv, frontend build, launcher, shortcut, upgrade flow
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -47,3 +69,4 @@
 | 10. Feature Pages | v2.0 | 3/3 | Complete | 2026-04-12 |
 | 11. gsd-core Support | v3.0 | 2/2 | Complete | 2026-06-18 |
 | 12. Enhanced Visibility | v3.0 | 2/2 | Complete | 2026-06-18 |
+| 13. Installation Script | v4.0 | 0/? | Pending | — |
