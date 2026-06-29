@@ -20,7 +20,7 @@
     non-interactive invocations.
 
 .EXAMPLE
-    iex (irm https://raw.githubusercontent.com/MeatMangler/GSD-Monitor/main/install.ps1)
+    iex (irm https://raw.githubusercontent.com/MeatMangler/GSD-Monitor/master/install.ps1)
 
 .EXAMPLE
     powershell -File install.ps1 -InstallPath "$env:TEMP\GSDMonitorTest" -NoWait
@@ -235,9 +235,10 @@ Write-OK "start.bat written"
 # ---------------------------------------------------------------------------
 
 Write-Step "Creating desktop shortcut..."
-$desktopPath  = [Environment]::GetFolderPath('Desktop')
-$shortcutPath = Join-Path $desktopPath 'Start GSD Monitor.lnk'
-$iconPath     = Join-Path $installDir 'assets\gsd-icon.ico'
+$desktopPath   = [Environment]::GetFolderPath('Desktop')
+$shortcutLabel = if ($installDir -eq $defaultPath) { 'Start GSD Monitor' } else { "Start GSD Monitor ($installDir)" }
+$shortcutPath  = Join-Path $desktopPath "$shortcutLabel.lnk"
+$iconPath      = Join-Path $installDir 'assets\gsd-icon.ico'
 
 $shell = New-Object -ComObject 'WScript.Shell'
 $lnk   = $shell.CreateShortcut($shortcutPath)
@@ -249,7 +250,7 @@ if (Test-Path $iconPath) {
     $lnk.IconLocation = "$iconPath, 0"
 }
 $lnk.Save()
-Write-OK "Desktop shortcut created: $shortcutPath"
+Write-OK "Desktop shortcut created: '$shortcutLabel'"
 
 # ---------------------------------------------------------------------------
 # Section 7 - Success message
@@ -261,7 +262,7 @@ Write-Host "   GSD Monitor installed successfully!" -ForegroundColor Green
 Write-Host "======================================" -ForegroundColor Green
 Write-Host ""
 Write-Host "   Location : $installDir" -ForegroundColor White
-Write-Host "   Launch   : Use the 'Start GSD Monitor' desktop shortcut" -ForegroundColor White
+Write-Host "   Launch   : Use the '$shortcutLabel' desktop shortcut" -ForegroundColor White
 Write-Host "           or run: $installDir\start.bat" -ForegroundColor White
 Write-Host ""
 

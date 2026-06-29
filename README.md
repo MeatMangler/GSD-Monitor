@@ -50,7 +50,7 @@ GSD Monitor was built by and for users of the GSD developer workflow system — 
 Open PowerShell and run:
 
 ```powershell
-iex (irm https://raw.githubusercontent.com/MeatMangler/GSD-Monitor/main/install.ps1)
+iex (irm https://raw.githubusercontent.com/MeatMangler/GSD-Monitor/master/install.ps1)
 ```
 
 The installer will:
@@ -64,7 +64,7 @@ Running the installer again on an existing installation offers an upgrade instea
 
 **Custom install path:**
 ```powershell
-iex "& { $(irm https://raw.githubusercontent.com/MeatMangler/GSD-Monitor/main/install.ps1) } -InstallPath 'C:\Tools\GSDMonitor'"
+iex "& { $(irm https://raw.githubusercontent.com/MeatMangler/GSD-Monitor/master/install.ps1) } -InstallPath 'C:\Tools\GSDMonitor'"
 ```
 
 ### Run from source
