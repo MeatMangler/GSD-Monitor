@@ -9,6 +9,7 @@ import {
 } from "react";
 import {
   fetchGroups,
+  refreshGroups,
   type GroupPayload,
   type SegmentPayload,
 } from "./api";
@@ -18,6 +19,7 @@ type Ctx = {
   loading: boolean;
   error: string | null;
   reload: () => Promise<void>;
+  forceRefresh: () => Promise<void>;
   selectedGroupId: string | null;
   setSelectedGroupId: (id: string | null) => void;
   selectedSegmentKey: string | null;
@@ -40,6 +42,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setError(null);
     try {
       const g = await fetchGroups();
+      setGroups(g);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const forceRefresh = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const g = await refreshGroups();
       setGroups(g);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -148,6 +163,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     loading,
     error,
     reload,
+    forceRefresh,
     selectedGroupId,
     setSelectedGroupId,
     selectedSegmentKey,

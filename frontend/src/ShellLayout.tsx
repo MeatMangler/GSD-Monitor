@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { useMemo, type ReactNode } from "react";
+import { useMemo, useState, useEffect, type ReactNode } from "react";
 import { useApp } from "./context";
 import type { GroupPayload, SegmentPayload, WorktreeInfo } from "./api";
 import gsdIcon from "./assets/gsd-icon.png";
@@ -19,12 +19,17 @@ export function ShellLayout({ children }: { children: ReactNode }) {
     groups,
     loading,
     error,
-    reload,
+    forceRefresh,
     selectedGroupId,
     setSelectedGroupId,
     selectedSegmentKey,
     setSelectedSegmentKey,
   } = useApp();
+
+  const [lastScanned, setLastScanned] = useState<string | null>(null);
+  useEffect(() => {
+    if (!loading) setLastScanned(new Date().toLocaleTimeString());
+  }, [loading]);
 
   const activeGroup = useMemo(
     (): GroupPayload | null => groups.find((g) => g.id === selectedGroupId) ?? null,
@@ -63,9 +68,9 @@ export function ShellLayout({ children }: { children: ReactNode }) {
             </div>
             <button
               type="button"
-              title="Refresh projects"
+              title={lastScanned ? `Force rescan — last scanned ${lastScanned}` : "Force rescan"}
               disabled={loading}
-              onClick={() => void reload()}
+              onClick={() => void forceRefresh()}
               className="rounded p-1 text-[#858585] hover:text-[#cccccc] hover:bg-[#2a2d2e] disabled:opacity-40"
             >
               ↻
