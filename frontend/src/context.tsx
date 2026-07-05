@@ -102,6 +102,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       ws.onopen = () => {
         attempt = 0; // Reset backoff on successful connection
+        void reload(); // Catch any broadcast missed during connect race
       };
 
       ws.onclose = () => {
