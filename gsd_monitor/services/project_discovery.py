@@ -163,11 +163,17 @@ class ProjectDiscoveryService:
 
     def discover_groups(self, scan_roots: list[str]) -> list[ProjectGroup]:
         roots = [r for r in scan_roots if r and Path(r).is_dir()]
+        skipped = [r for r in scan_roots if r and not Path(r).is_dir()]
+        logger.info("[discover] starting scan — %d root(s), %d skipped (not a dir)", len(roots), len(skipped))
+        if skipped:
+            for s in skipped:
+                logger.warning("[discover] scan root does not exist or is not a dir: %s", s)
         by_repo: dict[str, list[SegmentModel]] = {}
         by_repo_worktrees: dict[str, list[tuple[Path, bool]]] = {}
 
         for root in roots:
             root_path = Path(root).resolve()
+            logger.debug("[discover] scanning root: %s", root_path)
             try:
                 for planning_dir in self._find_dirs(root_path, ".planning"):
                     if planning_dir.name != ".planning":
@@ -182,16 +188,26 @@ class ProjectDiscoveryService:
                         wt_list.append((repo_dir, is_primary))
                     # Only add segments from the first worktree discovered for this canonical root
                     if canon_key in by_repo:
+                        logger.debug("[discover] skipping duplicate canonical root: %s (already from %s)", repo_dir, canon_key)
                         continue
                     hint_t = _try_read(repo_dir / ".planning" / "active-workstream")
                     hint = hint_t.strip() if hint_t else None
                     ws = is_workspace_root(repo_dir)
+                    segs_before = sum(len(v) for v in by_repo.values())
                     for ctx in iter_planning_contexts(planning_dir, repo_dir):
                         seg = self._build_gsd1_segment(ctx, ws, hint)
                         if seg:
                             by_repo.setdefault(canon_key, []).append(seg)
+                    segs_after = sum(len(v) for v in by_repo.values())
+                    logger.debug(
+                        "[discover] found planning dir %s — added %d segment(s)",
+                        planning_dir, segs_after - segs_before,
+                    )
             except PermissionError:
+                logger.warning("[discover] PermissionError scanning root: %s", root)
                 continue
+
+        logger.info("[discover] scan complete — %d unique repo(s) with segments", len(by_repo))
 
         groups: list[ProjectGroup] = []
         for repo_key, segments in by_repo.items():
@@ -235,6 +251,11 @@ class ProjectDiscoveryService:
                     worktrees=worktrees,
                 )
             )
+            logger.debug(
+                "[discover] group %s — %d segment(s), %d worktree(s)",
+                rp.name, len(segments), len(worktrees),
+            )
+        logger.info("[discover] returning %d group(s)", len(groups))
         return groups
 
     def _find_dirs(self, root: Path, name: str) -> list[Path]:

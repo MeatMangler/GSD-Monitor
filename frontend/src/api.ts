@@ -209,3 +209,22 @@ export async function fetchDocFile(planningPath: string, relPath: string): Promi
   if (!r.ok) throw new Error(await r.text());
   return r.json() as Promise<DocFileResponse>;
 }
+
+export interface LogEntry {
+  ts: number;
+  level: string;
+  logger: string;
+  message: string;
+}
+
+export async function fetchLogs(): Promise<LogEntry[]> {
+  const r = await fetch(`${base}/api/logs`, noStore);
+  if (!r.ok) throw new Error(await r.text());
+  const j = await r.json();
+  return j.logs ?? [];
+}
+
+export async function clearLogs(): Promise<void> {
+  const r = await fetch(`${base}/api/logs`, { ...noStore, method: "DELETE" });
+  if (!r.ok) throw new Error(await r.text());
+}

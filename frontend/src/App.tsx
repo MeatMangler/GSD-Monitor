@@ -8,6 +8,7 @@ import { VerificationPage } from "./pages/VerificationPage";
 import { InsightsPage } from "./pages/InsightsPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { DocsPage } from "./pages/DocsPage";
+import { LogsPage } from "./pages/LogsPage";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/verification" element={<VerificationPage />} />
           <Route path="/insights" element={<InsightsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/logs" element={<LogsPage />} />
         </Routes>
       </ShellLayout>
     </AppProvider>

@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import asyncio
+import collections
 import json
+import logging
 import sys
 import threading
+import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -24,6 +27,48 @@ from gsd_monitor.parsers.quick_task import QuickTaskParser
 from gsd_monitor.parsers.requirements_parser import RequirementsParser
 from gsd_monitor.services.project_discovery import ProjectDiscoveryService, ProjectGroup, SegmentModel, WorktreeInfo
 from gsd_monitor.services.settings_service import SettingsService
+
+
+class _InMemoryHandler(logging.Handler):
+    """Thread-safe in-memory log handler with a capped ring buffer."""
+
+    def __init__(self, maxlen: int = 2000) -> None:
+        super().__init__()
+        self._records: collections.deque[dict[str, Any]] = collections.deque(maxlen=maxlen)
+        self._lock = threading.Lock()
+
+    def emit(self, record: logging.LogRecord) -> None:
+        try:
+            entry: dict[str, Any] = {
+                "ts": record.created,
+                "level": record.levelname,
+                "logger": record.name,
+                "message": self.format(record),
+            }
+            with self._lock:
+                self._records.append(entry)
+        except Exception:
+            pass
+
+    def get_all(self) -> list[dict[str, Any]]:
+        with self._lock:
+            return list(self._records)
+
+    def clear(self) -> None:
+        with self._lock:
+            self._records.clear()
+
+
+# Module-level handler — attached to the gsd_monitor root logger so all
+# sub-loggers (discovery, parsers, settings, etc.) flow through it.
+_log_handler = _InMemoryHandler()
+_log_handler.setFormatter(logging.Formatter("%(message)s"))
+
+_gsd_root = logging.getLogger("gsd_monitor")
+_gsd_root.setLevel(logging.DEBUG)
+_gsd_root.addHandler(_log_handler)
+
+logger = logging.getLogger(__name__)
 
 
 class SettingsBody(BaseModel):
@@ -62,40 +107,59 @@ class RuntimeState:
         self._dirty: bool = False
 
     def _on_fs_change(self, _root: str) -> None:
+        logger.debug("[fs-change] event on root=%s", _root)
         acquired = self._refresh_lock.acquire(blocking=False)
         if not acquired:
             self._dirty = True  # Signal that a change arrived during an active scan
+            logger.debug("[fs-change] refresh already running — marked dirty")
             return
         try:
             while True:
                 self._dirty = False
+                logger.debug("[fs-change] starting re-scan")
+                t0 = time.monotonic()
                 s = self.settings_service.load()
                 self.groups = self.discovery.discover_groups(s.scan_roots)
+                elapsed = time.monotonic() - t0
+                logger.debug(
+                    "[fs-change] scan done in %.3fs — %d group(s)", elapsed, len(self.groups)
+                )
                 # Do NOT rebuild watchers here — roots only change on settings save,
                 # and stop()/restart on every FS event creates brief monitoring gaps.
                 if not self._dirty:
                     break
+                logger.debug("[fs-change] dirty flag set — re-scanning")
         finally:
             self._refresh_lock.release()
         if self._loop:
             asyncio.run_coroutine_threadsafe(self._broadcast({"type": "projects_updated"}), self._loop)
 
     def refresh(self) -> None:
+        logger.info("[refresh] starting full scan (scan_roots=%s)", self.settings_service.load().scan_roots)
+        t0 = time.monotonic()
         with self._refresh_lock:
             while True:
                 self._dirty = False
                 s = self.settings_service.load()
+                logger.debug("[refresh] discover_groups with %d root(s)", len(s.scan_roots))
                 self.groups = self.discovery.discover_groups(s.scan_roots)
+                elapsed = time.monotonic() - t0
+                logger.info(
+                    "[refresh] scan complete in %.3fs — %d group(s) found", elapsed, len(self.groups)
+                )
                 if not self._dirty:
                     break
+                logger.debug("[refresh] dirty flag set — re-scanning")
             self.watcher.set_roots(list(s.scan_roots))
 
     async def connect_ws(self, ws: WebSocket) -> None:
         await ws.accept()
         self._ws.add(ws)
+        logger.debug("[ws] client connected — %d active", len(self._ws))
 
     def disconnect_ws(self, ws: WebSocket) -> None:
         self._ws.discard(ws)
+        logger.debug("[ws] client disconnected — %d active", len(self._ws))
 
     async def _broadcast(self, payload: dict[str, Any]) -> None:
         dead: list[WebSocket] = []
@@ -282,9 +346,11 @@ def _extract_wave_data(planning_dir: str) -> list[dict[str, Any]]:
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup: capture event loop and trigger initial scan. Shutdown: stop file watcher."""
+    logger.info("[startup] GSD Monitor API starting up")
     state._loop = asyncio.get_running_loop()
     asyncio.create_task(_run_refresh_background(settings_saved=False))
     yield
+    logger.info("[shutdown] GSD Monitor API shutting down")
     state.watcher.stop()
 
 
@@ -353,6 +419,16 @@ def create_app() -> FastAPI:
         p = unquote(planning_path)
         tasks = QuickTaskParser.parse(p)
         return {"tasks": [t.model_dump(mode="json") for t in tasks]}
+
+    @application.get("/api/logs")
+    async def get_logs() -> dict[str, Any]:
+        return {"logs": _log_handler.get_all()}
+
+    @application.delete("/api/logs")
+    async def delete_logs() -> dict[str, str]:
+        _log_handler.clear()
+        logger.info("[logs] log buffer cleared")
+        return {"status": "cleared"}
 
     @application.get("/api/insights/{planning_path:path}")
     async def insights(planning_path: str) -> dict[str, Any]:

@@ -12,6 +12,7 @@ const nav = [
   { to: "/verification", label: "Verification" },
   { to: "/insights", label: "Insights" },
   { to: "/settings", label: "Settings" },
+  { to: "/logs", label: "Logs" },
 ];
 
 export function ShellLayout({ children }: { children: ReactNode }) {
