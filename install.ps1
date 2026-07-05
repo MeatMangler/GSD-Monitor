@@ -167,8 +167,8 @@ if (Test-Path (Join-Path $installDir '.git')) {
     }
 
     Write-Step "Pulling latest changes..."
-    git -C $installDir pull
-    if ($LASTEXITCODE -ne 0) { Fail "git pull failed - installation unchanged" }
+    git -C $installDir reset --hard origin/master 2>$null
+    if ($LASTEXITCODE -ne 0) { Fail "git reset failed - installation unchanged" }
     Write-OK "Repository updated"
 
     Write-Step "Re-installing Python dependencies..."
