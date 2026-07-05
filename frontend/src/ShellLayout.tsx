@@ -19,6 +19,7 @@ export function ShellLayout({ children }: { children: ReactNode }) {
     groups,
     loading,
     error,
+    reload,
     selectedGroupId,
     setSelectedGroupId,
     selectedSegmentKey,
@@ -52,12 +53,23 @@ export function ShellLayout({ children }: { children: ReactNode }) {
     <div className="flex h-screen overflow-hidden bg-[#1e1e1e]">
       <aside className="flex w-72 shrink-0 flex-col border-r border-[#474747] bg-[#252526]">
         <div className="border-b border-[#474747] p-3">
-          <div className="flex items-center gap-2">
-            <img src={gsdIcon} alt="GSD" width={32} height={32} style={{ objectFit: "contain", borderRadius: "6px" }} />
-            <div>
-              <h1 className="text-sm font-semibold tracking-tight text-[#cccccc]">GSD Monitor</h1>
-              <p className="mt-0.5 text-xs text-[#858585]">Grouped project roots</p>
+          <div className="flex items-center justify-between gap-2 w-full">
+            <div className="flex items-center gap-2">
+              <img src={gsdIcon} alt="GSD" width={32} height={32} style={{ objectFit: "contain", borderRadius: "6px" }} />
+              <div>
+                <h1 className="text-sm font-semibold tracking-tight text-[#cccccc]">GSD Monitor</h1>
+                <p className="mt-0.5 text-xs text-[#858585]">Grouped project roots</p>
+              </div>
             </div>
+            <button
+              type="button"
+              title="Refresh projects"
+              disabled={loading}
+              onClick={() => void reload()}
+              className="rounded p-1 text-[#858585] hover:text-[#cccccc] hover:bg-[#2a2d2e] disabled:opacity-40"
+            >
+              ↻
+            </button>
           </div>
         </div>
         <div className="space-y-2 p-3">
