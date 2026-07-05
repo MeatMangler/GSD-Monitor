@@ -76,21 +76,56 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [groups, selectedGroupId]);
 
   useEffect(() => {
-    const proto = window.location.protocol === "https:" ? "wss" : "ws";
-    const ws = new WebSocket(`${proto}://${window.location.host}/ws/events`);
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data) as { type?: string };
-        if (data.type === "projects_updated") {
+    let ws: WebSocket | null = null;
+    let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+    let destroyed = false;
+    let attempt = 0;
+
+    function connect() {
+      if (destroyed) return;
+      const proto = window.location.protocol === "https:" ? "wss" : "ws";
+      ws = new WebSocket(`${proto}://${window.location.host}/ws/events`);
+
+      ws.onmessage = (event) => {
+        attempt = 0; // Reset backoff on successful message
+        try {
+          const data = JSON.parse(event.data) as { type?: string };
+          if (data.type === "projects_updated") {
+            void reload();
+          }
+          // "settings_saved" events are intentionally ignored — no double reload on save
+        } catch {
+          // Non-JSON message; reload as fallback
           void reload();
         }
-        // "settings_saved" events are intentionally ignored — no double reload on save
-      } catch {
-        // Non-JSON message; reload as fallback
-        void reload();
-      }
+      };
+
+      ws.onopen = () => {
+        attempt = 0; // Reset backoff on successful connection
+      };
+
+      ws.onclose = () => {
+        ws = null;
+        if (destroyed) return;
+        // Exponential backoff: 1s, 2s, 4s, 8s, 16s, capped at 30s
+        const delay = Math.min(1000 * Math.pow(2, attempt), 30_000);
+        attempt += 1;
+        reconnectTimer = setTimeout(connect, delay);
+      };
+
+      ws.onerror = () => {
+        // onclose will fire after onerror; reconnect is handled there
+        ws?.close();
+      };
+    }
+
+    connect();
+
+    return () => {
+      destroyed = true;
+      if (reconnectTimer !== null) clearTimeout(reconnectTimer);
+      ws?.close();
     };
-    return () => ws.close();
   }, [reload]);
 
   const activeGroup = useMemo(
