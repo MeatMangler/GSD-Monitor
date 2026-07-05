@@ -243,7 +243,7 @@ if /i "%_cur%"=="%_new%" goto launch
 
 echo.
 echo Updating GSD Monitor...
-git pull --ff-only
+git reset --hard origin/master
 if errorlevel 1 goto launch
 .venv\Scripts\pip.exe install -q fastapi "uvicorn[standard]" pydantic pydantic-settings pywebview pygit2 watchdog
 if errorlevel 1 goto launch

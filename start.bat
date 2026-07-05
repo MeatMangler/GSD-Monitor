@@ -3,7 +3,7 @@ setlocal
 cd /d "%~dp0"
 
 :: ── Auto-update ──────────────────────────────────────────────────────────────
-git fetch origin master >nul 2>&1
+git fetch origin master --quiet >nul 2>&1
 if errorlevel 1 goto launch
 
 for /f %%h in ('git rev-parse HEAD 2^>nul') do set _cur=%%h
@@ -14,7 +14,7 @@ if /i "%_cur%"=="%_new%" goto launch
 
 echo.
 echo Updating GSD Monitor...
-git pull --ff-only
+git reset --hard origin/master
 if errorlevel 1 goto launch
 .venv\Scripts\pip.exe install -q fastapi "uvicorn[standard]" pydantic pydantic-settings pywebview pygit2 watchdog
 if errorlevel 1 goto launch
