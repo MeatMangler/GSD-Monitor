@@ -311,7 +311,7 @@ $lnk   = $shell.CreateShortcut($shortcutPath)
 $lnk.TargetPath       = Join-Path $installDir 'start.bat'
 $lnk.WorkingDirectory = $installDir
 $lnk.Description      = 'GSD Monitor - project status dashboard'
-$lnk.WindowStyle      = 7   # minimised - the bat window should not stay visible; pywebview is the real UI
+$lnk.WindowStyle      = 1   # normal window — user must be able to see update progress
 if (Test-Path $iconPath) {
     $lnk.IconLocation = "$iconPath, 0"
 }
