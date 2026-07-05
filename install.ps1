@@ -154,7 +154,7 @@ if (Test-Path (Join-Path $installDir '.git')) {
     Write-Host "`nExisting GSD Monitor installation found at: $installDir" -ForegroundColor Yellow
 
     $currentHash = git -C $installDir log --oneline -1 2>$null
-    git -C $installDir fetch origin 2>$null
+    git -C $installDir fetch origin --quiet 2>$null
     $remoteHash  = git -C $installDir log --oneline -1 origin/master 2>$null
 
     Write-Host "  Current: $currentHash"
