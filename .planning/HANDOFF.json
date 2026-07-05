@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-07-05T23:23:20.534Z",
+  "phase": null,
+  "phase_name": "ad-hoc debug — stale docs / live refresh",
+  "phase_dir": null,
+  "plan": null,
+  "task": null,
+  "total_tasks": null,
+  "status": "blocked",
+  "completed_tasks": [
+    {"id": 1, "name": "Add WebSocket exponential-backoff reconnect (context.tsx)", "status": "done", "commit": "6f2f12a"},
+    {"id": 2, "name": "Add watchdog Observer health-check 15s timer (file_watcher.py)", "status": "done", "commit": "6f2f12a"},
+    {"id": 3, "name": "Add reload() on WebSocket onopen to fix startup race (context.tsx)", "status": "done", "commit": "51eb9e5"},
+    {"id": 4, "name": "Add start.bat auto-update with git fetch + reset + rebuild", "status": "done", "commit": "81fe314"},
+    {"id": 5, "name": "Fix installer git fetch stderr (--quiet flag)", "status": "done", "commit": "dcf469f"},
+    {"id": 6, "name": "Fix installer git pull → git reset --hard (dist conflict)", "status": "done", "commit": "4a22811"},
+    {"id": 7, "name": "Fix start.bat git pull → git reset --hard", "status": "done", "commit": "4f9d0b8"},
+    {"id": 8, "name": "Replace silent failures with explicit error messages in start.bat", "status": "done", "commit": "f3366dc"},
+    {"id": 9, "name": "Add manual refresh button to shell header (↻)", "status": "done", "commit": "89875de"},
+    {"id": 10, "name": "Fix refresh button to call POST /api/groups/refresh (full rescan)", "status": "done", "commit": "a73f0c5"}
+  ],
+  "remaining_tasks": [
+    {"id": 11, "name": "ROOT CAUSE: find why POST /api/groups/refresh returns stale data even after forced rescan", "status": "not_started"},
+    {"id": 12, "name": "Verify what planningPath values the discovery service is actually returning", "status": "not_started"},
+    {"id": 13, "name": "Check if discover_groups() is reading from correct .planning/ paths on test PC", "status": "not_started"}
+  ],
+  "blockers": [
+    {
+      "description": "POST /api/groups/refresh triggers a full disk rescan but still returns stale project data. This means discover_groups() is either reading from wrong paths or parsing incorrectly. The test PC has correct scan roots configured and files are up to date on disk.",
+      "type": "technical",
+      "workaround": "None found yet — needs deeper investigation into discover_groups() and path resolution"
+    }
+  ],
+  "async_jobs": [],
+  "human_actions_pending": [
+    {
+      "action": "On the test PC: in the app, note the exact planningPath shown for a project (can be seen in browser devtools Network tab on /api/groups response), then manually check if that path exists and has current files on disk",
+      "context": "This would confirm whether the path resolution is correct",
+      "blocking": true
+    }
+  ],
+  "decisions": [
+    {"decision": "Use git reset --hard instead of git pull in installer and start.bat", "rationale": "git pull fails when tracked dist files differ locally after npm build", "phase": "ad-hoc"},
+    {"decision": "Refresh button calls POST /api/groups/refresh not GET /api/groups", "rationale": "GET just returns cached state.groups; POST triggers actual disk rescan", "phase": "ad-hoc"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "Read project_discovery.py fully to understand how planningPath is constructed and what discover_groups() actually scans. Add a /api/debug endpoint that returns raw scan results including all resolved paths — this will show exactly what the server is seeing vs what's on disk.",
+  "context_notes": "The core mystery: POST /api/groups/refresh does a full disk rescan via discover_groups(s.scan_roots) but still returns stale project data. The user confirmed scan roots are correct and files are up to date on disk. Either (a) the planningPath resolution is wrong so we're reading from a different location than expected, (b) the parser is reading the right files but the parsed output is wrong/cached somehow, or (c) there is some Python-level caching happening. Most likely (a) — need to trace the full path from scan_root → planning_path → file fetch."
+}
