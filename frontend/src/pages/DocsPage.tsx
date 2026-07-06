@@ -302,11 +302,11 @@ export function DocsPage() {
             }}
           />
           <main
-            className="flex-1 overflow-auto flex flex-col bg-[#1e1e1e]"
+            className="flex-1 flex flex-col min-h-0 bg-[#1e1e1e]"
             role="region"
             aria-label="Document content"
           >
-            <div className="flex-1 p-6">
+            <div className="flex-1 overflow-auto p-6">
               {contentLoading ? (
                 <p className="text-[#858585] text-sm">Loading...</p>
               ) : contentError ? (
