@@ -479,9 +479,13 @@ def create_app() -> FastAPI:
             raise HTTPException(status_code=404, detail="file not found")
         try:
             content = target.read_text(encoding="utf-8", errors="replace")
+            stat = target.stat()
         except Exception:
             raise HTTPException(status_code=500, detail="could not read file")
-        return {"content": content}
+        from datetime import datetime, timezone
+        created_at = datetime.fromtimestamp(stat.st_ctime, tz=timezone.utc).isoformat()
+        modified_at = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat()
+        return {"content": content, "created_at": created_at, "modified_at": modified_at}
 
     @application.websocket("/ws/events")
     async def ws_events(ws: WebSocket) -> None:

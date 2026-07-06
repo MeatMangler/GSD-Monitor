@@ -192,6 +192,8 @@ export interface DocTreeNode {
 
 export interface DocFileResponse {
   content: string;
+  created_at: string | null;
+  modified_at: string | null;
 }
 
 export async function fetchDocTree(planningPath: string): Promise<DocTreeNode[]> {

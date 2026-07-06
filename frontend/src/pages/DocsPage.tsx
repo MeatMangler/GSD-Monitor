@@ -14,6 +14,7 @@ export function DocsPage() {
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set());
   const [treeError, setTreeError] = useState<string | null>(null);
   const [contentError, setContentError] = useState<string | null>(null);
+  const [fileMeta, setFileMeta] = useState<{ createdAt: string | null; modifiedAt: string | null } | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [sidebarWidth, setSidebarWidth] = useState(260);
   const [resizing, setResizing] = useState(false);
@@ -132,6 +133,7 @@ export function DocsPage() {
     setContent("");
     setContentError(null);
     setTreeError(null);
+    setFileMeta(null);
   }, [activeSegment?.planningPath]);
 
   // Fetch tree when segment changes or groups refresh
@@ -159,15 +161,26 @@ export function DocsPage() {
       .then((r) => {
         setContent(r.content);
         setContentError(null);
+        setFileMeta({ createdAt: r.created_at, modifiedAt: r.modified_at });
       })
       .catch(() => {
         setContent("");
         setContentError(
           "Could not load file. Check that the file still exists and try selecting it again.",
         );
+        setFileMeta(null);
       })
       .finally(() => setContentLoading(false));
   }, [activeSegment?.planningPath, selectedPath, refreshKey]);
+
+  function formatDateTime(iso: string | null): string {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, {
+      year: "numeric", month: "short", day: "numeric",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+    });
+  }
 
   function handleFileClick(path: string) {
     if (path === selectedPath) return;
@@ -289,24 +302,41 @@ export function DocsPage() {
             }}
           />
           <main
-            className="flex-1 overflow-auto p-6 bg-[#1e1e1e]"
+            className="flex-1 overflow-auto flex flex-col bg-[#1e1e1e]"
             role="region"
             aria-label="Document content"
           >
-            {contentLoading ? (
-              <p className="text-[#858585] text-sm">Loading...</p>
-            ) : contentError ? (
-              <p className="text-red-400 text-sm">{contentError}</p>
-            ) : selectedPath.endsWith(".md") ? (
-              <div className="docs-content">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <div className="flex-1 p-6">
+              {contentLoading ? (
+                <p className="text-[#858585] text-sm">Loading...</p>
+              ) : contentError ? (
+                <p className="text-red-400 text-sm">{contentError}</p>
+              ) : selectedPath.endsWith(".md") ? (
+                <div className="docs-content">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {content}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                <pre className="text-sm text-[#cccccc] whitespace-pre-wrap font-mono">
                   {content}
-                </ReactMarkdown>
-              </div>
-            ) : (
-              <pre className="text-sm text-[#cccccc] whitespace-pre-wrap font-mono">
-                {content}
-              </pre>
+                </pre>
+              )}
+            </div>
+            {fileMeta && !contentLoading && (
+              <footer className="shrink-0 border-t border-[#474747] bg-[#252526] px-6 py-2 flex items-center gap-6 text-xs text-[#858585] font-mono">
+                <span className="text-[#6a9955] truncate max-w-[280px]" title={selectedPath}>
+                  {selectedPath.split("/").pop()}
+                </span>
+                <span>
+                  <span className="text-[#569cd6]">Modified:</span>{" "}
+                  {formatDateTime(fileMeta.modifiedAt)}
+                </span>
+                <span>
+                  <span className="text-[#569cd6]">Created:</span>{" "}
+                  {formatDateTime(fileMeta.createdAt)}
+                </span>
+              </footer>
             )}
           </main>
         </>
