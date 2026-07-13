@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { useApp } from "../context";
-import { fetchDocTree, fetchDocFile } from "../api";
+import { fetchDocTree, fetchDocFile, openDocFile } from "../api";
 import type { DocTreeNode } from "../api";
 
 export function DocsPage() {
@@ -17,7 +18,9 @@ export function DocsPage() {
   const [fileMeta, setFileMeta] = useState<{ createdAt: string | null; modifiedAt: string | null } | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [sidebarWidth, setSidebarWidth] = useState(260);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [resizing, setResizing] = useState(false);
+  const [autoOpen, setAutoOpen] = useState(false);
   const dragStartX = useRef(0);
   const dragStartWidth = useRef(0);
 
@@ -182,9 +185,16 @@ export function DocsPage() {
     });
   }
 
+  function handleOpenExternal() {
+    if (!activeSegment?.planningPath || !selectedPath) return;
+    void openDocFile(activeSegment.planningPath, selectedPath).catch(() => {});
+  }
+
   function handleFileClick(path: string) {
-    if (path === selectedPath) return;
-    setSelectedPath(path);
+    if (path !== selectedPath) setSelectedPath(path);
+    if (autoOpen && activeSegment?.planningPath) {
+      void openDocFile(activeSegment.planningPath, path).catch(() => {});
+    }
   }
 
   function handleDirToggle(path: string) {
@@ -234,6 +244,23 @@ export function DocsPage() {
     );
   }
 
+  // Shared auto-open checkbox rendered in both section headers
+  function AutoOpenCheckbox() {
+    return (
+      <label className="flex items-center gap-1 cursor-pointer select-none ml-auto shrink-0">
+        <input
+          type="checkbox"
+          checked={autoOpen}
+          onChange={(e) => setAutoOpen(e.target.checked)}
+          className="w-3 h-3 accent-[#4ec994]"
+        />
+        <span className="text-[10px] text-[#858585] whitespace-nowrap">auto-open</span>
+      </label>
+    );
+  }
+
+  const canOpenExternal = !contentLoading && !contentError && !!selectedPath && !!activeSegment;
+
   return (
     <div className="flex h-full" style={{ userSelect: resizing ? "none" : undefined }}>
       {!activeSegment ? (
@@ -244,68 +271,111 @@ export function DocsPage() {
         <div className="p-6 text-[#858585] text-sm">Loading...</div>
       ) : (
         <>
+          {/* Sidebar */}
           <aside
-            className="shrink-0 overflow-auto bg-[#252526]"
-            style={{ width: `${sidebarWidth}px` }}
+            className="shrink-0 bg-[#252526] flex flex-col"
+            style={{
+              width: sidebarCollapsed ? "28px" : `${sidebarWidth}px`,
+              overflow: sidebarCollapsed ? "hidden" : "auto",
+            }}
             role="navigation"
             aria-label="Planning files"
           >
-            <div className="px-2 py-1 text-xs font-medium uppercase tracking-wider text-[#858585]">
-              Quick access
-            </div>
-            {quickAccess.map((item) => (
+            {/* Collapse / expand toggle — always visible */}
+            <div className="shrink-0 flex items-center justify-end px-1 pt-1 pb-0">
               <button
-                key={item.path}
                 type="button"
-                className={`flex items-center w-full text-left min-h-7 px-2 hover:bg-[#2a2d2e] hover:text-[#cccccc] ${
-                  selectedPath === item.path
-                    ? "bg-[#2a2d2e] text-[#007acc]"
-                    : "text-[#858585]"
-                }`}
-                onClick={() => handleFileClick(item.path)}
-                aria-current={selectedPath === item.path ? "true" : undefined}
+                title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                className="p-1 text-[#858585] hover:text-[#cccccc] hover:bg-[#1e1e1e] rounded text-sm leading-none"
+                onClick={() => setSidebarCollapsed((c) => !c)}
               >
-                <span className="inline-block w-3 mr-1 select-none" />
-                <span className="font-mono text-xs truncate">{item.label}</span>
+                {sidebarCollapsed ? "›" : "‹"}
               </button>
-            ))}
-            <hr className="border-[#474747] my-2" />
-            <div className="px-2 py-1 text-xs font-medium uppercase tracking-wider text-[#858585]">
-              Files
             </div>
-            {treeError ? (
-              <p className="text-red-400 text-sm px-2 py-1">{treeError}</p>
-            ) : (
-              tree.map((node) => renderTreeNode(node, 0))
+
+            {!sidebarCollapsed && (
+              <>
+                <div className="px-2 py-1 text-xs font-medium uppercase tracking-wider text-[#858585] flex items-center gap-1">
+                  <span>Quick access</span>
+                  <AutoOpenCheckbox />
+                </div>
+                {quickAccess.map((item) => (
+                  <button
+                    key={item.path}
+                    type="button"
+                    className={`flex items-center w-full text-left min-h-7 px-2 hover:bg-[#2a2d2e] hover:text-[#cccccc] ${
+                      selectedPath === item.path
+                        ? "bg-[#2a2d2e] text-[#007acc]"
+                        : "text-[#858585]"
+                    }`}
+                    onClick={() => handleFileClick(item.path)}
+                    aria-current={selectedPath === item.path ? "true" : undefined}
+                  >
+                    <span className="inline-block w-3 mr-1 select-none" />
+                    <span className="font-mono text-xs truncate">{item.label}</span>
+                  </button>
+                ))}
+                <hr className="border-[#474747] my-2" />
+                <div className="px-2 py-1 text-xs font-medium uppercase tracking-wider text-[#858585] flex items-center gap-1">
+                  <span>Files</span>
+                  <AutoOpenCheckbox />
+                </div>
+                {treeError ? (
+                  <p className="text-red-400 text-sm px-2 py-1">{treeError}</p>
+                ) : (
+                  tree.map((node) => renderTreeNode(node, 0))
+                )}
+              </>
             )}
           </aside>
-          <div
-            className="w-2 shrink-0 cursor-col-resize select-none transition-colors hover:bg-[#007acc]"
-            style={{ background: resizing ? "#007acc" : "#3a3a3a" }}
-            role="separator"
-            aria-orientation="vertical"
-            title="Drag to resize"
-            onPointerDown={(e) => {
-              e.currentTarget.setPointerCapture(e.pointerId);
-              dragStartX.current = e.clientX;
-              dragStartWidth.current = sidebarWidth;
-              setResizing(true);
-            }}
-            onPointerMove={(e) => {
-              if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-              const delta = e.clientX - dragStartX.current;
-              setSidebarWidth(Math.min(480, Math.max(160, dragStartWidth.current + delta)));
-            }}
-            onPointerUp={(e) => {
-              e.currentTarget.releasePointerCapture(e.pointerId);
-              setResizing(false);
-            }}
-          />
+
+          {/* Drag-to-resize handle — only when sidebar is expanded */}
+          {!sidebarCollapsed && (
+            <div
+              className="w-2 shrink-0 cursor-col-resize select-none transition-colors hover:bg-[#007acc]"
+              style={{ background: resizing ? "#007acc" : "#3a3a3a" }}
+              role="separator"
+              aria-orientation="vertical"
+              title="Drag to resize"
+              onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId);
+                dragStartX.current = e.clientX;
+                dragStartWidth.current = sidebarWidth;
+                setResizing(true);
+              }}
+              onPointerMove={(e) => {
+                if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
+                const delta = e.clientX - dragStartX.current;
+                setSidebarWidth(Math.min(480, Math.max(160, dragStartWidth.current + delta)));
+              }}
+              onPointerUp={(e) => {
+                e.currentTarget.releasePointerCapture(e.pointerId);
+                setResizing(false);
+              }}
+            />
+          )}
+
+          {/* Main content area */}
           <main
             className="flex-1 flex flex-col min-h-0 bg-[#1e1e1e]"
             role="region"
             aria-label="Document content"
           >
+            {/* Compact toolbar */}
+            <div className="shrink-0 border-b border-[#474747] bg-[#252526] px-4 py-1 flex items-center justify-end min-h-[30px]">
+              {canOpenExternal && (
+                <button
+                  type="button"
+                  onClick={handleOpenExternal}
+                  title="Open in default external application"
+                  className="flex items-center gap-1 text-xs text-[#858585] hover:text-[#cccccc] px-2 py-0.5 rounded border border-[#474747] hover:border-[#858585] hover:bg-[#1e1e1e]"
+                >
+                  <span>↗</span>
+                  <span>Open</span>
+                </button>
+              )}
+            </div>
+
             <div className="flex-1 overflow-auto p-6">
               {contentLoading ? (
                 <p className="text-[#858585] text-sm">Loading...</p>
@@ -313,7 +383,7 @@ export function DocsPage() {
                 <p className="text-red-400 text-sm">{contentError}</p>
               ) : selectedPath.endsWith(".md") ? (
                 <div className="docs-content">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                     {content}
                   </ReactMarkdown>
                 </div>
@@ -323,6 +393,7 @@ export function DocsPage() {
                 </pre>
               )}
             </div>
+
             {fileMeta && !contentLoading && (
               <footer className="shrink-0 border-t border-[#474747] bg-[#252526] px-6 py-2 flex items-center gap-6 text-xs text-[#858585] font-mono">
                 <span className="text-[#6a9955] truncate max-w-[280px]" title={selectedPath}>
@@ -336,6 +407,13 @@ export function DocsPage() {
                   <span className="text-[#569cd6]">Created:</span>{" "}
                   {formatDateTime(fileMeta.createdAt)}
                 </span>
+                <button
+                  type="button"
+                  onClick={handleOpenExternal}
+                  className="ml-auto text-[#569cd6] hover:underline cursor-pointer"
+                >
+                  open externally ↗
+                </button>
               </footer>
             )}
           </main>

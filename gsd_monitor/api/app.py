@@ -487,6 +487,24 @@ def create_app() -> FastAPI:
         modified_at = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat()
         return {"content": content, "created_at": created_at, "modified_at": modified_at}
 
+    @application.post("/api/docs/{planning_path:path}/open")
+    async def docs_open_file(planning_path: str, path: str = "") -> dict[str, Any]:
+        import os
+        from urllib.parse import unquote
+        root = Path(unquote(planning_path)).resolve()
+        if not root.is_dir():
+            raise HTTPException(status_code=404, detail="planning path not found")
+        target = (root / path).resolve()
+        if root not in target.parents and target != root:
+            raise HTTPException(status_code=403, detail="path outside planning directory")
+        if not target.is_file():
+            raise HTTPException(status_code=404, detail="file not found")
+        try:
+            os.startfile(str(target))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"could not open file: {exc}")
+        return {"ok": True}
+
     @application.websocket("/ws/events")
     async def ws_events(ws: WebSocket) -> None:
         await state.connect_ws(ws)

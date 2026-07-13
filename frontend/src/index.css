@@ -177,3 +177,42 @@ body {
   border-top: 1px solid #474747;
   margin: 1.25em 0;
 }
+
+.docs-content details {
+  border: 1px solid #474747;
+  border-radius: 4px;
+  background: #252526;
+  margin: 0.5em 0;
+  padding: 0.3em 0.8em;
+}
+
+.docs-content details[open] {
+  padding-bottom: 0.6em;
+}
+
+.docs-content summary {
+  cursor: pointer;
+  color: #9cdcfe;
+  font-weight: 600;
+  padding: 0.2em 0;
+  user-select: none;
+  list-style: none;
+}
+
+.docs-content summary::-webkit-details-marker {
+  display: none;
+}
+
+.docs-content summary::before {
+  content: "› ";
+  color: #858585;
+  font-weight: normal;
+}
+
+.docs-content details[open] > summary::before {
+  content: "⌄ ";
+}
+
+.docs-content summary:hover {
+  color: #cccccc;
+}

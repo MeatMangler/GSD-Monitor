@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { useApp } from "../context";
 import { Drawer } from "../Drawer";
 import { byLastUpdated, fmtDate, statusLabel, statusBorderClass } from "../utils";
@@ -246,7 +247,7 @@ export function DashboardPage() {
               <div>
                 <h3 className="mb-1 text-xs font-semibold uppercase text-[#858585]">Plan</h3>
                 <div className="prose prose-invert prose-sm max-w-none">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{selected.plan_content}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{selected.plan_content}</ReactMarkdown>
                 </div>
               </div>
             )}
@@ -254,7 +255,7 @@ export function DashboardPage() {
               <div>
                 <h3 className="mb-1 text-xs font-semibold uppercase text-[#858585]">Research</h3>
                 <div className="prose prose-invert prose-sm max-w-none">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{selected.research_content}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{selected.research_content}</ReactMarkdown>
                 </div>
               </div>
             )}
@@ -262,7 +263,7 @@ export function DashboardPage() {
               <div>
                 <h3 className="mb-1 text-xs font-semibold uppercase text-[#858585]">Validation</h3>
                 <div className="prose prose-invert prose-sm max-w-none">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{selected.validation_content}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{selected.validation_content}</ReactMarkdown>
                 </div>
               </div>
             )}

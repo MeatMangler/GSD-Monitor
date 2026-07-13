@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { useApp } from "../context";
 import { statusBorderClass } from "../utils";
 
@@ -111,7 +112,7 @@ export function VerificationPage() {
             {expandedPhase === p.number && p.validation_content && (
               <div className="rounded-b-md border border-t-0 border-[#474747] bg-[#1e1e1e] p-4">
                 <div className="prose prose-invert prose-sm max-w-none">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                     {p.validation_content}
                   </ReactMarkdown>
                 </div>

@@ -212,6 +212,13 @@ export async function fetchDocFile(planningPath: string, relPath: string): Promi
   return r.json() as Promise<DocFileResponse>;
 }
 
+export async function openDocFile(planningPath: string, relPath: string): Promise<void> {
+  const enc = encodeURIComponent(planningPath);
+  const params = new URLSearchParams({ path: relPath });
+  const r = await fetch(`${base}/api/docs/${enc}/open?${params.toString()}`, { method: "POST" });
+  if (!r.ok) throw new Error(await r.text());
+}
+
 export interface LogEntry {
   ts: number;
   level: string;
