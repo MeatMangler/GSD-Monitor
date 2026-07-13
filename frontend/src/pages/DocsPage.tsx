@@ -21,6 +21,7 @@ export function DocsPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [resizing, setResizing] = useState(false);
   const [autoOpen, setAutoOpen] = useState(false);
+  const [dragHover, setDragHover] = useState(false);
   const dragStartX = useRef(0);
   const dragStartWidth = useRef(0);
 
@@ -282,16 +283,15 @@ export function DocsPage() {
             aria-label="Planning files"
           >
             {/* Collapse / expand toggle — always visible */}
-            <div className="shrink-0 flex items-center justify-end px-1 pt-1 pb-0">
-              <button
-                type="button"
-                title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                className="p-1 text-[#858585] hover:text-[#cccccc] hover:bg-[#1e1e1e] rounded text-sm leading-none"
-                onClick={() => setSidebarCollapsed((c) => !c)}
-              >
-                {sidebarCollapsed ? "›" : "‹"}
-              </button>
-            </div>
+            <button
+              type="button"
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className="shrink-0 w-full flex items-center justify-between px-2 py-1.5 border-b border-[#474747] text-[#858585] hover:text-[#cccccc] hover:bg-[#2a2d2e] select-none"
+              onClick={() => setSidebarCollapsed((c) => !c)}
+            >
+              {!sidebarCollapsed && <span className="text-[10px] font-medium uppercase tracking-wider">Explorer</span>}
+              <span className="text-base leading-none">{sidebarCollapsed ? "›" : "‹"}</span>
+            </button>
 
             {!sidebarCollapsed && (
               <>
@@ -332,11 +332,13 @@ export function DocsPage() {
           {/* Drag-to-resize handle — only when sidebar is expanded */}
           {!sidebarCollapsed && (
             <div
-              className="w-2 shrink-0 cursor-col-resize select-none transition-colors hover:bg-[#007acc]"
-              style={{ background: resizing ? "#007acc" : "#3a3a3a" }}
+              className="w-2 shrink-0 cursor-col-resize select-none"
+              style={{ background: resizing || dragHover ? "#007acc" : "#474747" }}
               role="separator"
               aria-orientation="vertical"
               title="Drag to resize"
+              onPointerEnter={() => setDragHover(true)}
+              onPointerLeave={() => setDragHover(false)}
               onPointerDown={(e) => {
                 e.currentTarget.setPointerCapture(e.pointerId);
                 dragStartX.current = e.clientX;
@@ -350,6 +352,7 @@ export function DocsPage() {
               }}
               onPointerUp={(e) => {
                 e.currentTarget.releasePointerCapture(e.pointerId);
+                setDragHover(false);
                 setResizing(false);
               }}
             />
