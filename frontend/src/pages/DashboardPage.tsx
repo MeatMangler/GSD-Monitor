@@ -26,7 +26,6 @@ export function DashboardPage() {
 
   const stats = useMemo(() => {
     if (!activeProject) return null;
-    const phases = activeProject.milestones.flatMap((m) => m.phases);
     const total = phases.length;
     const complete = phases.filter((p) => p.status === "complete").length;
     const completion = total ? Math.round((complete / total) * 100) : 0;
@@ -35,27 +34,33 @@ export function DashboardPage() {
     const activePhaseName =
       activeSegment?.stateCurrentPosition ??
       phases.find((p) => p.status === "in_progress")?.title ??
-      "—";
+      null;
+    // If nothing is in_progress, surface the most recently updated planned phase
+    // that already has plan docs written — this covers the "about to execute" state.
+    const nextUpName =
+      activePhaseName === null
+        ? (phases.find((p) => p.status === "not_started" && p.has_plan)?.title ?? null)
+        : null;
     let driftLabel = "No drift";
     const hasM = phases.some((p) => p.drift === "major");
     const hasN = phases.some((p) => p.drift === "minor");
     if (hasM) driftLabel = "Major drift";
     else if (hasN) driftLabel = "Minor drift";
-    return { completion, phasesDone, phasesTotal, activePhaseName, driftLabel, gsdVersion: activeProject.version };
-  }, [activeProject, activeSegment]);
+    return { completion, phasesDone, phasesTotal, activePhaseName, nextUpName, driftLabel, gsdVersion: activeProject.version };
+  }, [activeProject, activeSegment, phases]);
 
   const breadcrumb = useMemo(() => {
     const activeGroup = groups.find((g) => g.id === activeSegment?.groupId) ?? null;
     const groupName = activeGroup?.displayName ?? "—";
     const projectName = activeProject?.name ?? "—";
-    const phases = activeProject?.milestones.flatMap((m) => m.phases) ?? [];
     const activePhaseTitle =
       activeSegment?.stateCurrentPosition ??
       phases.find((p) => p.status === "in_progress")?.title ??
+      phases.find((p) => p.status === "not_started" && p.has_plan)?.title ??
       [...phases].filter((p) => p.status === "complete").sort(byLastUpdated)[0]?.title ??
       "—";
     return { groupName, projectName, activePhaseTitle };
-  }, [activeProject, activeSegment, groups]);
+  }, [activeProject, activeSegment, groups, phases]);
 
   // Progress data — from STATE.md-sourced fields on activeProject (per PROG-02, D-08)
   const progressData = useMemo(() => {
@@ -141,12 +146,14 @@ export function DashboardPage() {
           </div>
           <div className="text-xs text-[#858585]">Phases done</div>
         </div>
-        {/* Card 3: Active phase name (D-03) — text-sm not text-2xl since it's a string */}
+        {/* Card 3: Active phase / next-up phase (D-03) */}
         <div className="rounded-md border border-[#474747] bg-[#1e1e1e] p-4 text-center">
           <div className="text-sm font-semibold text-[#cccccc] truncate">
-            {stats?.activePhaseName ?? "—"}
+            {stats?.activePhaseName ?? stats?.nextUpName ?? "—"}
           </div>
-          <div className="text-xs text-[#858585]">Active phase</div>
+          <div className="text-xs text-[#858585]">
+            {stats?.activePhaseName == null && stats?.nextUpName != null ? "Next up" : "Active phase"}
+          </div>
         </div>
         {/* Card 4: Drift label (D-04, unchanged content) */}
         <div className="rounded-md border border-[#474747] bg-[#1e1e1e] p-4 text-center">

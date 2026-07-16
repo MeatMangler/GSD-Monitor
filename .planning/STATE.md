@@ -4,16 +4,16 @@ milestone: v3.0
 milestone_name: — gsd-core Migration
 current_phase: 0
 status: Awaiting next milestone
-stopped_at: Phase 13 context gathered
-last_updated: "2026-06-22T09:17:38.326Z"
+stopped_at: context exhaustion at 76% (2026-07-13)
+last_updated: "2026-07-13T11:54:33.154Z"
 last_activity: 2026-06-19
 last_activity_desc: Milestone v3.0 completed and archived
 progress:
   total_phases: 11
-  completed_phases: 9
-  total_plans: 19
-  completed_plans: 17
-  percent: 82
+  completed_phases: 10
+  total_plans: 20
+  completed_plans: 18
+  percent: 90
 current_phase_name: Enhanced Visibility
 ---
 
@@ -63,6 +63,7 @@ None.
 | 260508-m1d | Fix discovery for milestone-based GSD-1 layout (no root ROADMAP.md) | 2026-05-08 | [260508-m1d-fix-milestone-layout-discovery](.planning/quick/260508-m1d-fix-milestone-layout-discovery/) |
 | 260618-rat | Fix UI review findings: user-friendly errors, page heading, CSS tokens | 2026-06-18 | [260618-rat-fix-ui-review-findings-user-friendly-err](.planning/quick/260618-rat-fix-ui-review-findings-user-friendly-err/) |
 | 260619-mrd | Improve Markdown Readability — resizable panel, colored prose headings/code/tables | 2026-06-19 | [260619-mrd-improve-markdown-readability](.planning/quick/260619-mrd-improve-markdown-readability/) |
+| 20260713-mdv | Improved markdown viewer (rehype-raw, external open, collapsible nav, devMike.bat) | 2026-07-13 | [20260713-mdv-improved-markdown-viewer-and-nav-ux](.planning/quick/20260713-mdv-improved-markdown-viewer-and-nav-ux/) |
 
 ## Deferred Items
 
@@ -77,10 +78,10 @@ Items acknowledged and deferred at milestone close on 2026-06-18:
 
 ## Session Continuity
 
-**Last session:** 2026-06-22T09:17:38.314Z
+**Last session:** 2026-07-13T11:54:33.144Z
 
 Last activity: 2026-06-18 - Completed quick task 260618-rat: Fix UI review findings: user-friendly errors, page heading, CSS tokens
-Stopped at: Phase 13 context gathered
+Stopped at: context exhaustion at 76% (2026-07-13)
 Resume file: .planning/phases/13-installation-script/13-CONTEXT.md
 
 ## Performance Metrics

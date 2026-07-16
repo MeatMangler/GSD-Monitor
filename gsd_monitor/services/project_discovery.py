@@ -288,8 +288,10 @@ class ProjectDiscoveryService:
         config_data = _try_read_json(config_path)
         is_gsd_core = config_data is not None
 
-        # Fallback: sniff ROADMAP.md for heading-based phase format
-        if not is_gsd_core and roadmap.is_file():
+        # Fallback: sniff ROADMAP.md for heading-based phase format.
+        # Skip sniff when .planning/phases/ exists — that directory is a definitive GSD-1
+        # structural marker that takes precedence over ROADMAP heading style.
+        if not is_gsd_core and roadmap.is_file() and not (base / "phases").is_dir():
             roadmap_preview = _try_read(roadmap) or ""
             if _HEADING_PHASE_SNIFF.search(roadmap_preview[:2000]):
                 is_gsd_core = True

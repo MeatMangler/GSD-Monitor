@@ -35,6 +35,30 @@ class RoadmapParser:
                 arch = RoadmapParser._try_extract_from_milestone_archives(file_path)
                 if arch:
                     milestones = arch
+            # Supplement with any heading-based active phases in the main ROADMAP
+            # not already captured by the checkbox format or milestone archives.
+            # Handles hybrid GSD-1 projects where active phases use ## Phase N: headings.
+            known_nums = {ph.number for m in (milestones or []) for ph in m.phases}
+            active = RoadmapParser._extract_active_phases_from_roadmap(text, known_nums)
+            if active:
+                any_complete = any(ph.status == PhaseStatus.COMPLETE for ph in active)
+                any_incomplete = any(ph.status != PhaseStatus.COMPLETE for ph in active)
+                if any_complete and any_incomplete:
+                    ms_st = MilestoneStatus.ACTIVE
+                elif any_complete:
+                    ms_st = MilestoneStatus.COMPLETED
+                else:
+                    ms_st = MilestoneStatus.PLANNED
+                if milestones is None:
+                    milestones = []
+                milestones.append(
+                    Milestone(
+                        number=len(milestones) + 1,
+                        title="Active",
+                        status=ms_st,
+                        phases=active,
+                    )
+                )
             parent = str(p.parent)
             return ParseResult.ok(
                 GsdProject(name=project_name, path=parent, milestones=milestones)
@@ -199,6 +223,45 @@ class RoadmapParser:
                     status = PhaseStatus.NOT_STARTED
             phases.append(PhaseEntry(number=number, title=title, status=status, goal=goal))
         return phases if phases else None
+
+    @staticmethod
+    def _extract_active_phases_from_roadmap(
+        text: str, known_numbers: set[int]
+    ) -> list[PhaseEntry]:
+        """Extract heading-based phases from the main ROADMAP not already in archives.
+
+        Handles GSD-1 projects whose active phases use ``## Phase N:`` or
+        ``### Phase N:`` headings in the main ROADMAP rather than the checkbox
+        format — common when a project has evolved over many milestones.
+        """
+        heading_re = re.compile(r"^#{2,3} Phase (\d+): (.+)", re.MULTILINE)
+        matches = list(heading_re.finditer(text))
+        if not matches:
+            return []
+        phases: list[PhaseEntry] = []
+        for i, m in enumerate(matches):
+            try:
+                number = int(m.group(1))
+            except ValueError:
+                continue
+            if number in known_numbers:
+                continue
+            title = m.group(2).strip()
+            body_start = m.end()
+            body_end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            body = text[body_start:body_end]
+            gm = _GOAL.search(body)
+            goal = gm.group(1).strip() if gm else None
+            checked = len(re.findall(r"^- \[x\]", body, re.MULTILINE | re.IGNORECASE))
+            unchecked = len(re.findall(r"^- \[ \]", body, re.MULTILINE))
+            if checked > 0 and unchecked == 0:
+                status = PhaseStatus.COMPLETE
+            elif checked > 0:
+                status = PhaseStatus.IN_PROGRESS
+            else:
+                status = PhaseStatus.NOT_STARTED
+            phases.append(PhaseEntry(number=number, title=title, status=status, goal=goal))
+        return sorted(phases, key=lambda ph: ph.number)
 
     @staticmethod
     def _extract_milestones_fallback(text: str) -> list[Milestone]:
