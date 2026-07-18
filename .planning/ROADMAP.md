@@ -64,11 +64,11 @@
   4. Directories `spikes`, `sketches`, `reports`, `todos`, `debug`, `intel` are in `RESERVED` and not walked as fake projects
   5. `RequirementsParser` is confirmed called from the discovery pipeline; requirements appear in API responses for projects that have `REQUIREMENTS.md`
 
-**Plans:** 0/3 plans complete
+**Plans:** 3/3 plans complete
 Plans:
-- [ ] 14-01-PLAN.md — Unprefixed artifact fallback: `_resolve_artifact` helper trying `{padded}-NAME.md` then bare `NAME.md`; fix CONTEXT, RESEARCH, VERIFICATION, UAT; add tests
-- [ ] 14-02-PLAN.md — Phase-dir enrichment collision fix: `_phase_dir_prefix(phase)` helper that uses full padded code (`1-01` → `01-01-`) for milestone-prefixed phases; add collision regression tests
-- [ ] 14-03-PLAN.md — XML task parsing in `PlanParser` (`<task>` blocks → `TodoItem`); `RequirementsParser` wiring audit + export from `__init__.py`; reserved dir hardening
+- [x] 14-01-PLAN.md — Unprefixed artifact fallback: `_resolve_artifact` helper trying `{padded}-NAME.md` then bare `NAME.md`; fix CONTEXT, RESEARCH, VERIFICATION, UAT; add tests
+- [x] 14-02-PLAN.md — Phase-dir enrichment collision fix: `_phase_dir_prefix(phase)` helper that uses full padded code (`1-01` → `01-01-`) for milestone-prefixed phases; add collision regression tests
+- [x] 14-03-PLAN.md — XML task parsing in `PlanParser` (`<task>` blocks → `TodoItem`); `RequirementsParser` wiring audit + export from `__init__.py`; reserved dir hardening
 
 ### Phase 15: gsd-core P1 Artifact Visibility
 
@@ -131,7 +131,7 @@ Plans:
 | 10. Feature Pages | v2.0 | 3/3 | Complete | 2026-04-12 |
 | 11. gsd-core Support | v3.0 | 2/2 | Complete | 2026-06-18 |
 | 12. Enhanced Visibility | v3.0 | 2/2 | Complete | 2026-06-18 |
-| 14. gsd-core P0 Correctness | v4.0 | 0/3 | Pending | — |
+| 14. gsd-core P0 Correctness | v4.0 | 3/3 | Complete | 2026-07-18 |
 | 15. gsd-core P1 Visibility | v4.0 | 0/3 | Pending | — |
 | 16. gsd-core P2 Depth | v4.0 | 0/4 | Pending | — |
 | 13. Installation Script | v5.0 | 0/1 | Deferred | — |
