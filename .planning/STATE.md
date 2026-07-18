@@ -1,20 +1,20 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: — gsd-core Migration
+milestone: v4.0
+milestone_name: gsd-core Full Visibility
 current_phase: 0
-status: Awaiting next milestone
-stopped_at: context exhaustion at 76% (2026-07-13)
-last_updated: "2026-07-18T23:17:45.347Z"
-last_activity: 2026-06-19
-last_activity_desc: Milestone v3.0 completed and archived
+status: Milestone v4.0 complete — awaiting next milestone
+stopped_at: ""
+last_updated: "2026-07-18T23:22:01.877Z"
+last_activity: 2026-07-18
+last_activity_desc: Phase 16 complete — v4.0 milestone fully delivered (10/10 plans)
 progress:
   total_phases: 14
-  completed_phases: 12
+  completed_phases: 13
   total_plans: 30
-  completed_plans: 26
-  percent: 86
-current_phase_name: Enhanced Visibility
+  completed_plans: 30
+  percent: 100
+current_phase_name: gsd-core P2 Surface Depth
 ---
 
 # Project State
@@ -78,7 +78,7 @@ Items acknowledged and deferred at milestone close on 2026-06-18:
 
 ## Session Continuity
 
-**Last session:** 2026-07-18T23:17:45.334Z
+**Last session:** 2026-07-18T23:22:01.868Z
 
 Last activity: 2026-06-18 - Completed quick task 260618-rat: Fix UI review findings: user-friendly errors, page heading, CSS tokens
 Stopped at: context exhaustion at 76% (2026-07-13)

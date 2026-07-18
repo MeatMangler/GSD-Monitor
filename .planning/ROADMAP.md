@@ -5,7 +5,7 @@
 - [x] **v1.0** — Worktree deduplication, VS Code dark dashboard, doc browser, performance & correctness (8 phases, 15 plans, 2026-04-04) — [Archive](milestones/v1.0-ROADMAP.md)
 - [x] **v2.0 Feature Pages** — Drift computation, Drift/Quick Tasks/Verification pages (2 phases, 4 plans, 2026-04-12) — [Archive](milestones/v2.0-ROADMAP.md)
 - [x] **v3.0 gsd-core Migration** — gsd-core detection & parsing, document surfacing, progress metrics, enhanced visibility (2 phases, 4 plans, 2026-06-18) — [Archive](milestones/v3.0-ROADMAP.md)
-- [ ] **v4.0 gsd-core Full Visibility** — P0 correctness fixes, P1 artifact visibility, P2 surface depth (3 phases, 10 plans)
+- [x] **v4.0 gsd-core Full Visibility** — P0 correctness fixes, P1 artifact visibility, P2 surface depth (3 phases, 10 plans, 2026-07-18)
 
 ## Phases
 
@@ -43,7 +43,7 @@
 
 - [ ] Phase 14: gsd-core P0 Correctness Bug Fixes — unprefixed artifact fallback, phase-dir enrichment collision fix, XML task parsing, RequirementsParser wiring
 - [x] Phase 15: gsd-core P1 Artifact Visibility — Decision parser, code review findings, package legitimacy audit (completed 2026-07-18)
-- [ ] Phase 16: gsd-core P2 Surface Depth — backlog phases, config signals, PROJECT.md vision, VerificationPage structured render, artifact explorers
+- [x] Phase 16: gsd-core P2 Surface Depth — backlog phases, config signals, PROJECT.md vision, VerificationPage structured render, artifact explorers (completed 2026-07-18)
 
 ## Deferred
 
@@ -101,13 +101,13 @@ Plans:
   3. VerificationPage renders gsd-core VERIFICATION.md with structured sections (open blockers highlighted separately from passing gates)
   4. A new Artifacts page (or sidebar section) lists Spikes, Threads, Codebase docs with read-only detail views; Sketches open externally via existing open API
 
-**Plans:** 2/4 plans executed
+**Plans:** 4/4 plans complete
 Plans:
 
 - [x] 16-01-PLAN.md — Backlog phases (999.x): fix `_HEADING_PHASE` regex for dot separator + `_enrich_phase` dir matching
 - [x] 16-02-PLAN.md — Config signal expansion (nyquist_validation, discuss_mode, ui_phase) + PROJECT.md vision callout on Dashboard
-- [ ] 16-03-PLAN.md — VerificationPage structured render: parse VERIFICATION.md sections, highlight open blockers vs passing gates
-- [ ] 16-04-PLAN.md — Top-level artifact explorers: new API endpoints for Spikes/Threads/Codebase/Intel + frontend views
+- [x] 16-03-PLAN.md — VerificationPage structured render: parse VERIFICATION.md sections, highlight open blockers vs passing gates
+- [x] 16-04-PLAN.md — Top-level artifact explorers: new API endpoints for Spikes/Threads/Codebase/Intel + frontend views
 
 ### Phase 13: Installation Script (deferred to v5.0)
 
@@ -137,5 +137,5 @@ Plans:
 | 12. Enhanced Visibility | v3.0 | 2/2 | Complete | 2026-06-18 |
 | 14. gsd-core P0 Correctness | v4.0 | 3/3 | Complete | 2026-07-18 |
 | 15. gsd-core P1 Visibility | v4.0 | 3/3 | Complete   | 2026-07-18 |
-| 16. gsd-core P2 Depth | v4.0 | 2/4 | In Progress|  |
+| 16. gsd-core P2 Depth | v4.0 | 4/4 | Complete   | 2026-07-18 |
 | 13. Installation Script | v5.0 | 0/1 | Deferred | — |
