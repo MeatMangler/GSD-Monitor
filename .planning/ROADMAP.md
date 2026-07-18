@@ -101,11 +101,11 @@ Plans:
   3. VerificationPage renders gsd-core VERIFICATION.md with structured sections (open blockers highlighted separately from passing gates)
   4. A new Artifacts page (or sidebar section) lists Spikes, Threads, Codebase docs with read-only detail views; Sketches open externally via existing open API
 
-**Plans:** 0/4 plans complete
+**Plans:** 2/4 plans executed
 Plans:
 
-- [ ] 16-01-PLAN.md — Backlog phases (999.x): fix `_HEADING_PHASE` regex for dot separator + `_enrich_phase` dir matching
-- [ ] 16-02-PLAN.md — Config signal expansion (nyquist_validation, discuss_mode, ui_phase) + PROJECT.md vision callout on Dashboard
+- [x] 16-01-PLAN.md — Backlog phases (999.x): fix `_HEADING_PHASE` regex for dot separator + `_enrich_phase` dir matching
+- [x] 16-02-PLAN.md — Config signal expansion (nyquist_validation, discuss_mode, ui_phase) + PROJECT.md vision callout on Dashboard
 - [ ] 16-03-PLAN.md — VerificationPage structured render: parse VERIFICATION.md sections, highlight open blockers vs passing gates
 - [ ] 16-04-PLAN.md — Top-level artifact explorers: new API endpoints for Spikes/Threads/Codebase/Intel + frontend views
 
@@ -137,5 +137,5 @@ Plans:
 | 12. Enhanced Visibility | v3.0 | 2/2 | Complete | 2026-06-18 |
 | 14. gsd-core P0 Correctness | v4.0 | 3/3 | Complete | 2026-07-18 |
 | 15. gsd-core P1 Visibility | v4.0 | 3/3 | Complete   | 2026-07-18 |
-| 16. gsd-core P2 Depth | v4.0 | 0/4 | Pending | — |
+| 16. gsd-core P2 Depth | v4.0 | 2/4 | In Progress|  |
 | 13. Installation Script | v5.0 | 0/1 | Deferred | — |

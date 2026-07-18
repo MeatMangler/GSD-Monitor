@@ -9,6 +9,7 @@ import { InsightsPage } from "./pages/InsightsPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { DocsPage } from "./pages/DocsPage";
 import { LogsPage } from "./pages/LogsPage";
+import { ArtifactsPage } from "./pages/ArtifactsPage";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/insights" element={<InsightsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/logs" element={<LogsPage />} />
+          <Route path="/artifacts" element={<ArtifactsPage />} />
         </Routes>
       </ShellLayout>
     </AppProvider>

@@ -7,6 +7,7 @@ import gsdIcon from "./assets/gsd-icon.png";
 const nav = [
   { to: "/dashboard", label: "Dashboard" },
   { to: "/docs",      label: "Docs" },
+  { to: "/artifacts", label: "Artifacts" },
   { to: "/drift",     label: "Drift" },
   { to: "/quick-tasks", label: "Quick Tasks" },
   { to: "/verification", label: "Verification" },

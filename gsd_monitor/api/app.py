@@ -505,6 +505,59 @@ def create_app() -> FastAPI:
             raise HTTPException(status_code=500, detail=f"could not open file: {exc}")
         return {"ok": True}
 
+    @application.get("/api/artifacts/{planning_path:path}")
+    async def artifacts(planning_path: str) -> dict[str, Any]:
+        """List artifact files from well-known subdirectories of the planning root.
+
+        Returns files grouped by artifact type (spikes, threads, codebase, intel, sketches).
+        Each entry has name, path (relative to planning root), type, and size.
+        """
+        import os as _os
+        from urllib.parse import unquote
+
+        root = Path(unquote(planning_path)).resolve()
+        if not root.is_dir():
+            raise HTTPException(status_code=404, detail="planning path not found")
+
+        # Artifact directories to surface
+        ARTIFACT_DIRS = ["spikes", "threads", "codebase", "intel", "sketches"]
+
+        def _list_dir(subdir_name: str) -> list[dict[str, Any]]:
+            subdir = root / subdir_name
+            if not subdir.is_dir():
+                return []
+            entries: list[dict[str, Any]] = []
+            try:
+                for entry in sorted(subdir.iterdir(), key=lambda e: e.name.lower()):
+                    if entry.name.startswith("."):
+                        continue
+                    rel = str(entry.relative_to(root)).replace("\\", "/")
+                    if entry.is_dir():
+                        # For dirs (spike/thread containers), list the first markdown file as preview
+                        md_files = sorted(entry.glob("*.md"), key=lambda f: f.name.lower())
+                        entries.append({
+                            "name": entry.name,
+                            "path": rel,
+                            "type": "dir",
+                            "preview_file": str(md_files[0].relative_to(root)).replace("\\", "/") if md_files else None,
+                        })
+                    else:
+                        entries.append({
+                            "name": entry.name,
+                            "path": rel,
+                            "type": "file",
+                            "preview_file": None,
+                        })
+            except PermissionError:
+                pass
+            return entries
+
+        result: dict[str, Any] = {}
+        for dir_name in ARTIFACT_DIRS:
+            result[dir_name] = _list_dir(dir_name)
+
+        return result
+
     @application.websocket("/ws/events")
     async def ws_events(ws: WebSocket) -> None:
         await state.connect_ws(ws)

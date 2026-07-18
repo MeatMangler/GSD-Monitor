@@ -242,6 +242,28 @@ export async function openDocFile(planningPath: string, relPath: string): Promis
   if (!r.ok) throw new Error(await r.text());
 }
 
+export interface ArtifactEntry {
+  name: string;
+  path: string;
+  type: "file" | "dir";
+  preview_file: string | null;
+}
+
+export interface ArtifactsPayload {
+  spikes: ArtifactEntry[];
+  threads: ArtifactEntry[];
+  codebase: ArtifactEntry[];
+  intel: ArtifactEntry[];
+  sketches: ArtifactEntry[];
+}
+
+export async function fetchArtifacts(planningPath: string): Promise<ArtifactsPayload> {
+  const enc = encodeURIComponent(planningPath);
+  const r = await fetch(`${base}/api/artifacts/${enc}`, noStore);
+  if (!r.ok) throw new Error(await r.text());
+  return r.json() as Promise<ArtifactsPayload>;
+}
+
 export interface LogEntry {
   ts: number;
   level: string;
