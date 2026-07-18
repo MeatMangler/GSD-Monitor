@@ -232,6 +232,25 @@ export function DashboardPage() {
                   {phaseId} — {p.title}
                 </span>
                 <div className="flex items-center gap-2">
+                  {p.review_summary && (p.review_summary.critical > 0 || p.review_summary.warning > 0 || p.review_summary.info > 0) && (
+                    <span className="flex items-center gap-1 font-mono text-[10px]">
+                      {p.review_summary.critical > 0 && (
+                        <span className="rounded bg-red-900/40 px-1 py-0.5 text-red-400">
+                          {p.review_summary.critical}C
+                        </span>
+                      )}
+                      {p.review_summary.warning > 0 && (
+                        <span className="rounded bg-amber-900/40 px-1 py-0.5 text-amber-400">
+                          {p.review_summary.warning}W
+                        </span>
+                      )}
+                      {p.review_summary.info > 0 && (
+                        <span className="rounded bg-sky-900/40 px-1 py-0.5 text-sky-400">
+                          {p.review_summary.info}I
+                        </span>
+                      )}
+                    </span>
+                  )}
                   <span className="text-xs text-[#858585]">{statusLabel(p.status)}</span>
                   <span className="text-xs text-[#858585]">{fmtDate(p.last_updated)}</span>
                 </div>

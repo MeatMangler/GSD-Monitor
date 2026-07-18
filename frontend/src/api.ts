@@ -68,6 +68,12 @@ export interface DecisionPayload {
   is_covered: boolean;
 }
 
+export interface ReviewSummaryPayload {
+  critical: number;
+  warning: number;
+  info: number;
+}
+
 export interface RequirementEntryPayload {
   id: string;
   category: string;
@@ -188,6 +194,7 @@ export interface PhasePayload {
   depends_on: string[];
   has_uat: boolean;
   decisions: DecisionPayload[];
+  review_summary?: ReviewSummaryPayload | null;
 }
 
 export interface DocTreeNode {

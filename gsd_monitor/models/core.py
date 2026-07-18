@@ -25,6 +25,12 @@ class DecisionEntry(BaseModel):
     is_covered: bool = False
 
 
+class ReviewSummary(BaseModel):
+    critical: int = 0
+    warning: int = 0
+    info: int = 0
+
+
 class PhaseEntry(BaseModel):
     number: int = 0
     title: str = ""
@@ -56,6 +62,7 @@ class PhaseEntry(BaseModel):
     has_summary: bool = False
     has_requirements: bool = False
     decisions: list["DecisionEntry"] = Field(default_factory=list)
+    review_summary: "ReviewSummary | None" = None
 
     model_config = {"populate_by_name": True}
 

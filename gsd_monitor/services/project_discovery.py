@@ -26,6 +26,7 @@ from gsd_monitor.parsers.decision_parser import DecisionParser
 from gsd_monitor.parsers.gsd_core_roadmap import GsdCoreRoadmapParser
 from gsd_monitor.parsers.plan_parser import PlanParser
 from gsd_monitor.parsers.requirements_parser import RequirementsParser
+from gsd_monitor.parsers.review_parser import ReviewParser
 from gsd_monitor.parsers.roadmap import RoadmapParser
 from gsd_monitor.parsers.state_parser import StateParser
 from gsd_monitor.services.git_service import GitService
@@ -562,6 +563,9 @@ class ProjectDiscoveryService:
             uat_file = _resolve_artifact(phase_dir, padded, "UAT.md")
             ui_spec_file = _resolve_artifact(phase_dir, padded, "UI-SPEC.md")
             ui_review_file = _resolve_artifact(phase_dir, padded, "UI-REVIEW.md")
+            review_file = _resolve_artifact(phase_dir, padded, "REVIEW.md")
+            review_text = _try_read(review_file) if review_file.is_file() else None
+            review_summary = ReviewParser.parse(review_text) if review_text else None
 
             has_context = ctx_file.is_file()
             has_research = research_file.is_file()
@@ -614,6 +618,7 @@ class ProjectDiscoveryService:
                 has_summary=has_summary,
                 has_requirements=has_requirements,
                 decisions=decisions,
+                review_summary=review_summary,
                 nyquist_compliant=nyq,
                 research_coverage=coverage,
                 research_content=research_content,

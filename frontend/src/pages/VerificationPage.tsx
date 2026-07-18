@@ -109,13 +109,37 @@ export function VerificationPage() {
                 </div>
               </div>
             </button>
-            {expandedPhase === p.number && p.validation_content && (
+            {expandedPhase === p.number && (p.validation_content || (p.review_summary && (p.review_summary.critical > 0 || p.review_summary.warning > 0 || p.review_summary.info > 0))) && (
               <div className="rounded-b-md border border-t-0 border-[#474747] bg-[#1e1e1e] p-4">
-                <div className="prose prose-invert prose-sm max-w-none">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-                    {p.validation_content}
-                  </ReactMarkdown>
-                </div>
+                {p.validation_content && (
+                  <div className="prose prose-invert prose-sm max-w-none">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                      {p.validation_content}
+                    </ReactMarkdown>
+                  </div>
+                )}
+                {p.review_summary && (p.review_summary.critical > 0 || p.review_summary.warning > 0 || p.review_summary.info > 0) && (
+                  <div className="mt-3 rounded-md border border-[#474747] bg-[#1e1e1e] p-3">
+                    <h4 className="mb-2 text-xs font-semibold uppercase text-[#858585]">Code Review</h4>
+                    <div className="flex items-center gap-2 font-mono text-xs">
+                      {p.review_summary.critical > 0 && (
+                        <span className="rounded bg-red-900/40 px-1.5 py-0.5 text-red-400">
+                          {p.review_summary.critical} Critical
+                        </span>
+                      )}
+                      {p.review_summary.warning > 0 && (
+                        <span className="rounded bg-amber-900/40 px-1.5 py-0.5 text-amber-400">
+                          {p.review_summary.warning} Warning
+                        </span>
+                      )}
+                      {p.review_summary.info > 0 && (
+                        <span className="rounded bg-sky-900/40 px-1.5 py-0.5 text-sky-400">
+                          {p.review_summary.info} Info
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
