@@ -274,6 +274,27 @@ export function DashboardPage() {
                 </div>
               </div>
             )}
+            {selected.decisions && selected.decisions.length > 0 && (
+              <div>
+                <h3 className="mb-2 text-xs font-semibold uppercase text-[#858585]">Decisions</h3>
+                <ul className="space-y-1.5">
+                  {selected.decisions.map((d) => (
+                    <li key={d.id} className="flex items-start gap-2">
+                      <span
+                        className={`mt-0.5 shrink-0 rounded px-1 py-0.5 font-mono text-[10px] font-medium ${
+                          d.is_covered
+                            ? "bg-green-900/40 text-[#4ec994]"
+                            : "bg-[#2a2d2e] text-[#858585]"
+                        }`}
+                      >
+                        {d.is_covered ? "✓" : "○"} {d.id}
+                      </span>
+                      <span className="text-xs text-[#cccccc]">{d.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
       </Drawer>

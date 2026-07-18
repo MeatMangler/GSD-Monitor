@@ -62,6 +62,12 @@ export interface QuickTaskPayload {
   last_updated?: string;
 }
 
+export interface DecisionPayload {
+  id: string;
+  text: string;
+  is_covered: boolean;
+}
+
 export interface RequirementEntryPayload {
   id: string;
   category: string;
@@ -181,6 +187,7 @@ export interface PhasePayload {
   risk_tag?: string | null;
   depends_on: string[];
   has_uat: boolean;
+  decisions: DecisionPayload[];
 }
 
 export interface DocTreeNode {

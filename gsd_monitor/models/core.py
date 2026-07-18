@@ -19,6 +19,12 @@ class TodoItem(BaseModel):
     text: str = ""
 
 
+class DecisionEntry(BaseModel):
+    id: str = ""
+    text: str = ""
+    is_covered: bool = False
+
+
 class PhaseEntry(BaseModel):
     number: int = 0
     title: str = ""
@@ -49,6 +55,7 @@ class PhaseEntry(BaseModel):
     has_ui_review: bool = False
     has_summary: bool = False
     has_requirements: bool = False
+    decisions: list["DecisionEntry"] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
 
