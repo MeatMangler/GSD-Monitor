@@ -663,3 +663,156 @@ Plans:
         assert phase.number == 3
         assert phase.has_plan is True
         assert len(phase.todos) == 1
+
+
+# ---------------------------------------------------------------------------
+# VIS-P0-03: XML task parsing in PlanParser
+# ---------------------------------------------------------------------------
+
+class TestXmlTaskParsing:
+    """VIS-P0-03: <task> XML blocks in gsd-core plans produce todos."""
+
+    def test_xml_tasks_parsed(self, tmp_path: Path):
+        from gsd_monitor.parsers.plan_parser import PlanParser
+
+        plan_content = """\
+---
+phase: test-phase
+plan: 01
+---
+
+<objective>
+Do stuff.
+</objective>
+
+<tasks>
+
+<task id="1.1" status="done">Set up the repository structure</task>
+<task id="1.2" status="pending">Implement the feature</task>
+<task id="1.3" status="done">Write tests</task>
+
+</tasks>
+"""
+        plan_file = tmp_path / "01-01-PLAN.md"
+        plan_file.write_text(plan_content, encoding="utf-8")
+
+        result = PlanParser.parse(str(plan_file))
+        assert result.is_success
+        todos = result.value.todos
+        assert len(todos) == 3
+        done_tasks = [t for t in todos if t.is_checked]
+        pending_tasks = [t for t in todos if not t.is_checked]
+        assert len(done_tasks) == 2
+        assert len(pending_tasks) == 1
+        assert any("repository structure" in t.text for t in todos)
+        assert any("feature" in t.text for t in todos)
+
+    def test_mixed_markdown_and_xml_tasks(self, tmp_path: Path):
+        """Files with both checkbox and XML tasks extract all todos."""
+        plan_content = """\
+# My Plan
+
+- [x] Markdown task one
+- [ ] Markdown task two
+
+<task id="1.1" status="done">XML task one</task>
+<task id="1.2" status="pending">XML task two</task>
+"""
+        plan_file = tmp_path / "plan.md"
+        plan_file.write_text(plan_content, encoding="utf-8")
+
+        from gsd_monitor.parsers.plan_parser import PlanParser
+        result = PlanParser.parse(str(plan_file))
+        assert result.is_success
+        assert len(result.value.todos) == 4
+
+
+# ---------------------------------------------------------------------------
+# VIS-P0-04: Reserved dir hardening
+# ---------------------------------------------------------------------------
+
+class TestReservedDirHardening:
+    """VIS-P0-04: gsd-core artifact dirs must not be walked as sub-projects."""
+
+    def test_spikes_not_walked_as_project(self, tmp_path: Path):
+        from gsd_monitor.services.planning_layout import iter_planning_contexts, RESERVED
+        assert "spikes" in RESERVED
+        assert "sketches" in RESERVED
+        assert "reports" in RESERVED
+        assert "todos" in RESERVED
+        assert "debug" in RESERVED
+        assert "intel" in RESERVED
+
+    def test_spikes_dir_not_surfaced_as_segment(self, tmp_path: Path):
+        """A .planning/spikes/ dir with a ROADMAP.md is not walked as a sub-project."""
+        repo = tmp_path / "repo"
+        planning = repo / ".planning"
+        spikes = planning / "spikes"
+        spikes.mkdir(parents=True)
+
+        # Main planning context
+        (planning / "ROADMAP.md").write_text("# Roadmap: Main\n", encoding="utf-8")
+        # Fake sub-project inside spikes/ — must be ignored
+        (spikes / "ROADMAP.md").write_text("# Roadmap: Fake\n", encoding="utf-8")
+
+        svc = ProjectDiscoveryService()
+        groups = svc.discover_groups([str(repo)])
+        assert len(groups) == 1
+        # Only the flat segment, not a spikes sub-segment
+        assert len(groups[0].segments) == 1
+        assert groups[0].segments[0].segment_key == "flat"
+
+
+# ---------------------------------------------------------------------------
+# VIS-P0-04: RequirementsParser exported from parsers package
+# ---------------------------------------------------------------------------
+
+class TestRequirementsParserExport:
+    """VIS-P0-04: RequirementsParser exported from parsers package."""
+
+    def test_requirements_parser_importable_from_package(self):
+        from gsd_monitor.parsers import RequirementsParser
+        assert RequirementsParser is not None
+
+    def test_requirements_surfaced_on_project(self, tmp_path: Path):
+        """Projects with REQUIREMENTS.md have requirements parsed and attached."""
+        roadmap = """\
+# Roadmap: TestProject
+
+## Phase Details
+
+### Phase 1: Alpha
+
+**Goal**: Test requirements wiring.
+
+**Plans:** 0/1 plans complete
+Plans:
+- [ ] 01-01-PLAN.md — stub
+"""
+        requirements_md = """\
+# Requirements
+
+## v3.0 Requirements
+
+### Detection & Parsing
+
+- [ ] **DETECT-01**: Detect gsd-core projects by config.json
+- [x] **DETECT-02**: Parse heading-based ROADMAP format
+"""
+        repo = tmp_path / "repo"
+        planning = repo / ".planning"
+        planning.mkdir(parents=True)
+        (planning / "config.json").write_text("{}", encoding="utf-8")
+        (planning / "ROADMAP.md").write_text(roadmap, encoding="utf-8")
+        (planning / "REQUIREMENTS.md").write_text(requirements_md, encoding="utf-8")
+
+        svc = ProjectDiscoveryService()
+        groups = svc.discover_groups([str(repo)])
+        proj = groups[0].segments[0].project
+        assert proj.has_requirements is True  # already set by existing logic
+        # New: requirements list must be non-empty
+        assert hasattr(proj, "requirements")
+        assert len(proj.requirements) > 0
+        req_ids = [r.id for r in proj.requirements]
+        assert "DETECT-01" in req_ids
+        assert "DETECT-02" in req_ids

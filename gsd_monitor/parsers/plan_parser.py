@@ -17,6 +17,14 @@ class PlanParseResult(BaseModel):
 
 # - [ ] or - [x] task text
 _TASK_LINE = re.compile(r"^-\s*\[(x| )\]\s*(.*)$", re.MULTILINE | re.IGNORECASE)
+
+# <task id="N.N" status="done">Task text</task>  (gsd-core XML format)
+# Also handles multi-line: <task ...>\ntext\n</task>
+_XML_TASK = re.compile(
+    r'<task[^>]*\bstatus=["\']?([^"\'>\s]+)["\']?[^>]*>\s*(.*?)\s*</task>',
+    re.DOTALL | re.IGNORECASE,
+)
+
 _H1 = re.compile(r"^#\s+(.+)$", re.MULTILINE)
 
 
@@ -35,6 +43,12 @@ class PlanParser:
                 checked = m.group(1).lower() == "x"
                 rest = m.group(2).strip()
                 todos.append(TodoItem(is_checked=checked, text=rest))
+            for m in _XML_TASK.finditer(text):
+                status_val = m.group(1).lower()
+                checked = status_val in ("done", "complete", "completed", "x")
+                task_text = m.group(2).strip()
+                if task_text:
+                    todos.append(TodoItem(is_checked=checked, text=task_text))
             return ParseResult.ok(PlanParseResult(title=title, todos=todos))
         except Exception as ex:
             return ParseResult.err(f"Failed to parse plan file: {ex}")

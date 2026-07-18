@@ -24,6 +24,7 @@ from gsd_monitor.models.enums import (
 )
 from gsd_monitor.parsers.gsd_core_roadmap import GsdCoreRoadmapParser
 from gsd_monitor.parsers.plan_parser import PlanParser
+from gsd_monitor.parsers.requirements_parser import RequirementsParser
 from gsd_monitor.parsers.roadmap import RoadmapParser
 from gsd_monitor.parsers.state_parser import StateParser
 from gsd_monitor.services.git_service import GitService
@@ -417,6 +418,12 @@ class ProjectDiscoveryService:
                 "branching_strategy": git_cfg.get("branching_strategy"),
             }
             proj = proj.model_copy(update={"config_info": config_info})
+
+        # --- REQUIREMENTS.MD (per VIS-P0-04) ---
+        req_path = base / "REQUIREMENTS.md"
+        if req_path.is_file():
+            requirements = RequirementsParser.parse(str(base))
+            proj = proj.model_copy(update={"has_requirements": True, "requirements": requirements})
 
         sm = SegmentModel(
             segment_key=ctx.segment_key,

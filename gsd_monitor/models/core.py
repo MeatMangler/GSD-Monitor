@@ -78,6 +78,8 @@ class GsdProject(BaseModel):
     progress_percent: int = 0
     completed_phases: int = 0
     total_phases: int = 0
+    has_requirements: bool = False
+    requirements: list[Any] = Field(default_factory=list)
 
 
 class AppSettings(BaseModel):

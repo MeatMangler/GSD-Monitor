@@ -17,6 +17,13 @@ RESERVED = frozenset(
         "forensics",
         "ui-reviews",
         "codebase",
+        # gsd-core artifact directories that must not be walked as sub-projects
+        "spikes",
+        "sketches",
+        "reports",
+        "todos",
+        "debug",
+        "intel",
     }
 )
 
