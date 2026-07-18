@@ -192,9 +192,9 @@ export function DashboardPage() {
         )}
       </div>
 
-      {/* Config badge row — per DOCS-08, D-07, UI-SPEC section 3 */}
+      {/* Config badge row — per DOCS-08, D-07, VIS-P2-02 */}
       {configInfo && (
-        <div className="mb-4 flex items-center gap-2">
+        <div className="mb-4 flex items-center gap-2 flex-wrap">
           {configInfo.workflow_mode && (
             <span className="rounded bg-[#2a2d2e] px-1.5 py-0.5 text-xs text-[#858585]">
               {configInfo.workflow_mode}
@@ -210,6 +210,29 @@ export function DashboardPage() {
               {configInfo.branching_strategy}
             </span>
           )}
+          {configInfo.nyquist_validation === true && (
+            <span className="rounded bg-[#2a2d2e] px-1.5 py-0.5 text-xs text-[#858585]">
+              nyquist
+            </span>
+          )}
+          {configInfo.discuss_mode && (
+            <span className="rounded bg-[#2a2d2e] px-1.5 py-0.5 text-xs text-[#858585]">
+              {configInfo.discuss_mode}
+            </span>
+          )}
+          {configInfo.ui_phase === true && (
+            <span className="rounded bg-[#2a2d2e] px-1.5 py-0.5 text-xs text-[#858585]">
+              ui-phase
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* PROJECT.md vision callout — per VIS-P2-02 */}
+      {activeProject.vision && (
+        <div className="mb-4 rounded-md border border-[#474747] bg-[#1e1e1e] px-4 py-3">
+          <span className="mr-2 text-xs font-semibold uppercase text-[#858585]">Vision</span>
+          <span className="text-xs text-[#cccccc]">{activeProject.vision}</span>
         </div>
       )}
 

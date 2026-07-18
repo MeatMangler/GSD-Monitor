@@ -41,6 +41,34 @@ _EXCLUDED_DIRS: set[str] = {"node_modules", ".venv", ".git", "build", "dist"}
 # Pattern to sniff heading-based ROADMAP format (fallback when no config.json)
 _HEADING_PHASE_SNIFF = re.compile(r"^#{2,3} Phase \d", re.MULTILINE)
 
+# Patterns for PROJECT.md vision extraction (VIS-P2-02)
+_PROJECT_VISION_SECTIONS = re.compile(
+    r"^## (Core Value|Vision|What This Is)\s*$",
+    re.MULTILINE | re.IGNORECASE,
+)
+_NEXT_HEADING = re.compile(r"^#{1,3} ", re.MULTILINE)
+
+
+def _extract_project_vision(text: str) -> str | None:
+    """Extract vision/core value text from PROJECT.md.
+
+    Looks for sections named 'Core Value', 'Vision', or 'What This Is'
+    and returns the first non-empty paragraph of that section.
+    """
+    m = _PROJECT_VISION_SECTIONS.search(text)
+    if not m:
+        return None
+    block_start = m.end()
+    # Find the next heading at any level after block_start
+    next_hdr = _NEXT_HEADING.search(text, block_start)
+    block = text[block_start : next_hdr.start() if next_hdr else len(text)]
+    # Return first non-empty paragraph (strip leading/trailing whitespace)
+    for line in block.splitlines():
+        stripped = line.strip()
+        if stripped:
+            return stripped
+    return None
+
 
 def _try_read(path: Path) -> str | None:
     try:
@@ -425,8 +453,19 @@ class ProjectDiscoveryService:
                 ),
                 "model_profile": config_data.get("model_profile"),
                 "branching_strategy": git_cfg.get("branching_strategy"),
+                "nyquist_validation": workflow.get("nyquist_validation"),
+                "discuss_mode": workflow.get("discuss_mode"),
+                "ui_phase": workflow.get("ui_phase"),
             }
             proj = proj.model_copy(update={"config_info": config_info})
+
+        # --- PROJECT.MD VISION (VIS-P2-02) ---
+        project_md_path = base / "PROJECT.md"
+        if project_md_path.is_file():
+            project_md_text = _try_read(project_md_path) or ""
+            vision = _extract_project_vision(project_md_text)
+            if vision:
+                proj = proj.model_copy(update={"vision": vision})
 
         # --- REQUIREMENTS.MD (per VIS-P0-04) ---
         req_path = base / "REQUIREMENTS.md"

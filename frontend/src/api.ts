@@ -146,10 +146,18 @@ export interface GsdProjectPayload {
   version: string;
   handoff_info?: { phase?: string; plan?: string; timestamp?: string; paused?: boolean } | null;
   continue_here?: boolean;
-  config_info?: { workflow_mode?: string; model_profile?: string; branching_strategy?: string } | null;
+  config_info?: {
+    workflow_mode?: string | null;
+    model_profile?: string | null;
+    branching_strategy?: string | null;
+    nyquist_validation?: boolean | null;
+    discuss_mode?: string | null;
+    ui_phase?: boolean | null;
+  } | null;
   progress_percent?: number;
   completed_phases?: number;
   total_phases?: number;
+  vision?: string | null;
 }
 
 export interface MilestonePayload {

@@ -95,6 +95,7 @@ class GsdProject(BaseModel):
     total_phases: int = 0
     has_requirements: bool = False
     requirements: list[Any] = Field(default_factory=list)
+    vision: str | None = None
 
 
 class AppSettings(BaseModel):
