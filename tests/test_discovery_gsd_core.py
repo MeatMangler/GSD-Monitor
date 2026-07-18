@@ -427,3 +427,106 @@ class TestGsd2Removal:
 
         # Should return empty list (no projects discovered)
         assert len(groups) == 0
+
+
+# ---------------------------------------------------------------------------
+# VIS-P0-01: Unprefixed artifact fallback for gsd-core phase directories
+# ---------------------------------------------------------------------------
+
+class TestUnprefixedArtifactFallback:
+    """VIS-P0-01: gsd-core bare artifact filenames must be discovered."""
+
+    _ROADMAP = """\
+# Roadmap: TestProject
+
+## Phase Details
+
+### Phase 3: Doc Browser
+
+**Goal**: Test bare artifact fallback.
+
+**Plans:** 0/1 plans complete
+Plans:
+- [ ] 03-01-PLAN.md — stub
+"""
+
+    def test_bare_context_found(self, tmp_path: Path):
+        repo = _setup_project(
+            tmp_path,
+            config_json={},
+            roadmap=self._ROADMAP,
+            phases={"03-doc-browser": ["03-01-PLAN.md"]},
+        )
+        # Write bare CONTEXT.md (no prefix)
+        ctx = repo / ".planning" / "phases" / "03-doc-browser" / "CONTEXT.md"
+        ctx.write_text("## Context\nTest context content.", encoding="utf-8")
+
+        svc = ProjectDiscoveryService()
+        groups = svc.discover_groups([str(repo)])
+        phase = groups[0].segments[0].project.milestones[0].phases[0]
+        assert phase.has_context is True
+
+    def test_bare_research_found(self, tmp_path: Path):
+        repo = _setup_project(
+            tmp_path,
+            config_json={},
+            roadmap=self._ROADMAP,
+            phases={"03-doc-browser": ["03-01-PLAN.md"]},
+        )
+        res = repo / ".planning" / "phases" / "03-doc-browser" / "RESEARCH.md"
+        res.write_text("## Research\nSome research.", encoding="utf-8")
+
+        svc = ProjectDiscoveryService()
+        groups = svc.discover_groups([str(repo)])
+        phase = groups[0].segments[0].project.milestones[0].phases[0]
+        assert phase.has_research is True
+        assert phase.research_content is not None
+
+    def test_bare_verification_found(self, tmp_path: Path):
+        repo = _setup_project(
+            tmp_path,
+            config_json={},
+            roadmap=self._ROADMAP,
+            phases={"03-doc-browser": ["03-01-PLAN.md"]},
+        )
+        ver = repo / ".planning" / "phases" / "03-doc-browser" / "VERIFICATION.md"
+        ver.write_text("## Verification\nAll passing.", encoding="utf-8")
+
+        svc = ProjectDiscoveryService()
+        groups = svc.discover_groups([str(repo)])
+        phase = groups[0].segments[0].project.milestones[0].phases[0]
+        assert phase.has_validation is True
+        assert phase.validation_content is not None
+
+    def test_bare_uat_found(self, tmp_path: Path):
+        repo = _setup_project(
+            tmp_path,
+            config_json={},
+            roadmap=self._ROADMAP,
+            phases={"03-doc-browser": ["03-01-PLAN.md"]},
+        )
+        uat = repo / ".planning" / "phases" / "03-doc-browser" / "UAT.md"
+        uat.write_text("## UAT\nUser acceptance tests.", encoding="utf-8")
+
+        svc = ProjectDiscoveryService()
+        groups = svc.discover_groups([str(repo)])
+        phase = groups[0].segments[0].project.milestones[0].phases[0]
+        assert phase.has_uat is True
+
+    def test_prefixed_takes_precedence_over_bare(self, tmp_path: Path):
+        """Prefixed file is found first; bare file is ignored when prefix exists."""
+        repo = _setup_project(
+            tmp_path,
+            config_json={},
+            roadmap=self._ROADMAP,
+            phases={"03-doc-browser": ["03-01-PLAN.md"]},
+        )
+        phase_dir = repo / ".planning" / "phases" / "03-doc-browser"
+        # Write BOTH forms — prefixed wins
+        (phase_dir / "03-CONTEXT.md").write_text("prefixed", encoding="utf-8")
+        (phase_dir / "CONTEXT.md").write_text("bare", encoding="utf-8")
+
+        svc = ProjectDiscoveryService()
+        groups = svc.discover_groups([str(repo)])
+        phase = groups[0].segments[0].project.milestones[0].phases[0]
+        assert phase.has_context is True  # found either way

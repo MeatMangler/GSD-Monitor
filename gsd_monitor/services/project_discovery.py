@@ -64,6 +64,24 @@ def _try_read_json(path: Path) -> dict | None:
         return None
 
 
+def _resolve_artifact(phase_dir: Path, padded: str, name: str) -> Path:
+    """Resolve a phase artifact file: try prefixed form first, fall back to bare name.
+
+    Args:
+        phase_dir: The phase directory (e.g. .planning/phases/03-doc-browser/).
+        padded:    Zero-padded phase number string (e.g. "03").
+        name:      Bare filename without prefix (e.g. "CONTEXT.md").
+
+    Returns:
+        Path to the prefixed file if it exists, otherwise Path to the bare file.
+        The returned path may not exist — callers must check `.is_file()`.
+    """
+    prefixed = phase_dir / f"{padded}-{name}"
+    if prefixed.is_file():
+        return prefixed
+    return phase_dir / name
+
+
 def _compute_drift(
     status: PhaseStatus,
     plan_write_time: datetime | None,
@@ -502,18 +520,18 @@ class ProjectDiscoveryService:
                     datetime.fromtimestamp(f.stat().st_mtime, tz=timezone.utc) for f in plan_files
                 )
 
-            validation_file = phase_dir / f"{padded}-VALIDATION.md"
-            verification_file = phase_dir / f"{padded}-VERIFICATION.md"
+            validation_file = _resolve_artifact(phase_dir, padded, "VALIDATION.md")
+            verification_file = _resolve_artifact(phase_dir, padded, "VERIFICATION.md")
             nyq = self._read_nyquist(validation_file)
             final_status = phase.status
             if nyq is False and phase.status in (PhaseStatus.IN_PROGRESS, PhaseStatus.COMPLETE):
                 final_status = PhaseStatus.NEEDS_VERIFICATION
 
-            ctx_file = phase_dir / f"{padded}-CONTEXT.md"
-            research_file = phase_dir / f"{padded}-RESEARCH.md"
-            uat_file = phase_dir / f"{padded}-UAT.md"
-            ui_spec_file = phase_dir / f"{padded}-UI-SPEC.md"
-            ui_review_file = phase_dir / f"{padded}-UI-REVIEW.md"
+            ctx_file = _resolve_artifact(phase_dir, padded, "CONTEXT.md")
+            research_file = _resolve_artifact(phase_dir, padded, "RESEARCH.md")
+            uat_file = _resolve_artifact(phase_dir, padded, "UAT.md")
+            ui_spec_file = _resolve_artifact(phase_dir, padded, "UI-SPEC.md")
+            ui_review_file = _resolve_artifact(phase_dir, padded, "UI-REVIEW.md")
 
             has_context = ctx_file.is_file()
             has_research = research_file.is_file()
