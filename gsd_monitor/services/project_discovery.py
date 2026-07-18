@@ -96,15 +96,21 @@ def _phase_dir_prefix(phase: "PhaseEntry") -> str:
       Phase(number=1, code="1-01") -> "01-01"
       Phase(number=1, code="1-02") -> "01-02"
 
+    For backlog dot-separated phases (code="999.1"): uses just the number.
+      Phase(number=999, code="999.1") -> "999"
+
     Args:
         phase: The PhaseEntry to compute a prefix for.
 
     Returns:
-        String prefix used to match phase directories (e.g. "01-01").
+        String prefix used to match phase directories.
     """
     if phase.code and "-" in phase.code:
         parts = phase.code.split("-")
         return "-".join(f"{int(p):02d}" for p in parts if p.isdigit())
+    if phase.code and "." in phase.code:
+        # Backlog dot-separated: "999.1" -> use number str directly (no zero-padding for 3-digit)
+        return str(phase.number)
     return f"{phase.number:02d}"
 
 

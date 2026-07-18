@@ -12,9 +12,10 @@ from gsd_monitor.models.enums import GsdVersion, MilestoneStatus, PhaseStatus
 logger = logging.getLogger(__name__)
 
 # Match "## Phase N: Title" or "### Phase N: Title"
-# Supports plain integers (Phase 1) and milestone-prefixed IDs (Phase 1-01)
+# Supports plain integers (Phase 1), milestone-prefixed IDs (Phase 1-01),
+# and backlog/dot-separated IDs (Phase 999.1)
 _HEADING_PHASE = re.compile(
-    r"^#{2,3} Phase ([\d]+(?:-[\d]+)?): (.+)",
+    r"^#{2,3} Phase ([\d]+(?:[.\-][\d]+)?): (.+)",
     re.MULTILINE,
 )
 
@@ -40,9 +41,9 @@ _PLAN_CHECKED = re.compile(r"^- \[x\]", re.MULTILINE | re.IGNORECASE)
 _PLAN_UNCHECKED = re.compile(r"^- \[ \]", re.MULTILINE)
 
 # Checkbox-style phase line within milestone Phases section
-# e.g. "- [x] **Phase 1: Title** - note"
+# e.g. "- [x] **Phase 1: Title**" or "- [ ] **Phase 999.1: Title**"
 _CHECKBOX_PHASE = re.compile(
-    r"^- \[([x ])\] \*\*Phase ([\d]+(?:-[\d]+)?): ([^*]+)\*\*",
+    r"^- \[([x ])\] \*\*Phase ([\d]+(?:[.\-][\d]+)?): ([^*]+)\*\*",
     re.MULTILINE,
 )
 
@@ -61,15 +62,22 @@ def _parse_phase_id(raw_id: str) -> tuple[int, str | None]:
     """Parse a phase ID string into (number, code).
 
     Args:
-        raw_id: The ID string from the heading — either "5" or "1-01".
+        raw_id: The ID string from the heading — "5", "1-01", or "999.1".
 
     Returns:
         Tuple of (numeric_part, code) where code is None for plain integers
-        and the full string for milestone-prefixed IDs.
+        and the full string for milestone-prefixed or dot-separated IDs.
     """
     if "-" in raw_id:
         # Milestone-prefixed: "1-01" → number=1, code="1-01"
         prefix = raw_id.split("-")[0]
+        try:
+            return int(prefix), raw_id
+        except ValueError:
+            return 0, raw_id
+    if "." in raw_id:
+        # Dot-separated backlog: "999.1" → number=999, code="999.1"
+        prefix = raw_id.split(".")[0]
         try:
             return int(prefix), raw_id
         except ValueError:

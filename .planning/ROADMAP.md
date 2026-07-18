@@ -42,7 +42,7 @@
 ## Active
 
 - [ ] Phase 14: gsd-core P0 Correctness Bug Fixes — unprefixed artifact fallback, phase-dir enrichment collision fix, XML task parsing, RequirementsParser wiring
-- [ ] Phase 15: gsd-core P1 Artifact Visibility — Decision parser, code review findings, package legitimacy audit
+- [x] Phase 15: gsd-core P1 Artifact Visibility — Decision parser, code review findings, package legitimacy audit (completed 2026-07-18)
 - [ ] Phase 16: gsd-core P2 Surface Depth — backlog phases, config signals, PROJECT.md vision, VerificationPage structured render, artifact explorers
 
 ## Deferred
@@ -66,6 +66,7 @@
 
 **Plans:** 3/3 plans complete
 Plans:
+
 - [x] 14-01-PLAN.md — Unprefixed artifact fallback: `_resolve_artifact` helper trying `{padded}-NAME.md` then bare `NAME.md`; fix CONTEXT, RESEARCH, VERIFICATION, UAT; add tests
 - [x] 14-02-PLAN.md — Phase-dir enrichment collision fix: `_phase_dir_prefix(phase)` helper that uses full padded code (`1-01` → `01-01-`) for milestone-prefixed phases; add collision regression tests
 - [x] 14-03-PLAN.md — XML task parsing in `PlanParser` (`<task>` blocks → `TodoItem`); `RequirementsParser` wiring audit + export from `__init__.py`; reserved dir hardening
@@ -81,11 +82,12 @@ Plans:
   2. A phase with an `XX-REVIEW.md` shows a severity badge (Critical/Warning/Info counts) in the phase list and an expanded section in VerificationPage
   3. A phase with a RESEARCH.md Package Legitimacy Audit table shows flagged/suspicious packages as a security signal
 
-**Plans:** 0/3 plans complete
+**Plans:** 3/3 plans complete
 Plans:
-- [ ] 15-01-PLAN.md — `DecisionParser` + `PhaseEntry.decisions` field + Dashboard phase drawer integration with coverage indicator
-- [ ] 15-02-PLAN.md — `ReviewParser` (XX-REVIEW.md severity counts) + phase badge on Dashboard + section in VerificationPage
-- [ ] 15-03-PLAN.md — Package legitimacy audit parser (RESEARCH.md `## Package Legitimacy Audit`) + security signal display per phase
+
+- [x] 15-01-PLAN.md — `DecisionParser` + `PhaseEntry.decisions` field + Dashboard phase drawer integration with coverage indicator
+- [x] 15-02-PLAN.md — `ReviewParser` (XX-REVIEW.md severity counts) + phase badge on Dashboard + section in VerificationPage
+- [x] 15-03-PLAN.md — Package legitimacy audit parser (RESEARCH.md `## Package Legitimacy Audit`) + security signal display per phase
 
 ### Phase 16: gsd-core P2 Surface Depth
 
@@ -101,6 +103,7 @@ Plans:
 
 **Plans:** 0/4 plans complete
 Plans:
+
 - [ ] 16-01-PLAN.md — Backlog phases (999.x): fix `_HEADING_PHASE` regex for dot separator + `_enrich_phase` dir matching
 - [ ] 16-02-PLAN.md — Config signal expansion (nyquist_validation, discuss_mode, ui_phase) + PROJECT.md vision callout on Dashboard
 - [ ] 16-03-PLAN.md — VerificationPage structured render: parse VERIFICATION.md sections, highlight open blockers vs passing gates
@@ -120,6 +123,7 @@ Plans:
 
 **Plans:** 0/1 plans complete
 Plans:
+
 - [ ] 13-01-PLAN.md — PowerShell installer: prereq checks, clone, venv, frontend build, launcher, shortcut, upgrade flow
 
 ## Progress
@@ -132,6 +136,6 @@ Plans:
 | 11. gsd-core Support | v3.0 | 2/2 | Complete | 2026-06-18 |
 | 12. Enhanced Visibility | v3.0 | 2/2 | Complete | 2026-06-18 |
 | 14. gsd-core P0 Correctness | v4.0 | 3/3 | Complete | 2026-07-18 |
-| 15. gsd-core P1 Visibility | v4.0 | 0/3 | Pending | — |
+| 15. gsd-core P1 Visibility | v4.0 | 3/3 | Complete   | 2026-07-18 |
 | 16. gsd-core P2 Depth | v4.0 | 0/4 | Pending | — |
 | 13. Installation Script | v5.0 | 0/1 | Deferred | — |
