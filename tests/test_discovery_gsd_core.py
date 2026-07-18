@@ -530,3 +530,136 @@ Plans:
         groups = svc.discover_groups([str(repo)])
         phase = groups[0].segments[0].project.milestones[0].phases[0]
         assert phase.has_context is True  # found either way
+
+
+# ---------------------------------------------------------------------------
+# VIS-P0-02: No collision for milestone-prefixed phases
+# ---------------------------------------------------------------------------
+
+class TestPhaseEnrichmentCollision:
+    """VIS-P0-02: milestone-prefixed phases enrich from their own directories."""
+
+    _ROADMAP = """\
+# Roadmap: MultiPhase
+
+## v1.0
+
+- [ ] **Phase 1-01: Alpha** - first sub-phase
+- [ ] **Phase 1-02: Beta** - second sub-phase
+- [ ] **Phase 1-03: Gamma** - third sub-phase
+
+## Phase Details
+
+### Phase 1-01: Alpha
+
+**Goal**: First phase goal.
+
+**Plans:** 0/1 plans complete
+Plans:
+- [ ] 01-01-PLAN.md — alpha work
+
+### Phase 1-02: Beta
+
+**Goal**: Second phase goal.
+
+**Plans:** 0/1 plans complete
+Plans:
+- [ ] 01-02-PLAN.md — beta work
+
+### Phase 1-03: Gamma
+
+**Goal**: Third phase goal.
+
+**Plans:** 0/1 plans complete
+Plans:
+- [ ] 01-03-PLAN.md — gamma work
+"""
+
+    def _make_repo(self, tmp_path: Path) -> Path:
+        repo = tmp_path / "repo"
+        planning = repo / ".planning"
+        phases = planning / "phases"
+        planning.mkdir(parents=True)
+        phases.mkdir()
+        (planning / "config.json").write_text("{}", encoding="utf-8")
+        (planning / "ROADMAP.md").write_text(self._ROADMAP, encoding="utf-8")
+
+        # Three distinct sub-phase directories
+        for slug, plan_name, content in [
+            ("01-01-alpha", "01-01-PLAN.md", "# Alpha Plan\n- [ ] Alpha task one\n"),
+            ("01-02-beta",  "01-02-PLAN.md", "# Beta Plan\n- [ ] Beta task one\n- [ ] Beta task two\n"),
+            ("01-03-gamma", "01-03-PLAN.md", "# Gamma Plan\n- [ ] Gamma task one\n- [ ] Gamma task two\n- [ ] Gamma task three\n"),
+        ]:
+            d = phases / slug
+            d.mkdir()
+            (d / plan_name).write_text(content, encoding="utf-8")
+
+        return repo
+
+    def test_each_phase_enriches_own_directory(self, tmp_path: Path):
+        """Phases 1-01, 1-02, 1-03 each read their own plan file."""
+        repo = self._make_repo(tmp_path)
+        svc = ProjectDiscoveryService()
+        groups = svc.discover_groups([str(repo)])
+
+        assert groups, "Expected at least one project group"
+        milestones = groups[0].segments[0].project.milestones
+        # Find the active milestone (not archived)
+        active = next((m for m in milestones if not m.is_archived), None)
+        assert active is not None, "Expected an active milestone"
+        phases = active.phases
+        assert len(phases) == 3, f"Expected 3 phases, got {len(phases)}"
+
+        # Sort by code to ensure consistent ordering
+        phases_by_code = {p.code: p for p in phases}
+
+        # Each phase must have its own unique plan content (different todo counts)
+        alpha = phases_by_code.get("1-01")
+        beta  = phases_by_code.get("1-02")
+        gamma = phases_by_code.get("1-03")
+
+        assert alpha is not None, "Phase 1-01 not found"
+        assert beta  is not None, "Phase 1-02 not found"
+        assert gamma is not None, "Phase 1-03 not found"
+
+        assert alpha.has_plan is True, "Phase 1-01 should have a plan"
+        assert beta.has_plan  is True, "Phase 1-02 should have a plan"
+        assert gamma.has_plan is True, "Phase 1-03 should have a plan"
+
+        # The todo counts distinguish which directory was actually read
+        assert len(alpha.todos) == 1, f"Phase 1-01 expected 1 todo, got {len(alpha.todos)}"
+        assert len(beta.todos)  == 2, f"Phase 1-02 expected 2 todos, got {len(beta.todos)}"
+        assert len(gamma.todos) == 3, f"Phase 1-03 expected 3 todos, got {len(gamma.todos)}"
+
+    def test_plain_phase_unaffected(self, tmp_path: Path):
+        """Plain phases (no code) still use two-digit padded prefix."""
+        roadmap = """\
+# Roadmap: Simple
+
+## Phase Details
+
+### Phase 3: Doc Browser
+
+**Goal**: Simple phase.
+
+**Plans:** 0/1 plans complete
+Plans:
+- [ ] 03-01-PLAN.md — stub
+"""
+        repo = tmp_path / "repo"
+        planning = repo / ".planning"
+        phases_dir = planning / "phases"
+        planning.mkdir(parents=True)
+        phases_dir.mkdir()
+        (planning / "config.json").write_text("{}", encoding="utf-8")
+        (planning / "ROADMAP.md").write_text(roadmap, encoding="utf-8")
+        d = phases_dir / "03-doc-browser"
+        d.mkdir()
+        (d / "03-01-PLAN.md").write_text("# Doc Plan\n- [ ] Task one\n", encoding="utf-8")
+
+        svc = ProjectDiscoveryService()
+        groups = svc.discover_groups([str(repo)])
+        phase = groups[0].segments[0].project.milestones[0].phases[0]
+        assert phase.number == 3
+        assert phase.has_plan is True
+        assert len(phase.todos) == 1

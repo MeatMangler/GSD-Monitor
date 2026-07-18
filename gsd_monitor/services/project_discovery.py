@@ -82,6 +82,28 @@ def _resolve_artifact(phase_dir: Path, padded: str, name: str) -> Path:
     return phase_dir / name
 
 
+def _phase_dir_prefix(phase: "PhaseEntry") -> str:
+    """Compute the directory name prefix for a phase.
+
+    For plain phases (no code): zero-pads the number to 2 digits.
+      Phase(number=3) -> "03"
+
+    For milestone-prefixed phases (code="1-01"): zero-pads each part to 2 digits.
+      Phase(number=1, code="1-01") -> "01-01"
+      Phase(number=1, code="1-02") -> "01-02"
+
+    Args:
+        phase: The PhaseEntry to compute a prefix for.
+
+    Returns:
+        String prefix used to match phase directories (e.g. "01-01").
+    """
+    if phase.code and "-" in phase.code:
+        parts = phase.code.split("-")
+        return "-".join(f"{int(p):02d}" for p in parts if p.isdigit())
+    return f"{phase.number:02d}"
+
+
 def _compute_drift(
     status: PhaseStatus,
     plan_write_time: datetime | None,
@@ -471,7 +493,7 @@ class ProjectDiscoveryService:
 
     def _enrich_phase(self, planning_dir: Path, phases_dir: str, phase: PhaseEntry) -> PhaseEntry:
         try:
-            padded = f"{phase.number:02d}"
+            padded = _phase_dir_prefix(phase)
             phase_dir: Path | None = None
             is_archived = False
             archive_milestone = None
