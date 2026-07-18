@@ -5,6 +5,90 @@ import rehypeRaw from "rehype-raw";
 import { useApp } from "../context";
 import { statusBorderClass } from "../utils";
 
+interface VerificationSections {
+  openBlockers: string[];
+  passingGates: string[];
+  hasStructuredContent: boolean;
+}
+
+function parseVerificationSections(text: string): VerificationSections {
+  const openBlockers: string[] = [];
+  const passingGates: string[] = [];
+
+  const lines = text.split("\n");
+  for (const line of lines) {
+    const trimmed = line.trim();
+    // Unchecked checkbox: - [ ] text  or  * [ ] text
+    if (/^[-*]\s+\[\s+\]\s+(.+)/.test(trimmed)) {
+      const m = trimmed.match(/^[-*]\s+\[\s+\]\s+(.+)/);
+      if (m) openBlockers.push(m[1].trim());
+    }
+    // Checked checkbox: - [x] text  or  - [X] text  or  * [x] text
+    else if (/^[-*]\s+\[[xX]\]\s+(.+)/.test(trimmed)) {
+      const m = trimmed.match(/^[-*]\s+\[[xX]\]\s+(.+)/);
+      if (m) passingGates.push(m[1].trim());
+    }
+  }
+
+  return {
+    openBlockers,
+    passingGates,
+    hasStructuredContent: openBlockers.length > 0 || passingGates.length > 0,
+  };
+}
+
+function VerificationContent({ content }: { content: string }) {
+  const sections = parseVerificationSections(content);
+  if (sections.hasStructuredContent) {
+    return (
+      <div className="space-y-3">
+        {sections.openBlockers.length > 0 && (
+          <div>
+            <h4 className="mb-1.5 text-xs font-semibold uppercase text-amber-500">
+              Open Blockers ({sections.openBlockers.length})
+            </h4>
+            <ul className="space-y-1">
+              {sections.openBlockers.map((item, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="mt-0.5 shrink-0 rounded bg-amber-900/30 px-1 py-0.5 font-mono text-[10px] text-amber-400">
+                    [ ]
+                  </span>
+                  <span className="text-xs text-[#cccccc]">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {sections.passingGates.length > 0 && (
+          <div>
+            <h4 className="mb-1.5 text-xs font-semibold uppercase text-[#4ec994]">
+              Passing Gates ({sections.passingGates.length})
+            </h4>
+            <ul className="space-y-1">
+              {sections.passingGates.map((item, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="mt-0.5 shrink-0 rounded bg-green-900/30 px-1 py-0.5 font-mono text-[10px] text-[#4ec994]">
+                    [x]
+                  </span>
+                  <span className="text-xs text-[#858585]">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    );
+  }
+  // Fallback: raw markdown render for non-checkbox VERIFICATION.md formats
+  return (
+    <div className="prose prose-invert prose-sm max-w-none">
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+}
+
 function validationBadgeClass(hasValidation: boolean): string {
   return hasValidation
     ? "bg-green-900/40 text-[#4ec994]"
@@ -112,11 +196,7 @@ export function VerificationPage() {
             {expandedPhase === p.number && (p.validation_content || (p.review_summary && (p.review_summary.critical > 0 || p.review_summary.warning > 0 || p.review_summary.info > 0))) && (
               <div className="rounded-b-md border border-t-0 border-[#474747] bg-[#1e1e1e] p-4">
                 {p.validation_content && (
-                  <div className="prose prose-invert prose-sm max-w-none">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-                      {p.validation_content}
-                    </ReactMarkdown>
-                  </div>
+                  <VerificationContent content={p.validation_content} />
                 )}
                 {p.review_summary && (p.review_summary.critical > 0 || p.review_summary.warning > 0 || p.review_summary.info > 0) && (
                   <div className="mt-3 rounded-md border border-[#474747] bg-[#1e1e1e] p-3">
