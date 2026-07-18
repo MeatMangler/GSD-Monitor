@@ -251,6 +251,11 @@ export function DashboardPage() {
                       )}
                     </span>
                   )}
+                  {p.flagged_packages && p.flagged_packages.length > 0 && (
+                    <span className="rounded bg-red-900/40 px-1.5 py-0.5 font-mono text-[10px] text-red-400">
+                      {p.flagged_packages.length} flagged
+                    </span>
+                  )}
                   <span className="text-xs text-[#858585]">{statusLabel(p.status)}</span>
                   <span className="text-xs text-[#858585]">{fmtDate(p.last_updated)}</span>
                 </div>

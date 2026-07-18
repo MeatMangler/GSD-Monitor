@@ -63,6 +63,7 @@ class PhaseEntry(BaseModel):
     has_requirements: bool = False
     decisions: list["DecisionEntry"] = Field(default_factory=list)
     review_summary: "ReviewSummary | None" = None
+    flagged_packages: list[str] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
 

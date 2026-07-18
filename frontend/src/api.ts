@@ -195,6 +195,7 @@ export interface PhasePayload {
   has_uat: boolean;
   decisions: DecisionPayload[];
   review_summary?: ReviewSummaryPayload | null;
+  flagged_packages: string[];
 }
 
 export interface DocTreeNode {

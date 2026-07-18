@@ -1,5 +1,6 @@
 from gsd_monitor.parsers.decision_parser import DecisionParser, DecisionEntry
 from gsd_monitor.parsers.gsd_core_roadmap import GsdCoreRoadmapParser
+from gsd_monitor.parsers.legitimacy_parser import LegitimacyParser
 from gsd_monitor.parsers.plan_parser import PlanParser, PlanParseResult
 from gsd_monitor.parsers.requirements_parser import RequirementsParser, RequirementEntry
 from gsd_monitor.parsers.review_parser import ReviewParser
@@ -11,6 +12,7 @@ __all__ = [
     "DecisionParser",
     "DecisionEntry",
     "GsdCoreRoadmapParser",
+    "LegitimacyParser",
     "PlanParser",
     "PlanParseResult",
     "RequirementsParser",

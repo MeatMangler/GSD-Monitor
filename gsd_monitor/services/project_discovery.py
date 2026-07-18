@@ -24,6 +24,7 @@ from gsd_monitor.models.enums import (
 )
 from gsd_monitor.parsers.decision_parser import DecisionParser
 from gsd_monitor.parsers.gsd_core_roadmap import GsdCoreRoadmapParser
+from gsd_monitor.parsers.legitimacy_parser import LegitimacyParser
 from gsd_monitor.parsers.plan_parser import PlanParser
 from gsd_monitor.parsers.requirements_parser import RequirementsParser
 from gsd_monitor.parsers.review_parser import ReviewParser
@@ -588,6 +589,8 @@ class ProjectDiscoveryService:
             research_content = _try_read(research_file) if has_research else None
             validation_content = _try_read(validation_file) or (_try_read(verification_file) if verification_file.is_file() else None)
 
+            flagged_packages = LegitimacyParser.parse(research_content) if research_content else []
+
             # Parse decisions from CONTEXT.md; mark covered when phase has validation
             ctx_text = _try_read(ctx_file) if has_context else None
             if ctx_text:
@@ -619,6 +622,7 @@ class ProjectDiscoveryService:
                 has_requirements=has_requirements,
                 decisions=decisions,
                 review_summary=review_summary,
+                flagged_packages=flagged_packages,
                 nyquist_compliant=nyq,
                 research_coverage=coverage,
                 research_content=research_content,
