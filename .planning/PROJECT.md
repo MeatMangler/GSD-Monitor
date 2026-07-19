@@ -2,20 +2,21 @@
 
 ## What This Is
 
-GSD Monitor is a Windows desktop companion app (Python + pywebview + React) that discovers GSD projects on disk and gives developers an immediate visual overview of every GSD workflow document. It scans configured directories, classifies GSD-1 (`.planning/`) and gsd-core projects, and surfaces roadmap phases, planning docs, progress metrics, requirements traceability, and project status through a local FastAPI + React UI rendered in Edge WebView2.
+GSD Monitor is a Windows desktop companion app (Python + pywebview + React) that discovers GSD projects on disk and gives developers an immediate visual overview of every GSD workflow document. It scans configured directories, classifies GSD-1 (`.planning/`) and gsd-core projects, and surfaces roadmap phases, planning docs, progress metrics, requirements traceability, and project status through a local FastAPI + React UI rendered in Edge WebView2. It ships with a PowerShell installer and upgrade script, and displays its own version in the sidebar footer.
 
 ## Core Value
 
 A developer opens GSD Monitor and within seconds understands exactly where every project stands — which phases are done, what's active, and can read any planning doc — with zero duplicate entries and zero confusion about which project they're looking at.
 
-## Current Milestone: v5.0 Installation and Distribution
+## Current State (v5.0 — Shipped 2026-07-18)
 
-**Goal:** A developer can install, upgrade, and identify the version of GSD Monitor using standalone scripts and a version display in the UI.
+All v5.0 requirements delivered across 2 phases (Phases 17–18, 3 plans):
 
-**Target features:**
-- Install script (PowerShell): prereq checks (Git, Python 3.11+, Node.js), clone, venv, frontend build, .bat launcher, desktop shortcut, WebView2 check, idempotent re-run
-- Upgrade script (standalone PowerShell/bat): git pull, pip install, frontend rebuild — runnable from install directory, no in-app trigger
-- App version in side menu: reads `__version__` from `gsd_monitor/__init__.py`, displayed statically in ShellLayout sidebar footer
+- **Installation (Phase 17):** `install.ps1` — prereq checks, clone, venv, pip install -e ., frontend build, start.bat launcher, desktop shortcut, WebView2 check, idempotent re-run
+- **Upgrade (Phase 17):** `upgrade.ps1` / `upgrade.bat` — valid-install guard, git pull + pip + npm ci + npm build, already-up-to-date detection
+- **Version Display (Phase 18):** `/api/version` endpoint + ShellLayout sidebar footer badge
+
+**Codebase:** ~4,900 LOC (Python + TypeScript) | 12 files changed in v5.0 (+300/−45 lines)
 
 ## Previous State (v4.0 — Shipped 2026-07-18)
 
@@ -36,7 +37,7 @@ All 21 v3.0 requirements delivered across 2 phases (12 phases total across 3 mil
 - **InsightsPage**: Three-tab page with requirements traceability (gap highlighting), wave visualization, and milestone archive browsing
 - **GSD-2 removed**: Complete removal of `.gsd/` code path from discovery, parsers, models, and tests
 
-**Codebase:** 4,626 LOC (Python + TypeScript), 82 tests passing
+**Codebase at v3.0:** 4,626 LOC (Python + TypeScript), 82 tests passing
 
 ### Requirements
 
@@ -48,10 +49,16 @@ All 21 v3.0 requirements delivered across 2 phases (12 phases total across 3 mil
 - ✓ DOCS-01 through DOCS-08 — v3.0 (all document types surfaced)
 - ✓ PROG-01 through PROG-03 — v3.0 (progress metrics)
 - ✓ VIS-01 through VIS-04 — v3.0 (requirements traceability, waves, archives, gap highlighting)
+- ✓ VIS-P0-01 through VIS-P0-04 — v4.0 (artifact fallback, collision fix, XML tasks, reserved dirs)
+- ✓ VIS-P1-01 through VIS-P1-03 — v4.0 (decisions, review severity, legitimacy audit)
+- ✓ VIS-P2-01 through VIS-P2-04 — v4.0 (backlog phases, config signals, verification render, artifacts page)
+- ✓ INST-01 through INST-05 — v5.0 (installer: prereqs, WebView2, idempotent, bat launcher)
+- ✓ UPG-01 through UPG-03 — v5.0 (upgrade: git pull+pip+npm, guard, already-up-to-date)
+- ✓ VER-01 — v5.0 (version badge in sidebar footer)
 
 #### Active
 
-v5.0 requirements defined in REQUIREMENTS.md (INST-*, VER-*)
+*(none — next milestone requirements TBD via `/gsd-new-milestone`)*
 
 #### Out of Scope
 
@@ -59,6 +66,11 @@ v5.0 requirements defined in REQUIREMENTS.md (INST-*, VER-*)
 - gsd-core workflow execution — Monitor is a viewer, not a workflow runner
 - Cross-project dependency visualization — High complexity, not core to monitoring value
 - Mobile/macOS/Linux — Windows-only (Edge WebView2)
+- Chocolatey / winget distribution — deferred to Future Requirements
+- Auto-update check (background) — deferred to Future Requirements
+- Uninstall script — deferred to Future Requirements
+- In-app upgrade trigger — upgrade is scripted-only by design
+- Signed executables — out of scope for v5.0
 
 ## Constraints
 
@@ -84,6 +96,10 @@ v5.0 requirements defined in REQUIREMENTS.md (INST-*, VER-*)
 | StateParser 3-variant progress extraction | YAML frontmatter first, bold-inline, then pipe-table — covers all STATE.md formats | ✓ Phase 11 |
 | Fetch-once display-from-cache for InsightsPage | Fetch on segment change, not tab switch — avoids redundant API calls | ✓ Phase 12 |
 | v3.0 section-bounded requirement parsing | RequirementsParser scans only ## v3.0 section, excludes Validated/Future sections | ✓ Phase 12 |
+| pyproject.toml with hatch dynamic version | `gsd_monitor/__init__.py` is the single source of truth for version — used by pip and /api/version | ✓ Phase 17 |
+| upgrade.ps1 separated from install.ps1 | Standalone upgrade reduces risk of re-running full installer on existing installations | ✓ Phase 17 |
+| upgrade.ps1 uses git pull (not git reset --hard) | Gentler than start.bat auto-updater; preserves local changes if any | ✓ Phase 17 |
+| /api/version reads __version__ at import time | No hardcoded version in API layer; bumping __init__.py is the single update point | ✓ Phase 18 |
 
 ## Evolution
 
@@ -103,4 +119,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-18 after v4.0 milestone — v5.0 started*
+*Last updated: 2026-07-18 after v5.0 milestone — Installation and Distribution shipped*

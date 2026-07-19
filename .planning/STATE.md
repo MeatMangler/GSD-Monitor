@@ -7,7 +7,7 @@ current_phase_name: Version Display
 status: complete
 last_updated: "2026-07-18T00:00:00.000Z"
 last_activity: 2026-07-18
-last_activity_desc: Phase 18 complete — /api/version endpoint + ShellLayout sidebar footer version badge
+last_activity_desc: v5.0 milestone archived — Installation and Distribution shipped
 progress:
   total_phases: 2
   completed_phases: 2
@@ -20,30 +20,22 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-18)
+See: .planning/PROJECT.md (updated 2026-07-18)
 
 **Core value:** Developer opens GSD Monitor and immediately understands every project's status with zero duplicate entries and zero confusion
-**Current focus:** v5.0 — Installation and Distribution
+**Current focus:** v5.0 complete — planning next milestone
 
 ## Current Position
 
-Phase: Phase 18 — Version Display
-Plan: 18-01-PLAN.md (complete)
-Status: Milestone v5.0 complete
-Last activity: 2026-07-18 — Phase 18 complete: /api/version endpoint + sidebar footer version badge
+Phase: v5.0 archived
+Status: Milestone v5.0 complete and archived
+Last activity: 2026-07-18 — v5.0 archived: install.ps1 + upgrade.ps1 + upgrade.bat + /api/version + sidebar footer badge
 
 ## Accumulated Context
 
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- v3.0: Two-phase structure — Phase 11 (Make it Work) covers all detection, parsing, document surfacing, progress, and GSD-2 removal; Phase 12 (Enhanced Visibility) covers traceability, waves, archives, and gap highlighting
-- v3.0: GSD-2 support dropped entirely this milestone (DETECT-06)
-- v3.0: Legacy GSD-1 checkbox format must continue working (DETECT-05)
-- [Phase ?]: Phase 11-01 complete
-- [Phase ?]: Phase 11-01 backend
 
 ### Pending Todos
 
@@ -66,7 +58,7 @@ None.
 
 ## Deferred Items
 
-Items acknowledged and deferred at milestone close on 2026-06-18:
+Items acknowledged and deferred at milestone close on 2026-07-18:
 
 | Category | Item | Status |
 |----------|------|--------|
@@ -74,22 +66,16 @@ Items acknowledged and deferred at milestone close on 2026-06-18:
 | verification | 12-VERIFICATION.md | human_needed |
 | quick_task | 260405-759-fix-stale-data-in-the-projects-docs-ui | unknown |
 | quick_task | 260508-m1d-fix-milestone-layout-discovery | unknown |
+| verification | 17-VERIFICATION.md | override — Phase 17 self-checks in SUMMARY passed; milestone audit confirmed all INST/UPG requirements |
+| verification | 18-VERIFICATION.md | override — Phase 18 has no phase directory; milestone audit confirmed VER-01 implemented |
 
 ## Session Continuity
 
 **Last session:** 2026-07-18
 
-Last activity: 2026-07-18 — Phase 17 complete (2/2 plans): pyproject.toml + install.ps1 pip -e (d69ec64), upgrade.ps1 + upgrade.bat (69f06c6)
-Stopped at: Phase 17 complete, Phase 18 ready to execute
-
-## Performance Metrics
-
-| Phase | Plan | Duration | Notes |
-|-------|------|----------|-------|
-| Phase 11 P01 | 7m | 3 tasks | 8 files |
-| Phase 17 P01 | ~2m | 5 tasks | 2 files |
-| Phase 17 P02 | ~2m | 4 tasks | 2 files |
+Last activity: 2026-07-18 — v5.0 archived
+Stopped at: Milestone complete. Ready for `/gsd-new-milestone`
 
 ## Operator Next Steps
 
-- `/gsd-execute-phase 18` — execute Phase 18 (Version Display — /api/version + sidebar footer badge)
+- `/gsd-new-milestone` — start v6.0 (questioning → research → requirements → roadmap)
