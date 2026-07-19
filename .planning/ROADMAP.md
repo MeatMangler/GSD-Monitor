@@ -6,6 +6,7 @@
 - [x] **v2.0 Feature Pages** — Drift computation, Drift/Quick Tasks/Verification pages (2 phases, 4 plans, 2026-04-12) — [Archive](milestones/v2.0-ROADMAP.md)
 - [x] **v3.0 gsd-core Migration** — gsd-core detection & parsing, document surfacing, progress metrics, enhanced visibility (2 phases, 4 plans, 2026-06-18) — [Archive](milestones/v3.0-ROADMAP.md)
 - [x] **v4.0 gsd-core Full Visibility** — P0 correctness fixes, P1 artifact visibility, P2 surface depth (3 phases, 10 plans, 2026-07-18)
+- [ ] **v5.0 Installation and Distribution** — install script, upgrade script, version display (2 phases, 3 plans)
 
 ## Phases
 
@@ -41,13 +42,15 @@
 
 ## Active
 
-- [ ] Phase 14: gsd-core P0 Correctness Bug Fixes — unprefixed artifact fallback, phase-dir enrichment collision fix, XML task parsing, RequirementsParser wiring
+- [x] Phase 14: gsd-core P0 Correctness Bug Fixes — unprefixed artifact fallback, phase-dir enrichment collision fix, XML task parsing, RequirementsParser wiring (completed 2026-07-18)
 - [x] Phase 15: gsd-core P1 Artifact Visibility — Decision parser, code review findings, package legitimacy audit (completed 2026-07-18)
 - [x] Phase 16: gsd-core P2 Surface Depth — backlog phases, config signals, PROJECT.md vision, VerificationPage structured render, artifact explorers (completed 2026-07-18)
+- [x] Phase 17: Installation & Upgrade Scripts — PowerShell install script, standalone upgrade script (INST-01–05, UPG-01–03) (completed 2026-07-19)
+- [x] Phase 18: Version Display — app version in ShellLayout sidebar footer (VER-01) (completed 2026-07-18)
 
 ## Deferred
 
-- [ ] Phase 13: Installation Script — PowerShell guided installer; clone, venv, frontend build, .bat launcher, desktop shortcut, WebView2 check (deferred to v5.0)
+*(none)*
 
 ## Phase Details
 
@@ -109,22 +112,43 @@ Plans:
 - [x] 16-03-PLAN.md — VerificationPage structured render: parse VERIFICATION.md sections, highlight open blockers vs passing gates
 - [x] 16-04-PLAN.md — Top-level artifact explorers: new API endpoints for Spikes/Threads/Codebase/Intel + frontend views
 
-### Phase 13: Installation Script (deferred to v5.0)
+### Phase 17: Installation & Upgrade Scripts
 
-**Goal**: A developer or power user runs a single PowerShell script and ends up with GSD Monitor fully installed — repo cloned, virtualenv created, frontend built, a `.bat` launcher in place, a desktop shortcut created, and WebView2 presence verified
-**Depends on**: Phase 12
-**Requirements**: INST-01
+**Goal**: A developer can install GSD Monitor from scratch with a single PowerShell script, and upgrade an existing installation with a standalone upgrade script
+**Depends on**: Phase 16
+**Requirements**: INST-01, INST-02, INST-03, INST-04, INST-05, UPG-01, UPG-02, UPG-03
 **Success Criteria** (what must be TRUE):
 
-  1. Running the installer script on a clean Windows machine with Git, Python 3.11+, and Node.js results in a working GSD Monitor launch via the created shortcut
-  2. The script checks for WebView2 and prints a clear message (with download link) if it is absent
-  3. If any prerequisite (Git, Python, Node) is missing, the script exits with a human-readable error naming the missing tool
-  4. Running the installer a second time on an already-installed location does not corrupt the existing installation
+  1. Running `install.ps1` on a clean Windows machine with Git, Python 3.11+, and Node.js installed results in a working GSD Monitor launch via the created desktop shortcut
+  2. `install.ps1` checks for WebView2 and prints a clear message with a download link if absent
+  3. `install.ps1` exits with a human-readable error naming any missing prerequisite (Git, Python, Node.js)
+  4. Running `install.ps1` a second time on an already-installed directory completes without error and does not corrupt the existing installation
+  5. `install.ps1` creates a `.bat` launcher in the install directory alongside the desktop shortcut
+  6. Running `upgrade.ps1` (or `upgrade.bat`) from the install directory performs `git pull` + `pip install -e .` + frontend rebuild and prints a success confirmation
+  7. Running `upgrade.ps1` outside a valid GSD Monitor directory exits with a human-readable error
+  8. Running `upgrade.ps1` when already on the latest version completes cleanly with a "already up to date" message
 
-**Plans:** 0/1 plans complete
+**Plans:** 2/2 plans complete
 Plans:
 
-- [ ] 13-01-PLAN.md — PowerShell installer: prereq checks, clone, venv, frontend build, launcher, shortcut, upgrade flow
+- [x] 17-01-PLAN.md — `install.ps1`: prereq checks (Git, Python, Node, WebView2), clone, venv, pip install, frontend build, .bat launcher, desktop shortcut, idempotent re-run
+- [x] 17-02-PLAN.md — `upgrade.ps1` / `upgrade.bat`: valid-install guard, git pull, pip install, frontend rebuild, already-up-to-date detection, success/error messaging
+
+### Phase 18: Version Display
+
+**Goal**: The ShellLayout sidebar footer shows GSD Monitor's current version number, sourced from `gsd_monitor/__init__.py` via the API
+**Depends on**: Phase 17
+**Requirements**: VER-01
+**Success Criteria** (what must be TRUE):
+
+  1. A `/api/version` endpoint (or existing health endpoint) returns the app version from `gsd_monitor.__version__`
+  2. The ShellLayout sidebar footer displays the version string (e.g. `v1.0.0`) at all times, visible on every page
+  3. Version string updates without a code change when `__version__` in `gsd_monitor/__init__.py` is bumped
+
+**Plans:** 1/1 plans complete
+Plans:
+
+- [x] 18-01-PLAN.md — `/api/version` endpoint + ShellLayout sidebar footer version badge
 
 ## Progress
 
@@ -138,4 +162,5 @@ Plans:
 | 14. gsd-core P0 Correctness | v4.0 | 3/3 | Complete | 2026-07-18 |
 | 15. gsd-core P1 Visibility | v4.0 | 3/3 | Complete   | 2026-07-18 |
 | 16. gsd-core P2 Depth | v4.0 | 4/4 | Complete   | 2026-07-18 |
-| 13. Installation Script | v5.0 | 0/1 | Deferred | — |
+| 17. Installation & Upgrade Scripts | v5.0 | 2/2 | Complete   | 2026-07-19 |
+| 18. Version Display | v5.0 | 1/1 | Complete | 2026-07-18 |

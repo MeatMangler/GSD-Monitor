@@ -2,15 +2,18 @@
 gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Installation and Distribution
-status: planning
-last_updated: "2026-07-18T23:52:19.687Z"
+current_phase: 18
+current_phase_name: Version Display
+status: complete
+last_updated: "2026-07-18T00:00:00.000Z"
 last_activity: 2026-07-18
+last_activity_desc: Phase 18 complete — /api/version endpoint + ShellLayout sidebar footer version badge
 progress:
   total_phases: 2
-  completed_phases: 0
+  completed_phases: 2
   total_plans: 3
-  completed_plans: 0
-  percent: 0
+  completed_plans: 3
+  percent: 100
 ---
 
 # Project State
@@ -24,10 +27,10 @@ See: .planning/PROJECT.md (updated 2026-06-18)
 
 ## Current Position
 
-Phase: Phase 17 — Installation & Upgrade Scripts
-Plan: 17-01-PLAN.md (not started)
-Status: Ready to plan
-Last activity: 2026-07-18 — Milestone v5.0 initialized (2 phases, 3 plans)
+Phase: Phase 18 — Version Display
+Plan: 18-01-PLAN.md (complete)
+Status: Milestone v5.0 complete
+Last activity: 2026-07-18 — Phase 18 complete: /api/version endpoint + sidebar footer version badge
 
 ## Accumulated Context
 
@@ -74,19 +77,19 @@ Items acknowledged and deferred at milestone close on 2026-06-18:
 
 ## Session Continuity
 
-**Last session:** 2026-07-18T23:22:01.868Z
+**Last session:** 2026-07-18
 
-Last activity: 2026-06-18 - Completed quick task 260618-rat: Fix UI review findings: user-friendly errors, page heading, CSS tokens
-Stopped at: context exhaustion at 76% (2026-07-13)
-Resume file: .planning/phases/13-installation-script/13-CONTEXT.md
+Last activity: 2026-07-18 — Phase 17 complete (2/2 plans): pyproject.toml + install.ps1 pip -e (d69ec64), upgrade.ps1 + upgrade.bat (69f06c6)
+Stopped at: Phase 17 complete, Phase 18 ready to execute
 
 ## Performance Metrics
 
 | Phase | Plan | Duration | Notes |
 |-------|------|----------|-------|
 | Phase 11 P01 | 7m | 3 tasks | 8 files |
+| Phase 17 P01 | ~2m | 5 tasks | 2 files |
+| Phase 17 P02 | ~2m | 4 tasks | 2 files |
 
 ## Operator Next Steps
 
-- `/gsd-discuss-phase 17` — gather context and clarify approach for Phase 17
-- `/gsd-plan-phase 17` — skip discussion, plan directly
+- `/gsd-execute-phase 18` — execute Phase 18 (Version Display — /api/version + sidebar footer badge)

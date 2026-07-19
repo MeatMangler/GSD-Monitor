@@ -377,6 +377,11 @@ def create_app() -> FastAPI:
     async def health() -> dict[str, str]:
         return {"status": "ok"}
 
+    @application.get("/api/version")
+    async def version() -> dict[str, str]:
+        from gsd_monitor import __version__
+        return {"version": __version__}
+
     @application.get("/api/groups")
     async def get_groups() -> dict[str, Any]:
         return {"groups": [_group_to_json(g) for g in state.groups]}

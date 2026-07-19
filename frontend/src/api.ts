@@ -3,6 +3,13 @@ const base = "";
 /** Avoid stale settings/groups when the embedded WebView caches GET responses. */
 const noStore: RequestInit = { cache: "no-store" };
 
+export async function fetchVersion(): Promise<string> {
+  const r = await fetch(`${base}/api/version`, noStore);
+  if (!r.ok) throw new Error(await r.text());
+  const j = await r.json();
+  return (j.version as string) ?? "";
+}
+
 export async function fetchGroups(): Promise<GroupPayload[]> {
   const r = await fetch(`${base}/api/groups`, noStore);
   if (!r.ok) throw new Error(await r.text());

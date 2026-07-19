@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useMemo, useState, useEffect, useRef, type ReactNode } from "react";
 import { useApp } from "./context";
 import type { GroupPayload, SegmentPayload, WorktreeInfo } from "./api";
+import { fetchVersion } from "./api";
 import gsdIcon from "./assets/gsd-icon.png";
 
 const nav = [
@@ -32,6 +33,11 @@ export function ShellLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!loading) setLastScanned(new Date().toLocaleTimeString());
   }, [loading]);
+
+  const [appVersion, setAppVersion] = useState<string | null>(null);
+  useEffect(() => {
+    void fetchVersion().then((v) => setAppVersion(v));
+  }, []);
 
   const [navCollapsed, setNavCollapsed] = useState(false);
   const [navWidth, setNavWidth] = useState(288);
@@ -253,6 +259,17 @@ export function ShellLayout({ children }: { children: ReactNode }) {
             </NavLink>
           ))}
         </nav>
+
+        {/* Version footer */}
+        {appVersion && (
+          <div className="shrink-0 border-t border-[#474747] px-3 py-2">
+            {navCollapsed ? (
+              <span className="block text-center text-[10px] text-[#555555]" title={`v${appVersion}`}>v</span>
+            ) : (
+              <span className="text-xs text-[#555555]">v{appVersion}</span>
+            )}
+          </div>
+        )}
       </aside>
 
       {/* Drag-to-resize handle — only when expanded */}
