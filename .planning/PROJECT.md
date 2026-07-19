@@ -8,7 +8,24 @@ GSD Monitor is a Windows desktop companion app (Python + pywebview + React) that
 
 A developer opens GSD Monitor and within seconds understands exactly where every project stands — which phases are done, what's active, and can read any planning doc — with zero duplicate entries and zero confusion about which project they're looking at.
 
-## Current State (v3.0 — Shipped 2026-06-18)
+## Current Milestone: v5.0 Installation and Distribution
+
+**Goal:** A developer can install, upgrade, and identify the version of GSD Monitor using standalone scripts and a version display in the UI.
+
+**Target features:**
+- Install script (PowerShell): prereq checks (Git, Python 3.11+, Node.js), clone, venv, frontend build, .bat launcher, desktop shortcut, WebView2 check, idempotent re-run
+- Upgrade script (standalone PowerShell/bat): git pull, pip install, frontend rebuild — runnable from install directory, no in-app trigger
+- App version in side menu: reads `__version__` from `gsd_monitor/__init__.py`, displayed statically in ShellLayout sidebar footer
+
+## Previous State (v4.0 — Shipped 2026-07-18)
+
+All v4.0 requirements delivered across 3 phases (Phases 14–16, 10 plans):
+
+- **P0 Correctness (Phase 14):** Unprefixed artifact fallback, phase-dir enrichment collision fix, XML task parsing, RequirementsParser wiring
+- **P1 Visibility (Phase 15):** DecisionParser (coverage indicator), ReviewParser (severity badges), package legitimacy audit signals
+- **P2 Surface Depth (Phase 16):** Backlog phases (999.x), config badges (nyquist/discuss_mode/ui_phase), PROJECT.md vision callout, VerificationPage structured render, ArtifactsPage (Spikes/Threads/Codebase/Intel)
+
+## Previous State (v3.0 — Shipped 2026-06-18)
 
 All 21 v3.0 requirements delivered across 2 phases (12 phases total across 3 milestones):
 
@@ -34,7 +51,7 @@ All 21 v3.0 requirements delivered across 2 phases (12 phases total across 3 mil
 
 #### Active
 
-(None — awaiting next milestone definition)
+v5.0 requirements defined in REQUIREMENTS.md (INST-*, VER-*)
 
 #### Out of Scope
 
@@ -86,4 +103,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-18 after v3.0 milestone*
+*Last updated: 2026-07-18 after v4.0 milestone — v5.0 started*

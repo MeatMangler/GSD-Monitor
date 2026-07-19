@@ -172,8 +172,7 @@ if (Test-Path (Join-Path $installDir '.git')) {
     Write-OK "Repository updated"
 
     Write-Step "Re-installing Python dependencies..."
-    & "$installDir\.venv\Scripts\pip.exe" install `
-        fastapi "uvicorn[standard]" pydantic pydantic-settings pywebview pygit2 watchdog
+    & "$installDir\.venv\Scripts\pip.exe" install -e "$installDir"
     if ($LASTEXITCODE -ne 0) { Fail "pip install failed during upgrade" }
     Write-OK "Python dependencies up to date"
 
@@ -207,8 +206,7 @@ if ($LASTEXITCODE -ne 0) { Fail "Failed to create virtual environment" }
 Write-OK "Virtual environment created"
 
 Write-Step "Installing Python dependencies..."
-& "$installDir\.venv\Scripts\pip.exe" install `
-    fastapi "uvicorn[standard]" pydantic pydantic-settings pywebview pygit2 watchdog
+& "$installDir\.venv\Scripts\pip.exe" install -e "$installDir"
 if ($LASTEXITCODE -ne 0) { Fail "pip install failed" }
 Write-OK "Python dependencies installed"
 
@@ -263,7 +261,7 @@ if errorlevel 1 (
 )
 
 echo Installing Python dependencies...
-.venv\Scripts\pip.exe install -q fastapi "uvicorn[standard]" pydantic pydantic-settings pywebview pygit2 watchdog
+.venv\Scripts\pip.exe install -q -e "%~dp0."
 if errorlevel 1 (
     echo ERROR: pip install failed - launching existing version.
     timeout /t 5 /nobreak >nul

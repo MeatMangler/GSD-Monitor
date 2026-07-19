@@ -1,20 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v4.0
-milestone_name: gsd-core Full Visibility
-current_phase: 0
-status: Milestone v4.0 complete — awaiting next milestone
-stopped_at: ""
-last_updated: "2026-07-18T23:22:01.877Z"
+milestone: v5.0
+milestone_name: Installation and Distribution
+status: planning
+last_updated: "2026-07-18T23:52:19.687Z"
 last_activity: 2026-07-18
-last_activity_desc: Phase 16 complete — v4.0 milestone fully delivered (10/10 plans)
 progress:
-  total_phases: 14
-  completed_phases: 13
-  total_plans: 30
-  completed_plans: 30
-  percent: 100
-current_phase_name: gsd-core P2 Surface Depth
+  total_phases: 2
+  completed_phases: 0
+  total_plans: 3
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -24,14 +20,14 @@ current_phase_name: gsd-core P2 Surface Depth
 See: .planning/PROJECT.md (updated 2026-06-18)
 
 **Core value:** Developer opens GSD Monitor and immediately understands every project's status with zero duplicate entries and zero confusion
-**Current focus:** v3.0 milestone complete
+**Current focus:** v5.0 — Installation and Distribution
 
 ## Current Position
 
-Phase: Milestone v3.0 complete
-Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-19 — Milestone v3.0 completed and archived
+Phase: Phase 17 — Installation & Upgrade Scripts
+Plan: 17-01-PLAN.md (not started)
+Status: Ready to plan
+Last activity: 2026-07-18 — Milestone v5.0 initialized (2 phases, 3 plans)
 
 ## Accumulated Context
 
@@ -92,4 +88,5 @@ Resume file: .planning/phases/13-installation-script/13-CONTEXT.md
 
 ## Operator Next Steps
 
-- Start the next milestone with /gsd-new-milestone
+- `/gsd-discuss-phase 17` — gather context and clarify approach for Phase 17
+- `/gsd-plan-phase 17` — skip discussion, plan directly
