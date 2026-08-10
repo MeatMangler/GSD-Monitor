@@ -362,3 +362,81 @@ def test_returns_parse_result_ok(tmp_path: Path):
     # Check it's a GsdProject
     from gsd_monitor.models.core import GsdProject
     assert isinstance(r.value, GsdProject)
+
+
+# ---------------------------------------------------------------------------
+# GSD Monitor's own ROADMAP format:
+# "## Milestones" list + "## Phases" with <details> blocks containing
+# plain checkbox phases (no bold markup, no ## Phase Details section)
+# ---------------------------------------------------------------------------
+
+GSD_MONITOR_FORMAT_ROADMAP = """\
+# Roadmap: GSD Monitor
+
+## Milestones
+
+- [x] **v1.0** — First milestone (8 phases, 15 plans, 2026-04-04) — [Archive](milestones/v1.0-ROADMAP.md)
+- [x] **v2.0 Feature Pages** — Drift/Quick Tasks/Verification pages (2 phases, 4 plans, 2026-04-12)
+
+## Phases
+
+<details>
+<summary>v1.0 (Phases 1-8) — SHIPPED 2026-04-04</summary>
+
+- [x] Phase 1: Worktree Deduplication — completed 2026-04-03
+- [x] Phase 2: Visual Redesign — completed 2026-04-03
+- [x] Phase 3: Doc Browser — completed 2026-04-03
+
+</details>
+
+<details>
+<summary>v2.0 Feature Pages (Phases 9-10) — SHIPPED 2026-04-12</summary>
+
+- [x] Phase 9: Drift Computation (1/1 plans) — completed 2026-04-12
+- [x] Phase 10: Feature Pages (3/3 plans) — completed 2026-04-12
+
+</details>
+
+## Active
+
+*(none — planning next milestone)*
+"""
+
+
+def test_gsd_monitor_format_detects_milestones(tmp_path: Path):
+    """Parser handles the Milestones-list + Phases <details> format used by GSD Monitor itself."""
+    p = _write(tmp_path, GSD_MONITOR_FORMAT_ROADMAP)
+    r = GsdCoreRoadmapParser.parse(str(p))
+    assert r.is_success
+    milestones = r.value.milestones
+    assert len(milestones) == 2
+
+
+def test_gsd_monitor_format_phases_parsed(tmp_path: Path):
+    p = _write(tmp_path, GSD_MONITOR_FORMAT_ROADMAP)
+    r = GsdCoreRoadmapParser.parse(str(p))
+    assert r.is_success
+    all_phases = [ph for m in r.value.milestones for ph in m.phases]
+    assert len(all_phases) == 5
+    nums = [ph.number for ph in all_phases]
+    assert nums == [1, 2, 3, 9, 10]
+
+
+def test_gsd_monitor_format_phase_titles_clean(tmp_path: Path):
+    """Phase titles must not include trailing '— completed date' or plan-count metadata."""
+    p = _write(tmp_path, GSD_MONITOR_FORMAT_ROADMAP)
+    r = GsdCoreRoadmapParser.parse(str(p))
+    assert r.is_success
+    all_phases = [ph for m in r.value.milestones for ph in m.phases]
+    titles = [ph.title for ph in all_phases]
+    assert titles[0] == "Worktree Deduplication"
+    assert titles[3] == "Drift Computation"
+    assert titles[4] == "Feature Pages"
+
+
+def test_gsd_monitor_format_milestones_completed(tmp_path: Path):
+    p = _write(tmp_path, GSD_MONITOR_FORMAT_ROADMAP)
+    r = GsdCoreRoadmapParser.parse(str(p))
+    assert r.is_success
+    for m in r.value.milestones:
+        assert m.status == MilestoneStatus.COMPLETED

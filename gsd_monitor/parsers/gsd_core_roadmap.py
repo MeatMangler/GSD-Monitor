@@ -51,6 +51,13 @@ _CHECKBOX_PHASE = re.compile(
 _DETAILS_OPEN = re.compile(r"<details>", re.IGNORECASE)
 _DETAILS_CLOSE = re.compile(r"</details>", re.IGNORECASE)
 
+# Plain checkbox phase line (no bold markup): "- [x] Phase N: Title (metadata)"
+# Handles the "## Milestones list + ## Phases <details>" ROADMAP format
+_PLAIN_PHASE_CHECKBOX = re.compile(
+    r"^- \[([x ])\] Phase ([\d]+(?:[.\-][\d]+)?): ([^\n]+)",
+    re.MULTILINE,
+)
+
 # Extract completion date from summary text: "SHIPPED 2026-04-12" or "SHIPPED: 2026-04-12"
 _SHIPPED_DATE = re.compile(r"SHIPPED\s+(\d{4}-\d{2}-\d{2})")
 
@@ -220,6 +227,20 @@ class GsdCoreRoadmapParser:
                         status=ms_status,
                         phases=phases,
                     )
+                ]
+            # Fall back to <details> blocks — handles "## Milestones list + ## Phases <details>" format
+            archived = GsdCoreRoadmapParser._extract_archived_milestones(text, phase_map)
+            if archived:
+                return [
+                    Milestone(
+                        number=i,
+                        title=m.title,
+                        status=m.status,
+                        phases=m.phases,
+                        is_archived=m.is_archived,
+                        completion_date=m.completion_date,
+                    )
+                    for i, m in enumerate(archived, 1)
                 ]
             return []
 
@@ -400,11 +421,33 @@ class GsdCoreRoadmapParser:
                     )
 
             if not phase_entries:
-                # Try checkbox-style within block
+                # Try checkbox-style within block: "- [x] **Phase N: Title**"
                 for m in _CHECKBOX_PHASE.finditer(block):
                     checked = m.group(1).lower() == "x"
                     raw_id = m.group(2)
                     title = m.group(3).strip()
+                    number, code = _parse_phase_id(raw_id)
+                    if raw_id in phase_map:
+                        phase_entries.append(phase_map[raw_id])
+                    else:
+                        phase_entries.append(
+                            PhaseEntry(
+                                number=number,
+                                code=code,
+                                title=title,
+                                status=PhaseStatus.COMPLETE if checked else PhaseStatus.NOT_STARTED,
+                            )
+                        )
+
+            if not phase_entries:
+                # Try plain checkbox style: "- [x] Phase N: Title (metadata)"
+                for m in _PLAIN_PHASE_CHECKBOX.finditer(block):
+                    checked = m.group(1).lower() == "x"
+                    raw_id = m.group(2)
+                    raw_title = m.group(3).strip()
+                    # Strip trailing plan-count/date metadata:
+                    # "(3/3 plans) — completed 2026-08-09" or "— completed 2026-04-03"
+                    title = re.sub(r"\s+(?:\([^)]*\)|—)\s*.*$", "", raw_title).strip() or raw_title
                     number, code = _parse_phase_id(raw_id)
                     if raw_id in phase_map:
                         phase_entries.append(phase_map[raw_id])

@@ -399,6 +399,24 @@ class ProjectDiscoveryService:
                 if arch:
                     proj = proj.model_copy(update={"milestones": arch})
 
+        # For gsd-core projects, supplement from per-milestone ROADMAP files in milestones/.
+        # This fills in milestones whose <details> blocks contain only prose (no phase lines),
+        # without duplicating milestones whose phases were already captured by the parser.
+        if is_gsd_core:
+            arch = RoadmapParser._try_extract_from_milestone_archives(str(base / "ROADMAP.md"))
+            if arch:
+                parser_phase_nums = {p.number for m in proj.milestones for p in m.phases}
+                extra = [
+                    m for m in arch
+                    if m.phases and not any(p.number in parser_phase_nums for p in m.phases)
+                ]
+                if extra:
+                    all_ms = list(proj.milestones) + extra
+                    all_ms.sort(key=lambda m: min((p.number for p in m.phases), default=0))
+                    proj = proj.model_copy(update={
+                        "milestones": [m.model_copy(update={"number": i}) for i, m in enumerate(all_ms, 1)]
+                    })
+
         proj = self._enrich_planning(ctx.planning_base, proj)
         proj = self._apply_state_mtime(ctx, proj)
 
