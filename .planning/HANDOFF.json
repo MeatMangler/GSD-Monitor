@@ -1,50 +1,40 @@
 {
   "version": "1.0",
-  "timestamp": "2026-07-05T23:23:20.534Z",
+  "timestamp": "2026-08-10T23:03:32Z",
   "phase": null,
-  "phase_name": "ad-hoc debug — stale docs / live refresh",
+  "phase_name": null,
   "phase_dir": null,
   "plan": null,
   "task": null,
   "total_tasks": null,
-  "status": "blocked",
+  "status": "paused",
   "completed_tasks": [
-    {"id": 1, "name": "Add WebSocket exponential-backoff reconnect (context.tsx)", "status": "done", "commit": "6f2f12a"},
-    {"id": 2, "name": "Add watchdog Observer health-check 15s timer (file_watcher.py)", "status": "done", "commit": "6f2f12a"},
-    {"id": 3, "name": "Add reload() on WebSocket onopen to fix startup race (context.tsx)", "status": "done", "commit": "51eb9e5"},
-    {"id": 4, "name": "Add start.bat auto-update with git fetch + reset + rebuild", "status": "done", "commit": "81fe314"},
-    {"id": 5, "name": "Fix installer git fetch stderr (--quiet flag)", "status": "done", "commit": "dcf469f"},
-    {"id": 6, "name": "Fix installer git pull → git reset --hard (dist conflict)", "status": "done", "commit": "4a22811"},
-    {"id": 7, "name": "Fix start.bat git pull → git reset --hard", "status": "done", "commit": "4f9d0b8"},
-    {"id": 8, "name": "Replace silent failures with explicit error messages in start.bat", "status": "done", "commit": "f3366dc"},
-    {"id": 9, "name": "Add manual refresh button to shell header (↻)", "status": "done", "commit": "89875de"},
-    {"id": 10, "name": "Fix refresh button to call POST /api/groups/refresh (full rescan)", "status": "done", "commit": "a73f0c5"}
+    {"id": 1, "name": "Parser fix: GSD Monitor ROADMAP format (plain checkbox phases in <details> blocks)", "status": "done", "commit": "c4390e3"},
+    {"id": 2, "name": "Quick task 20260706-markdown-file-datetime-footer: SUMMARY written (was already implemented)", "status": "done", "commit": null},
+    {"id": 3, "name": "devMike.bat fix: angle brackets in commit subject broke for /f loop", "status": "done", "commit": "ad91dcf"},
+    {"id": 4, "name": "Version bump: __init__.py 1.0.0 -> 5.0.0", "status": "done", "commit": "db3505d"},
+    {"id": 5, "name": "fix(discovery): sort planning dirs so primary repos precede worktrees", "status": "done", "commit": "f8abb0c"}
   ],
   "remaining_tasks": [
-    {"id": 11, "name": "ROOT CAUSE: find why POST /api/groups/refresh returns stale data even after forced rescan", "status": "not_started"},
-    {"id": 12, "name": "Verify what planningPath values the discovery service is actually returning", "status": "not_started"},
-    {"id": 13, "name": "Check if discover_groups() is reading from correct .planning/ paths on test PC", "status": "not_started"}
+    {"id": 6, "name": "Verify SaaS project phases show correctly in app after restart", "status": "not_started"},
+    {"id": 7, "name": "Start v6.0 milestone planning", "status": "not_started"}
   ],
-  "blockers": [
-    {
-      "description": "POST /api/groups/refresh triggers a full disk rescan but still returns stale project data. This means discover_groups() is either reading from wrong paths or parsing incorrectly. The test PC has correct scan roots configured and files are up to date on disk.",
-      "type": "technical",
-      "workaround": "None found yet — needs deeper investigation into discover_groups() and path resolution"
-    }
-  ],
+  "blockers": [],
   "async_jobs": [],
   "human_actions_pending": [
     {
-      "action": "On the test PC: in the app, note the exact planningPath shown for a project (can be seen in browser devtools Network tab on /api/groups response), then manually check if that path exists and has current files on disk",
-      "context": "This would confirm whether the path resolution is correct",
-      "blocking": true
+      "action": "Start devMike.bat and verify: (1) footer shows v5.0.0, (2) SaaS Dashboard phases 160-169 all show as complete",
+      "context": "Worktree ordering fix (f8abb0c) is committed and pushed. App needs fresh start to pick up changes.",
+      "blocking": false
     }
   ],
   "decisions": [
-    {"decision": "Use git reset --hard instead of git pull in installer and start.bat", "rationale": "git pull fails when tracked dist files differ locally after npm build", "phase": "ad-hoc"},
-    {"decision": "Refresh button calls POST /api/groups/refresh not GET /api/groups", "rationale": "GET just returns cached state.groups; POST triggers actual disk rescan", "phase": "ad-hoc"}
+    {"decision": "Use git rev-parse --short HEAD instead of git log --oneline in devMike.bat", "rationale": "git log --oneline includes commit subject which may contain angle brackets that cmd.exe interprets as redirection operators, crashing the for /f loop", "phase": null},
+    {"decision": "Version bumped to 5.0.0 to align with shipped v5.0 milestone", "rationale": "Was hardcoded at 1.0.0 since initial commit; sidebar footer displays this value via /api/version", "phase": null},
+    {"decision": "_PLAIN_PHASE_CHECKBOX regex + three-pass extraction in _extract_archived_milestones", "rationale": "GSD Monitor and SaaS Dashboard both use plain '- [x] Phase N: Title' format in <details> blocks, not bold markup", "phase": null},
+    {"decision": "Sort .planning dirs by primary-repo-first in discover loop", "rationale": "os.walk order is filesystem-dependent; worktrees under .claude/worktrees/ can sort before the repo root alphabetically, causing the real .planning/ to be silently skipped as a duplicate. Sorting by whether ../.git is a directory (real repo) vs file (worktree) guarantees the authoritative ROADMAP wins.", "phase": null}
   ],
   "uncommitted_files": [],
-  "next_action": "Read project_discovery.py fully to understand how planningPath is constructed and what discover_groups() actually scans. Add a /api/debug endpoint that returns raw scan results including all resolved paths — this will show exactly what the server is seeing vs what's on disk.",
-  "context_notes": "The core mystery: POST /api/groups/refresh does a full disk rescan via discover_groups(s.scan_roots) but still returns stale project data. The user confirmed scan roots are correct and files are up to date on disk. Either (a) the planningPath resolution is wrong so we're reading from a different location than expected, (b) the parser is reading the right files but the parsed output is wrong/cached somehow, or (c) there is some Python-level caching happening. Most likely (a) — need to trace the full path from scan_root → planning_path → file fetch."
+  "next_action": "Run devMike.bat, confirm v5.0.0 footer and SaaS phases 160-169 all complete, then /gsd-new-milestone for v6.0",
+  "context_notes": "Two bugs fixed this session. (1) Parser fix c4390e3 added _PLAIN_PHASE_CHECKBOX for plain-checkbox <details> blocks. (2) Discovery ordering fix f8abb0c ensures worktrees never shadow the primary repo's ROADMAP. Both on master. 136/136 tests pass."
 }
