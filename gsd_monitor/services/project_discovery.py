@@ -253,7 +253,15 @@ class ProjectDiscoveryService:
             root_path = Path(root).resolve()
             logger.debug("[discover] scanning root: %s", root_path)
             try:
-                for planning_dir in self._find_dirs(root_path, ".planning"):
+                # Sort so primary repos (real .git dir) are processed before linked worktrees.
+                # os.walk order is filesystem-dependent; a worktree nested under .claude/worktrees/
+                # can sort before the repo root and claim the canonical key first, causing the
+                # real .planning directory to be silently skipped as a duplicate.
+                planning_dirs = sorted(
+                    self._find_dirs(root_path, ".planning"),
+                    key=lambda d: (0 if (d.parent / ".git").is_dir() else 1),
+                )
+                for planning_dir in planning_dirs:
                     if planning_dir.name != ".planning":
                         continue
                     repo_dir = planning_dir.parent
