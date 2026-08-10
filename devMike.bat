@@ -10,7 +10,7 @@ echo.
 
 :: Show what we're actually running so there's no ambiguity
 for /f "delims=" %%b in ('git branch --show-current 2^>nul') do set _branch=%%b
-for /f "delims=" %%h in ('git log --oneline -1 2^>nul') do set _commit=%%h
+for /f "delims=" %%h in ('git rev-parse --short HEAD 2^>nul') do set _commit=%%h
 echo  Branch : %_branch%
 echo  Commit : %_commit%
 echo.
