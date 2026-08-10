@@ -249,49 +249,49 @@ class ProjectDiscoveryService:
         by_repo: dict[str, list[SegmentModel]] = {}
         by_repo_worktrees: dict[str, list[tuple[Path, bool]]] = {}
 
+        # Collect all .planning dirs from every scan root before sorting.
+        # Sorting globally (not per-root) ensures primary repos precede linked
+        # worktrees even when they appear in different configured scan roots.
+        all_planning_dirs: list[Path] = []
         for root in roots:
             root_path = Path(root).resolve()
             logger.debug("[discover] scanning root: %s", root_path)
-            try:
-                # Sort so primary repos (real .git dir) are processed before linked worktrees.
-                # os.walk order is filesystem-dependent; a worktree nested under .claude/worktrees/
-                # can sort before the repo root and claim the canonical key first, causing the
-                # real .planning directory to be silently skipped as a duplicate.
-                planning_dirs = sorted(
-                    self._find_dirs(root_path, ".planning"),
-                    key=lambda d: (0 if (d.parent / ".git").is_dir() else 1),
-                )
-                for planning_dir in planning_dirs:
-                    if planning_dir.name != ".planning":
-                        continue
-                    repo_dir = planning_dir.parent
-                    canonical = _resolve_canonical_root(repo_dir)
-                    canon_key = str(canonical)
-                    # Accumulate worktree info regardless of segment deduplication
-                    is_primary = (repo_dir / ".git").is_dir()
-                    wt_list = by_repo_worktrees.setdefault(canon_key, [])
-                    if not any(str(p) == str(repo_dir) for p, _ in wt_list):
-                        wt_list.append((repo_dir, is_primary))
-                    # Only add segments from the first worktree discovered for this canonical root
-                    if canon_key in by_repo:
-                        logger.debug("[discover] skipping duplicate canonical root: %s (already from %s)", repo_dir, canon_key)
-                        continue
-                    hint_t = _try_read(repo_dir / ".planning" / "active-workstream")
-                    hint = hint_t.strip() if hint_t else None
-                    ws = is_workspace_root(repo_dir)
-                    segs_before = sum(len(v) for v in by_repo.values())
-                    for ctx in iter_planning_contexts(planning_dir, repo_dir):
-                        seg = self._build_gsd1_segment(ctx, ws, hint)
-                        if seg:
-                            by_repo.setdefault(canon_key, []).append(seg)
-                    segs_after = sum(len(v) for v in by_repo.values())
-                    logger.debug(
-                        "[discover] found planning dir %s — added %d segment(s)",
-                        planning_dir, segs_after - segs_before,
-                    )
-            except PermissionError:
-                logger.warning("[discover] PermissionError scanning root: %s", root)
+            all_planning_dirs.extend(self._find_dirs(root_path, ".planning"))
+
+        # Primaries (real .git dir, key=0) sort before worktrees (.git file, key=1).
+        all_planning_dirs = sorted(
+            all_planning_dirs,
+            key=lambda d: (0 if (d.parent / ".git").is_dir() else 1),
+        )
+
+        for planning_dir in all_planning_dirs:
+            if planning_dir.name != ".planning":
                 continue
+            repo_dir = planning_dir.parent
+            canonical = _resolve_canonical_root(repo_dir)
+            canon_key = str(canonical)
+            # Accumulate worktree info regardless of segment deduplication
+            is_primary = (repo_dir / ".git").is_dir()
+            wt_list = by_repo_worktrees.setdefault(canon_key, [])
+            if not any(str(p) == str(repo_dir) for p, _ in wt_list):
+                wt_list.append((repo_dir, is_primary))
+            # Only add segments from the first (primary) repo discovered for this canonical root
+            if canon_key in by_repo:
+                logger.debug("[discover] skipping duplicate canonical root: %s (already from %s)", repo_dir, canon_key)
+                continue
+            hint_t = _try_read(repo_dir / ".planning" / "active-workstream")
+            hint = hint_t.strip() if hint_t else None
+            ws = is_workspace_root(repo_dir)
+            segs_before = sum(len(v) for v in by_repo.values())
+            for ctx in iter_planning_contexts(planning_dir, repo_dir):
+                seg = self._build_gsd1_segment(ctx, ws, hint)
+                if seg:
+                    by_repo.setdefault(canon_key, []).append(seg)
+            segs_after = sum(len(v) for v in by_repo.values())
+            logger.debug(
+                "[discover] found planning dir %s — added %d segment(s)",
+                planning_dir, segs_after - segs_before,
+            )
 
         logger.info("[discover] scan complete — %d unique repo(s) with segments", len(by_repo))
 
