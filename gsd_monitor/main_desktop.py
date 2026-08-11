@@ -41,7 +41,7 @@ def main() -> None:
             time.sleep(0.05)
     url = f"http://127.0.0.1:{port}/"
     webview.create_window("GSD Monitor", url, width=1280, height=840)
-    webview.start(debug=True)
+    webview.start(debug=False)
 
 
 if __name__ == "__main__":
