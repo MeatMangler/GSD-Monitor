@@ -578,11 +578,13 @@ def create_app() -> FastAPI:
             "/assets", StaticFiles(directory=static / "assets"), name="assets"
         )
 
+    _NO_CACHE = {"Cache-Control": "no-store, no-cache, must-revalidate", "Pragma": "no-cache"}
+
     @application.get("/")
     async def index_page() -> FileResponse:
         idx = _static_dir() / "index.html"
         if idx.is_file():
-            return FileResponse(idx)
+            return FileResponse(idx, headers=_NO_CACHE)
         from fastapi.responses import JSONResponse
 
         return JSONResponse(
@@ -594,7 +596,7 @@ def create_app() -> FastAPI:
     async def spa(path: str) -> FileResponse:
         idx = _static_dir() / "index.html"
         if idx.is_file():
-            return FileResponse(idx)
+            return FileResponse(idx, headers=_NO_CACHE)
         from fastapi.responses import JSONResponse
 
         return JSONResponse({"detail": "frontend missing"}, status_code=503)
