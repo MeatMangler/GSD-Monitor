@@ -2,18 +2,17 @@
 gsd_state_version: 1.0
 milestone: v5.0
 milestone_name: Installation and Distribution
+status: complete
+last_updated: "2026-08-11T00:00:00.000Z"
+last_activity: 2026-08-11
+last_activity_desc: "bugfix: white screen on test PC — commit missing JS/CSS dist assets + no-cache headers on index.html"
+progress:
+  total_phases: 16
+  completed_phases: 14
+  total_plans: 33
+  completed_plans: 30
 current_phase: 18
 current_phase_name: Version Display
-status: complete
-last_updated: "2026-07-18T00:00:00.000Z"
-last_activity: 2026-07-18
-last_activity_desc: v5.0 milestone archived — Installation and Distribution shipped
-progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
-  percent: 100
 ---
 
 # Project State
@@ -71,10 +70,10 @@ Items acknowledged and deferred at milestone close on 2026-07-18:
 
 ## Session Continuity
 
-**Last session:** 2026-07-18
+**Last session:** 2026-08-11
 
-Last activity: 2026-07-18 — v5.0 archived
-Stopped at: Milestone complete. Ready for `/gsd-new-milestone`
+Last activity: 2026-08-11 — white screen bug fixed on test PC
+Stopped at: bug fixed and shipped
 
 ## Operator Next Steps
 
